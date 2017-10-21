@@ -4,9 +4,11 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <ostream>
 #include <functional>
 #include <unordered_map>
 
+#include "errors.hpp"
 #include "value.hpp"
 #include "lexer.hpp"
 #include "environment.hpp"
@@ -27,7 +29,7 @@ namespace dice
     public:
         using value_type = std::unique_ptr<base_value>;
 
-        explicit parser(lexer* l);
+        parser(lexer* l, errors* errs);
 
         /** Parse expression provided by the lexer.
          * Operators are left associative unless stated otherwise.
@@ -45,6 +47,7 @@ namespace dice
         lexer* lexer_;
         token lookahead_;
         environment environment_;
+        errors* errors_;
 
         value_type expr();
         value_type add();
@@ -53,7 +56,19 @@ namespace dice
         value_type factor();
         std::vector<value_type> param_list();
 
+        // true <=> next token is in FIRST(expr)
+        bool is_valid_expr() const;
+        // true <=> next token is in FIRST(add)
+        bool is_valid_add() const;
+        // true <=> next token is in FIRST(mult)
+        bool is_valid_mult() const;
+        // true <=> next token is in FIRST(dice_roll)
+        bool is_valid_dice_roll() const;
+        // true <=> next token is in FIRST(factor)
+        bool is_valid_factor() const;
+
         void eat(token_type type);
+        void error(const std::string& message);
     };
 }
 

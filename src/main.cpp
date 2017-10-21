@@ -104,10 +104,19 @@ int main(int argc, char** argv)
         std::stringstream input{ expr };
 
         // parse and interpret the expression
+        dice::errors errs;
         dice::lexer lexer{ &input, &std::cerr };
-        dice::parser parser{ &lexer };
-        dice::parser::value_type result;
-        print_result(parser.parse());
+        dice::parser parser{ &lexer, &errs };
+
+        auto result = parser.parse(); 
+        
+        // print errors if necessary
+        if (!errs.empty())
+        {
+            std::cerr << errs;
+        }
+
+        print_result(std::move(result));
     }
     else 
     {
