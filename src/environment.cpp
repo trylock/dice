@@ -108,6 +108,84 @@ static dice::user_function::return_type dice_rand_var_in(
     );
 }
 
+static dice::user_function::return_type dice_less_than(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().less_than(
+            fn::arg<type_rand_var>(first + 1)->data()
+        )
+    );
+}
+
+static dice::user_function::return_type dice_less_than_or_equal(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().less_than_or_equal(
+            fn::arg<type_rand_var>(first + 1)->data()
+        )
+    );
+}
+
+static dice::user_function::return_type dice_equal(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().equal(
+            fn::arg<type_rand_var>(first + 1)->data()
+        )
+    );
+}
+
+static dice::user_function::return_type dice_not_equal(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().not_equal(
+            fn::arg<type_rand_var>(first + 1)->data()
+        )
+    );
+}
+
+static dice::user_function::return_type dice_greater_than(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().greater_than(
+            fn::arg<type_rand_var>(first + 1)->data()
+        )
+    );
+}
+
+static dice::user_function::return_type dice_greater_than_or_equal(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().greater_than_or_equal(
+            fn::arg<type_rand_var>(first + 1)->data()
+        )
+    );
+}
+
 // environment code
 
 dice::environment::environment()
@@ -171,6 +249,24 @@ dice::environment::environment()
     });
     add_function("in", {
         dice_rand_var_in, { type_rand_var::id(), type_double::id(), type_double::id() }
+    });
+    add_function("<", {
+        dice_less_than, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("<=", {
+        dice_less_than_or_equal, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("==", {
+        dice_equal, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("!=", {
+        dice_not_equal, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function(">=", {
+        dice_greater_than_or_equal, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function(">", {
+        dice_greater_than, { type_rand_var::id(), type_rand_var::id() }
     });
 
     // type conversions
