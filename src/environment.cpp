@@ -53,10 +53,10 @@ static dice::user_function::return_type dice_roll(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<dice::dice_rand_var>(
-        dice::dice_rand_var::value_type::roll(
-            fn::arg<dice::dice_rand_var>(first)->data(),
-            fn::arg<dice::dice_rand_var>(first + 1)->data()
+    return dice::make<dice::type_rand_var>(
+        dice::type_rand_var::value_type::roll(
+            fn::arg<dice::type_rand_var>(first)->data(),
+            fn::arg<dice::type_rand_var>(first + 1)->data()
         )
     );
 }
@@ -69,56 +69,56 @@ dice::environment::environment()
 
     // user functions
     add_function("+", {
-        dice_add<dice_int>, { dice_int::get_type_id(), dice_int::get_type_id() }
+        dice_add<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
     });
     add_function("+", {
-        dice_add<dice_double>, { dice_double::get_type_id(), dice_double::get_type_id() }
+        dice_add<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
     });
     add_function("+", {
-        dice_add<dice_rand_var>, { dice_rand_var::get_type_id(), dice_rand_var::get_type_id() }
+        dice_add<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
     });
     add_function("-", {
-        dice_sub<dice_int>, { dice_int::get_type_id(), dice_int::get_type_id() }
+        dice_sub<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
     });
     add_function("-", {
-        dice_sub<dice_double>, { dice_double::get_type_id(), dice_double::get_type_id() }
+        dice_sub<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
     });
     add_function("-", {
-        dice_sub<dice_rand_var>, { dice_rand_var::get_type_id(), dice_rand_var::get_type_id() }
+        dice_sub<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
     });
     add_function("*", {
-        dice_mult<dice_int>, { dice_int::get_type_id(), dice_int::get_type_id() }
+        dice_mult<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
     });
     add_function("*", {
-        dice_mult<dice_double>, { dice_double::get_type_id(), dice_double::get_type_id() }
+        dice_mult<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
     });
     add_function("*", {
-        dice_mult<dice_rand_var>, { dice_rand_var::get_type_id(), dice_rand_var::get_type_id() }
+        dice_mult<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
     });
     add_function("/", {
-        dice_div<dice_int>, { dice_int::get_type_id(), dice_int::get_type_id() }
+        dice_div<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
     });
     add_function("/", {
-        dice_div<dice_double>, { dice_double::get_type_id(), dice_double::get_type_id() }
+        dice_div<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
     });
     add_function("/", {
-        dice_div<dice_rand_var>, { dice_rand_var::get_type_id(), dice_rand_var::get_type_id() }
+        dice_div<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
     });
     add_function("roll", {
-        dice_roll, { dice_rand_var::get_type_id(), dice_rand_var::get_type_id() }
+        dice_roll, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
     });
 
     // type conversions
-    conversions_.add_conversion(dice_int::get_type_id(), dice_double::get_type_id(), [](auto&& value)
+    conversions_.add_conversion(type_int::get_type_id(), type_double::get_type_id(), [](auto&& value)
     {
-        auto&& int_value = dynamic_cast<dice_int&>(*value);
-        return make<dice_double>(static_cast<double>(int_value.data()));
+        auto&& int_value = dynamic_cast<type_int&>(*value);
+        return make<type_double>(static_cast<double>(int_value.data()));
     }, 1);
 
-    conversions_.add_conversion(dice_int::get_type_id(), dice_rand_var::get_type_id(), [](auto&& value)
+    conversions_.add_conversion(type_int::get_type_id(), type_rand_var::get_type_id(), [](auto&& value)
     {
-        auto&& int_value = dynamic_cast<dice_int&>(*value);
-        return make<dice_rand_var>(constant_tag{}, int_value.data());
+        auto&& int_value = dynamic_cast<type_int&>(*value);
+        return make<type_rand_var>(constant_tag{}, int_value.data());
     }, 1);
 }
 

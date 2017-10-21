@@ -1,5 +1,5 @@
-#ifndef DICE_TYPES_HPP_
-#define DICE_TYPES_HPP_
+#ifndef DICE_VALUE_HPP_
+#define DICE_VALUE_HPP_
 
 #include <memory>
 #include <string>
@@ -52,9 +52,9 @@ namespace dice
     };
 
     // used data types
-    using dice_int = typed_value<int>;
-    using dice_double = typed_value<double>;
-    using dice_rand_var = typed_value<random_variable<int, double>>;
+    using type_int = typed_value<int>;
+    using type_double = typed_value<double>;
+    using type_rand_var = typed_value<random_variable<int, double>>;
 
     template<typename T, typename... Value>
     std::unique_ptr<T> make(Value&&... data)
@@ -66,4 +66,4 @@ namespace dice
     }
 }
 
-#endif // DICE_TYPES_HPP_
+#endif // DICE_VALUE_HPP_

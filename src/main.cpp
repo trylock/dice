@@ -77,19 +77,19 @@ void print_result(const dice::random_variable<int, double>& value)
 
 void print_result(std::unique_ptr<dice::base_value>&& value)
 {
-    auto scalar_int = dynamic_cast<dice::dice_int*>(value.get());
+    auto scalar_int = dynamic_cast<dice::type_int*>(value.get());
     if (scalar_int != nullptr)
     {
         std::cout << scalar_int->data() << std::endl;
         return;
     }
-    auto scalar_double = dynamic_cast<dice::dice_double*>(value.get());
+    auto scalar_double = dynamic_cast<dice::type_double*>(value.get());
     if (scalar_double != nullptr)
     {
         std::cout << scalar_double->data() << std::endl;
         return;
     }
-    auto rv = dynamic_cast<dice::dice_rand_var*>(value.get());
+    auto rv = dynamic_cast<dice::type_rand_var*>(value.get());
     print_result(rv->data());
 }
 
