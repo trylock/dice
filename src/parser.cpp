@@ -21,9 +21,9 @@ dice::parser::value_type dice::parser::expr()
     {
         eat(token_type::in);
         eat(token_type::left_square_bracket);
-        auto lower_bound = expr();
+        auto lower_bound = add();
         eat(token_type::param_delim);
-        auto upper_bound = expr();
+        auto upper_bound = add();
         eat(token_type::right_square_bracket);
 
         return environment_.call("in", 
