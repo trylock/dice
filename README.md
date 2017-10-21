@@ -46,11 +46,13 @@ The program implements a predictive parser for it is easy to write it by hand. O
                 
 <factor>      ::= (<expr>) 
                 | <number> 
-                | <identifier>(<param_list>)
+                | <identifier>(<opt_params>)
+                
+<opt_params>  ::= <param_list> 
+                | "" 
                 
 <param_list>  ::= <param_list>, <expr> 
                 | <expr> 
-                | ""
 ```
 
 Here are some non-trivial terminals and their regular expressions:
