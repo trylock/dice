@@ -94,6 +94,20 @@ static dice::user_function::return_type dice_roll(
     );
 }
 
+static dice::user_function::return_type dice_rand_var_in(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return dice::make<type_rand_var>(
+        fn::arg<type_rand_var>(first)->data().in(
+            fn::arg<type_double>(first + 1)->data(),
+            fn::arg<type_double>(first + 2)->data()
+        )
+    );
+}
+
 // environment code
 
 dice::environment::environment()
@@ -154,6 +168,9 @@ dice::environment::environment()
     });
     add_function("variance", {
         dice_variance, { type_rand_var::id() }
+    });
+    add_function("in", {
+        dice_rand_var_in, { type_rand_var::id(), type_double::id(), type_double::id() }
     });
 
     // type conversions

@@ -140,3 +140,24 @@ TEST_CASE("Compute expectation of a random variable", "[environment]")
     auto double_type = dynamic_cast<dice::type_double*>(result.get());
     REQUIRE(double_type->data() == Approx(0.4));
 }
+
+TEST_CASE("Call in operator on a random variable and int interval", "[environment]")
+{
+    dice::environment env;
+    auto var = dice::make<dice::type_rand_var>(
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+        std::make_pair(5, 1)
+    );
+    auto lower = dice::make<dice::type_int>(2);
+    auto upper = dice::make<dice::type_int>(4);
+
+    auto result = env.call("in", std::move(var), std::move(lower), std::move(upper));
+    REQUIRE(result->type() == dice::type_rand_var::id());
+
+    auto&& prob = dynamic_cast<dice::type_rand_var*>(result.get())->data().probability();
+    REQUIRE(prob.find(1)->second == Approx(3 / 5.0));
+    REQUIRE(prob.find(0)->second == Approx(2 / 5.0));
+}
