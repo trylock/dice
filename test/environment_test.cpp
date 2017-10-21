@@ -118,3 +118,25 @@ TEST_CASE("Call unary - function on random variable", "[environment]")
     REQUIRE(prob.find(-1)->second == 0.4);
     REQUIRE(prob.find(0)->second == 0.6);
 }
+
+TEST_CASE("Compute variance of a random variable", "[environment]")
+{
+    dice::environment env;
+    auto value = dice::make<dice::type_rand_var>(dice::bernoulli_tag{}, 0.4);
+    auto result = env.call("variance", std::move(value));
+    REQUIRE(result->type() == dice::type_double::id());
+
+    auto double_type = dynamic_cast<dice::type_double*>(result.get());
+    REQUIRE(double_type->data() == Approx(0.4 * 0.6));
+}
+
+TEST_CASE("Compute expectation of a random variable", "[environment]")
+{
+    dice::environment env;
+    auto value = dice::make<dice::type_rand_var>(dice::bernoulli_tag{}, 0.4);
+    auto result = env.call("expectation", std::move(value));
+    REQUIRE(result->type() == dice::type_double::id());
+
+    auto double_type = dynamic_cast<dice::type_double*>(result.get());
+    REQUIRE(double_type->data() == Approx(0.4));
+}
