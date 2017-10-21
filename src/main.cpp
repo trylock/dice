@@ -55,7 +55,7 @@ void print_result(const dice::random_variable<int, double>& value)
     }
 
     // print the distribution sorted by value
-    std::vector<std::pair<std::int32_t, double>> dist{ 
+    std::vector<std::pair<int, double>> dist{ 
         value.probability().begin(), 
         value.probability().end() 
     };
@@ -75,7 +75,7 @@ void print_result(const dice::random_variable<int, double>& value)
     }
 }
 
-void print_result(std::unique_ptr<dice::base_value>& value)
+void print_result(std::unique_ptr<dice::base_value>&& value)
 {
     auto scalar_int = dynamic_cast<dice::dice_int*>(value.get());
     if (scalar_int != nullptr)
@@ -104,24 +104,10 @@ int main(int argc, char** argv)
         std::stringstream input{ expr };
 
         // parse and interpret the expression
-        dice::lexer lexer{ &input };
+        dice::lexer lexer{ &input, &std::cerr };
         dice::parser parser{ &lexer };
         dice::parser::value_type result;
-        try 
-        {
-            result = parser.parse();
-        }
-        catch (dice::parse_error& error)
-        {
-            error_message(error, lexer.location());
-            return 1;
-        }
-        catch (dice::compiler_error& error)
-        {
-            error_message(error, lexer.location());
-            return 1;
-        }
-        print_result(result);
+        print_result(parser.parse());
     }
     else 
     {
