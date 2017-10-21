@@ -69,53 +69,53 @@ dice::environment::environment()
 
     // user functions
     add_function("+", {
-        dice_add<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
+        dice_add<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("+", {
-        dice_add<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
+        dice_add<type_double>, { type_double::id(), type_double::id() }
     });
     add_function("+", {
-        dice_add<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
+        dice_add<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("-", {
-        dice_sub<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
+        dice_sub<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("-", {
-        dice_sub<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
+        dice_sub<type_double>, { type_double::id(), type_double::id() }
     });
     add_function("-", {
-        dice_sub<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
+        dice_sub<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("*", {
-        dice_mult<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
+        dice_mult<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("*", {
-        dice_mult<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
+        dice_mult<type_double>, { type_double::id(), type_double::id() }
     });
     add_function("*", {
-        dice_mult<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
+        dice_mult<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("/", {
-        dice_div<type_int>, { type_int::get_type_id(), type_int::get_type_id() }
+        dice_div<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("/", {
-        dice_div<type_double>, { type_double::get_type_id(), type_double::get_type_id() }
+        dice_div<type_double>, { type_double::id(), type_double::id() }
     });
     add_function("/", {
-        dice_div<type_rand_var>, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
+        dice_div<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("roll", {
-        dice_roll, { type_rand_var::get_type_id(), type_rand_var::get_type_id() }
+        dice_roll, { type_rand_var::id(), type_rand_var::id() }
     });
 
     // type conversions
-    conversions_.add_conversion(type_int::get_type_id(), type_double::get_type_id(), [](auto&& value)
+    conversions_.add_conversion(type_int::id(), type_double::id(), [](auto&& value)
     {
         auto&& int_value = dynamic_cast<type_int&>(*value);
         return make<type_double>(static_cast<double>(int_value.data()));
     }, 1);
 
-    conversions_.add_conversion(type_int::get_type_id(), type_rand_var::get_type_id(), [](auto&& value)
+    conversions_.add_conversion(type_int::id(), type_rand_var::id(), [](auto&& value)
     {
         auto&& int_value = dynamic_cast<type_int&>(*value);
         return make<type_rand_var>(constant_tag{}, int_value.data());

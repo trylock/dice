@@ -33,7 +33,7 @@ namespace dice
     public:
         using value_type = T;
 
-        static type_id get_type_id() 
+        static type_id id() 
         {
             return typeid(typed_value<value_type>).name();
         }
@@ -42,7 +42,7 @@ namespace dice
         explicit typed_value(value_type&& value) : value_(std::move(value)) {}
 
         // get type id
-        type_id type() const override { return get_type_id(); }
+        type_id type() const override { return id(); }
 
         // value getter setter
         value_type& data() { return value_; }

@@ -7,7 +7,7 @@ TEST_CASE("Call operator + on integers", "[environment]")
     auto result = env.call("+", 
         dice::make<dice::type_int>(1), 
         dice::make<dice::type_int>(2));
-    REQUIRE(result->type() == dice::type_int::get_type_id());
+    REQUIRE(result->type() == dice::type_int::id());
 
     auto int_result = dynamic_cast<dice::type_int*>(result.get());
     REQUIRE(int_result->data() == 3);
@@ -26,7 +26,7 @@ TEST_CASE("Call operator + on random variables", "[environment]")
     );
 
     auto result = env.call("+", std::move(a), std::move(b));
-    REQUIRE(result->type() == dice::type_rand_var::get_type_id());
+    REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
     auto&& prob = rand_var_result->data().probability();
@@ -45,7 +45,7 @@ TEST_CASE("Operator + converts an int to a random variable if one argument is a 
     );
 
     auto result = env.call("+", std::move(a), std::move(b));
-    REQUIRE(result->type() == dice::type_rand_var::get_type_id());
+    REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
     auto&& prob = rand_var_result->data().probability();
@@ -60,7 +60,7 @@ TEST_CASE("Roll operators converts int arguments for the roll operator to a rand
     auto b = dice::make<dice::type_int>(6);
 
     auto result = env.call("roll", std::move(a), std::move(b));
-    REQUIRE(result->type() == dice::type_rand_var::get_type_id());
+    REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
     auto&& prob = rand_var_result->data().probability();
@@ -80,7 +80,7 @@ TEST_CASE("Call function using iterators as arguments", "[environment]")
 
     dice::environment env;
     auto result = env.call_var("+", args.begin(), args.end());
-    REQUIRE(result->type() == dice::type_int::get_type_id());
+    REQUIRE(result->type() == dice::type_int::id());
 
     auto int_result = dynamic_cast<dice::type_int*>(result.get());
     REQUIRE(int_result->data() == 8);
