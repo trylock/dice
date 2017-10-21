@@ -85,3 +85,36 @@ TEST_CASE("Call function using iterators as arguments", "[environment]")
     auto int_result = dynamic_cast<dice::type_int*>(result.get());
     REQUIRE(int_result->data() == 8);
 }
+
+TEST_CASE("Call unary - function on int", "[environment]")
+{
+    dice::environment env;
+    auto result = env.call("unary-", dice::make<dice::type_int>(5));
+    REQUIRE(result->type() == dice::type_int::id());
+
+    auto int_type = dynamic_cast<dice::type_int*>(result.get());
+    REQUIRE(int_type->data() == -5);
+}
+
+TEST_CASE("Call unary - function on double", "[environment]")
+{
+    dice::environment env;
+    auto result = env.call("unary-", dice::make<dice::type_double>(3.14));
+    REQUIRE(result->type() == dice::type_double::id());
+
+    auto int_type = dynamic_cast<dice::type_double*>(result.get());
+    REQUIRE(int_type->data() == -3.14);
+}
+
+TEST_CASE("Call unary - function on random variable", "[environment]")
+{
+    dice::environment env;
+    auto value = dice::make<dice::type_rand_var>(dice::bernoulli_tag{}, 0.4);
+    auto result = env.call("unary-", std::move(value));
+    REQUIRE(result->type() == dice::type_rand_var::id());
+
+    auto drv = dynamic_cast<dice::type_rand_var*>(result.get());
+    auto&& prob = drv->data().probability();
+    REQUIRE(prob.find(-1)->second == 0.4);
+    REQUIRE(prob.find(0)->second == 0.6);
+}

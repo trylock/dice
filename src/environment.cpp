@@ -2,6 +2,28 @@
 
 // functions implementation
 
+static dice::user_function::return_type dice_expectation(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return make<type_double>(
+        fn::arg<type_rand_var>(first)->data().expected_value()
+    );
+}
+
+static dice::user_function::return_type dice_variance(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using namespace dice;
+    using fn = function_traits;
+    return make<type_double>(
+        fn::arg<type_rand_var>(first)->data().variance()
+    );
+}
+
 // operator functions
 
 template<typename T>
@@ -45,6 +67,17 @@ dice::user_function::return_type dice_div(
     using fn = dice::function_traits;
     return dice::make<T>(
         fn::arg<T>(first)->data() / fn::arg<T>(first + 1)->data()
+    );
+}
+
+template<typename T>
+dice::user_function::return_type dice_unary_minus(
+    dice::user_function::args_iterator first,
+    dice::user_function::args_iterator)
+{
+    using fn = dice::function_traits;
+    return dice::make<T>(
+        -fn::arg<T>(first)->data()
     );
 }
 
@@ -104,8 +137,23 @@ dice::environment::environment()
     add_function("/", {
         dice_div<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
     });
+    add_function("unary-", {
+        dice_unary_minus<type_int>, { type_int::id() }
+    });
+    add_function("unary-", {
+        dice_unary_minus<type_double>, { type_double::id() }
+    });
+    add_function("unary-", {
+        dice_unary_minus<type_rand_var>, { type_rand_var::id() }
+    });
     add_function("roll", {
         dice_roll, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("expectation", {
+        dice_expectation, { type_rand_var::id() }
+    });
+    add_function("variance", {
+        dice_variance, { type_rand_var::id() }
     });
 
     // type conversions
