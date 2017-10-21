@@ -26,7 +26,7 @@ namespace dice
         virtual type_id type() const = 0;
     };
 
-    // Value with its data
+    // Value with data
     template<typename T>
     class typed_value : public base_value
     {
@@ -51,23 +51,18 @@ namespace dice
         value_type value_;
     };
 
-    // used types
+    // used data types
     using dice_int = typed_value<int>;
     using dice_double = typed_value<double>;
     using dice_rand_var = typed_value<random_variable<int, double>>;
 
-    /** Value factory function
-     * Allocate a new value of given C++ type
-     * @param value data
-     * @return newly allocated value for given data
-     */
-    template<typename T>
-    std::unique_ptr<base_value> value(T&& data)
+    template<typename T, typename... Value>
+    std::unique_ptr<T> make(Value&&... data)
     {
-        using value_type = typename std::decay<T>::type;
-        return std::make_unique<typed_value<value_type>>(
-            std::forward<T>(data)
-        );
+        static_assert(std::is_base_of<base_value, T>::value, 
+            "Dice value has to be derived from dice::base_value.");
+        using value_type = typename T::value_type;
+        return std::make_unique<T>(value_type{ std::forward<Value>(data)... });
     }
 }
 

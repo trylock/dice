@@ -140,9 +140,7 @@ dice::parser::value_type dice::parser::factor()
     {
         auto value = std::atoi(lookahead_.value.c_str());
         eat(lookahead_.type);
-        return std::make_unique<dice_rand_var>(
-            random_variable<int, double>{ constant_tag{}, std::move(value) }
-        );
+        return make<dice_rand_var>(constant_tag{}, std::move(value));
     }
     else if (lookahead_.type == token_type::id)
     {
