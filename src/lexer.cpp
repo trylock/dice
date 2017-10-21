@@ -43,8 +43,10 @@ dice::token dice::lexer::read_token()
                 get_char();
                 return token{ token_type::rel_op, std::string(1, current) + "=" };
             }
-            if (current == '<' || current == '>')
+            else if (current == '<' || current == '>')
+            {
                 return token{ token_type::rel_op, std::string(1, current) };
+            }
         }
 
         if (std::isdigit(current))
@@ -119,7 +121,7 @@ int dice::lexer::get_char()
 
 void dice::lexer::error(const std::string& message)
 {
-    *error_stream_ << message;
+    *error_stream_ << message << std::endl;
 }
 
 
