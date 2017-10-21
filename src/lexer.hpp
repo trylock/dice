@@ -6,6 +6,8 @@
 #include <cctype>
 #include <istream>
 
+#include "errors.hpp"
+
 namespace dice 
 {
     enum class token_type
@@ -58,9 +60,13 @@ namespace dice
     class lexer 
     {
     public:
-        lexer(std::istream* input, std::ostream* error_stream);
+        lexer(std::istream* input, errors* errs);
+
+        // disallow copy so that 2 lexers don't read from the same input
         lexer(const lexer&) = delete;
         void operator=(const lexer&) = delete;
+
+        // allow move
         lexer(lexer&&) = default;
         lexer& operator=(lexer&&) = default;
 
@@ -79,7 +85,7 @@ namespace dice
 
     private:
         std::istream* input_;
-        std::ostream* error_stream_;
+        errors* errors_;
         lexer_location location_;
 
         // skip sequence of whitespace at current location

@@ -94,9 +94,8 @@ int main(int argc, char** argv)
 
         // parse and interpret the expression
         dice::errors errs;
-        dice::lexer lexer{ &input, &std::cerr };
+        dice::lexer lexer{ &input, &errs };
         dice::parser parser{ &lexer, &errs };
-
         auto result = parser.parse(); 
         
         // print errors if necessary

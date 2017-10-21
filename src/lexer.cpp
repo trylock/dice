@@ -1,8 +1,8 @@
 #include "lexer.hpp"
 
-dice::lexer::lexer(std::istream* input, std::ostream* error_output) : 
+dice::lexer::lexer(std::istream* input, errors* errs) : 
     input_(input), 
-    error_stream_(error_output) {}
+    errors_(errs) {}
 
 dice::token dice::lexer::read_token()
 {
@@ -84,11 +84,13 @@ dice::token dice::lexer::read_token()
         }
 
         // format an error message
-        std::stringstream message;
-        message << "Unexpected character: '" 
-            << (char)current << "' (" 
-            << std::hex << current << ").";
-        error(message.str());
+        const char digits[] = { 
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'A', 'B', 'C', 'D', 'E', 'F'
+        };
+        error("Unexpected character: '" + std::string(1, current) + "' (0x" + 
+            std::string(1, digits[(current & 0xFF) >> 4]) + 
+            std::string(1, digits[current & 0xF])  + ").");
     }
 }
 
@@ -121,7 +123,7 @@ int dice::lexer::get_char()
 
 void dice::lexer::error(const std::string& message)
 {
-    *error_stream_ << message << std::endl;
+    errors_->add(location_.line, location_.col, message);
 }
 
 
