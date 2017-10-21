@@ -34,17 +34,6 @@ std::ostream& reset(std::ostream& output)
     return output << "\e[0m";
 }
 
-// Output message functions
-template<typename ErrorType>
-void error_message(ErrorType& error, dice::lexer_location loc)
-{
-    std::cerr 
-        << bold << "[line: " << loc.line
-                << "][column: " << loc.col << "] " 
-        << reset
-        << red << "error: " << reset << error.what() << std::endl << std::endl;
-}
-
 void print_result(const dice::random_variable<int, double>& value)
 {
     // print constant values as constants
