@@ -2,6 +2,7 @@
 #define DICE_LEXER_HPP_
 
 #include <string>
+#include <sstream>
 #include <cctype>
 #include <istream>
 
@@ -57,24 +58,38 @@ namespace dice
     class lexer 
     {
     public:
-        explicit lexer(std::istream* input);
+        lexer(std::istream* input, std::ostream* error_stream);
         lexer(const lexer&) = delete;
         void operator=(const lexer&) = delete;
         lexer(lexer&&) = default;
         lexer& operator=(lexer&&) = default;
 
+        /** Read token at current location.
+         * Decode a sequance of characters as a token and 
+         * advance in the input stream.
+         * @return token at current position
+         */
         token read_token();
 
+        // Return current location of the lexer in the input stream
         inline const lexer_location& location() const 
         {
             return location_; 
         }
+
     private:
         std::istream* input_;
+        std::ostream* error_stream_;
         lexer_location location_;
 
+        // skip sequence of whitespace at current location
         void skip_space();
+
+        // get character at current location
         int get_char();
+
+        // report a lexer error
+        void error(const std::string& message);
     };
 }
 
