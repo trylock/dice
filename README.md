@@ -45,7 +45,8 @@ The program implements a predictive parser for it is easy to write it by hand. O
                 | <factor>
                 
 <factor>      ::= (<expr>) 
-                | <number> 
+                | <number_int>
+                | <number_fp>
                 | <identifier>(<opt_params>)
                 
 <opt_params>  ::= <param_list> 
@@ -56,8 +57,9 @@ The program implements a predictive parser for it is easy to write it by hand. O
 ```
 
 Here are some non-trivial terminals and their regular expressions:
-- `<number>`: `[0-9]+`
-- `<identifier>`: `[A-Za-z][A-Za-z0-9]*`
+- `<number_int>`: `[0-9]+`
+- `<number_fp>`: `[0-9]+\.[0-9]+`
+- `<identifier>`: `[A-Za-z][A-Za-z0-9_]*`
 - `<rel_op>`: `<|<=|==|!=|>=|>`
 
 ## Types
