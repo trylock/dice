@@ -8,7 +8,7 @@
 #include "parser.hpp"
 
 // Formatting functions
-std::string to_percet_str(double value)
+std::string format_probability(double value)
 {
     if (value > 0 && value < 0.0001)
         return "< 0.01 %";
@@ -61,7 +61,7 @@ void print_result(const dice::random_variable<int, double>& value)
     {
         std::cout 
             << bold << std::setw(10) << std::right << pair.first << reset << ": " 
-            << std::setw(12) << to_percet_str(pair.second) << std::endl;
+            << std::setw(12) << format_probability(pair.second) << std::endl;
     }
 }
 
