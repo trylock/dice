@@ -23,7 +23,10 @@ namespace dice
     public:
         using value_type = std::unique_ptr<base_value>;
 
-        parser(Lexer* reader, Logger* log) : lexer_(reader), log_(log) {}
+        parser(Lexer* reader, Logger* log, Environment* env) : 
+            lexer_(reader), 
+            log_(log),
+            env_(env) {}
 
         /** Parse expression provided by the lexer.
          * Operators are left associative unless stated otherwise.
@@ -62,7 +65,7 @@ namespace dice
     private:
         Lexer* lexer_;
         Logger* log_;
-        Environment environment_;
+        Environment* env_;
         token lookahead_;
 
         value_type expr()
@@ -93,7 +96,7 @@ namespace dice
         
                 eat(token_type::right_square_bracket);
         
-                return environment_.call("in", 
+                return env_->call("in", 
                     std::move(left), 
                     std::move(lower_bound), 
                     std::move(upper_bound));
@@ -105,7 +108,7 @@ namespace dice
                 auto right = add();
         
                 // calculate the value
-                return environment_.call(op.value, std::move(left), std::move(right));
+                return env_->call(op.value, std::move(left), std::move(right));
             }
             return left;
         }
@@ -135,7 +138,7 @@ namespace dice
                 // compute the operator if there won't be any parse error
                 if (check_mult())
                 {
-                    result = environment_.call(op, std::move(result), mult());
+                    result = env_->call(op, std::move(result), mult());
                 }
                 else // otherwise, ignore the operator
                 {
@@ -170,7 +173,7 @@ namespace dice
                 // compute the operation if there won't be any parse error
                 if (check_dice_roll())
                 {
-                    result = environment_.call(op, std::move(result), dice_roll());
+                    result = env_->call(op, std::move(result), dice_roll());
                 }
                 else // otherwise, ignore the operator
                 {
@@ -208,7 +211,7 @@ namespace dice
                     // only use the factor production if there won't be any parse error
                     if (check_factor())
                     {
-                        result = environment_.call("roll", std::move(result), factor());
+                        result = env_->call("roll", std::move(result), factor());
                     }
                     else // otherwise, ignore the operator 
                     {
@@ -223,7 +226,7 @@ namespace dice
         
             // add sign
             if (count % 2 != 0)
-                result = environment_.call("unary-", std::move(result));
+                result = env_->call("unary-", std::move(result));
             return result; 
         }
 
@@ -257,7 +260,7 @@ namespace dice
                 auto args = param_list();
                 eat(token_type::right_parent);
                 
-                return environment_.call_var(id.value, args.begin(), args.end());
+                return env_->call_var(id.value, args.begin(), args.end());
             }
             
             error("Expected " + to_string(token_type::left_parent) + ", " + 

@@ -14,7 +14,8 @@ TEST_CASE("Interpret an empty expression", "[dice]")
 
     dice::logger log{ &errors };
     dice::lexer lexer{ &input, &log };
-    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
     auto result = parser.parse();
 
     REQUIRE(log.empty());
@@ -30,7 +31,8 @@ TEST_CASE("Interpret an arithmetic expression", "[dice]")
 
     dice::logger log{ &errors };
     dice::lexer lexer{ &input, &log };
-    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
     auto result = parser.parse();
 
     REQUIRE(log.empty());
@@ -46,7 +48,8 @@ TEST_CASE("Interpret a dice roll expression", "[dice]")
 
     dice::logger log{ &errors };
     dice::lexer lexer{ &input, &log };
-    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
     auto result = parser.parse();
 
     REQUIRE(log.empty());
@@ -70,7 +73,8 @@ TEST_CASE("Interpret a function call", "[dice]")
 
     dice::logger log{ &errors };
     dice::lexer lexer{ &input, &log };
-    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
     auto result = parser.parse();
 
     REQUIRE(log.empty());

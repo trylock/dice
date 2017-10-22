@@ -104,7 +104,8 @@ TEST_CASE("Parse empty expression", "[parser]")
 {
     lexer_mock lexer{};
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -127,7 +128,8 @@ TEST_CASE("Parse simple expression", "[parser]")
         { dice::token_type::number_int, "1" },
     };
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -146,7 +148,8 @@ TEST_CASE("+ and - operators are left associative", "[parser]")
         { dice::token_type::number_int, "4" },
     };
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -165,7 +168,8 @@ TEST_CASE("* and / operators are left associative", "[parser]")
         { dice::token_type::number_int, "5" },
     };
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -184,7 +188,8 @@ TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
         { dice::token_type::number_int, "4" },
     };
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -205,7 +210,8 @@ TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
         { dice::token_type::number_int, "4" },
     };
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -220,7 +226,8 @@ TEST_CASE("Parse dice roll operator", "[parser]")
         { dice::token_type::number_int, "6" },
     };
     logger_mock log;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
+    env_mock<dice::type_int> env;
+    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
     auto result = parser.parse();
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_rand_var::id());
