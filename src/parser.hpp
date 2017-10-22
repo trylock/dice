@@ -17,13 +17,13 @@
 namespace dice
 {
     // dice expression parser
-    template<typename TokenReader, typename Logger>
+    template<typename Lexer, typename Logger, typename Environment>
     class parser
     {
     public:
         using value_type = std::unique_ptr<base_value>;
 
-        parser(TokenReader* reader, Logger* log) : lexer_(reader), log_(log) {}
+        parser(Lexer* reader, Logger* log) : lexer_(reader), log_(log) {}
 
         /** Parse expression provided by the lexer.
          * Operators are left associative unless stated otherwise.
@@ -42,15 +42,11 @@ namespace dice
             // When using the expr as a start production, don't add 
             // the whole FOLLOW(expr) to the synchronizing tokens.
             // Use just the end symbol
-            while (!in_first_expr())
+            while (lookahead_.type != token_type::end && !in_first_expr())
             {
                 error("Invalid token at the beginning of an expression: " +
                     to_string(lookahead_));
                 eat(lookahead_.type);
-                if (lookahead_.type == token_type::end)
-                {
-                    break;
-                }
             }
         
             if (in_first_expr())
@@ -64,10 +60,10 @@ namespace dice
         }
 
     private:
-        lexer* lexer_;
-        logger* log_;
+        Lexer* lexer_;
+        Logger* log_;
+        Environment environment_;
         token lookahead_;
-        environment environment_;
 
         value_type expr()
         {
