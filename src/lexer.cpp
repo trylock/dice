@@ -49,6 +49,7 @@ dice::token dice::lexer::read_token()
             }
         }
 
+        // parse numbers
         if (std::isdigit(current))
         {
             bool is_fp = false;
@@ -79,6 +80,7 @@ dice::token dice::lexer::read_token()
             return token{ is_fp ? token_type::number_fp : token_type::number_int, value };
         }
 
+        // parse identifiers
         if (std::isalpha(current))
         {
             // read a string value
@@ -106,7 +108,7 @@ dice::token dice::lexer::read_token()
             'A', 'B', 'C', 'D', 'E', 'F'
         };
         error("Unexpected character: '" + std::string(1, current) + "' (0x" + 
-            std::string(1, digits[(current & 0xFF) >> 4]) + 
+            std::string(1, digits[(current >> 4) & 0xF]) + 
             std::string(1, digits[current & 0xF])  + ").");
     }
 }
