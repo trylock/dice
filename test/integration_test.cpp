@@ -65,7 +65,7 @@ TEST_CASE("Interpret a dice roll expression", "[dice]")
 
 TEST_CASE("Interpret a function call", "[dice]")
 {
-    std::stringstream input{ "variance(1d6)" };
+    std::stringstream input{ "expectation(1d6)" };
     std::stringstream errors;
 
     dice::logger log{ &errors };
