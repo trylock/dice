@@ -96,7 +96,7 @@ int main(int argc, char** argv)
         // parse and interpret the expression
         dice::logger log;
         dice::lexer lexer{ &input, &log };
-        dice::parser parser{ &lexer, &log };
+        dice::parser<dice::lexer, dice::logger> parser{ &lexer, &log };
         auto result = parser.parse(); 
         print_result(std::move(result));
     }
