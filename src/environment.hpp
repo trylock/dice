@@ -6,6 +6,7 @@
 #include <string>
 #include <functional>
 #include <cassert>
+#include <random>
 
 #include "value.hpp"
 #include "functions.hpp"

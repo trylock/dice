@@ -76,7 +76,7 @@ dice::user_function::return_type dice_unary_minus(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_roll(
+static dice::user_function::return_type dice_roll_op(
     dice::user_function::args_iterator first,
     dice::user_function::args_iterator)
 {
@@ -174,6 +174,39 @@ static dice::user_function::return_type dice_greater_than_or_equal(
     return std::move(*first);
 }
 
+static std::random_device dev;
+
+// generate a random
+template<typename ProbType = double>
+struct dice_roll 
+{
+    std::default_random_engine engine;
+    std::uniform_real_distribution<ProbType> dist;
+
+    dice_roll() : engine(dev()), dist(0, 1) {}
+
+    dice::user_function::return_type operator()(
+        dice::user_function::args_iterator first,
+        dice::user_function::args_iterator)
+    {
+        using namespace dice;
+        using fn = function_traits;
+
+        ProbType sum = 0;
+        auto value = dist(engine);
+        auto&& var = fn::arg<type_rand_var>(first)->data();
+        for (auto&& pair : var.probability())
+        {
+            if (sum + pair.second >= value)
+            {
+                return make<type_int>(pair.first);
+            }
+            sum += pair.second;
+        }
+        return make<type_int>(var.probability().end()->first);
+    } 
+};
+
 // environment code
 
 dice::environment::environment()
@@ -227,7 +260,7 @@ dice::environment::environment()
         dice_unary_minus<type_rand_var>, { type_rand_var::id() }
     });
     add_function("__roll_op", {
-        dice_roll, { type_rand_var::id(), type_rand_var::id() }
+        dice_roll_op, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("expectation", {
         dice_expectation, { type_rand_var::id() }
@@ -255,6 +288,9 @@ dice::environment::environment()
     });
     add_function(">", {
         dice_greater_than, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("roll", {
+        dice_roll<double>{}, { type_rand_var::id() }
     });
 
     // type conversions
