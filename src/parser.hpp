@@ -16,13 +16,6 @@
 
 namespace dice
 {
-    // an error called during parsing when it fails
-    class parse_error : public std::runtime_error
-    {
-    public:
-        parse_error(const std::string& message) : std::runtime_error(message) {}
-    };
-
     // dice expression parser
     class parser
     {
