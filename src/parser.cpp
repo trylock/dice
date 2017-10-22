@@ -13,7 +13,7 @@ dice::parser::value_type dice::parser::parse()
     lookahead_ = lexer_->read_token();
 
     // check if it's valid to parse an expression
-    while (lookahead_.type != token_type::end && !is_valid_expr())
+    while (lookahead_.type != token_type::end && !in_first_expr())
     {
         error("Invalid token at the beginning of an expression: " + 
             to_string(lookahead_));
@@ -32,9 +32,9 @@ dice::parser::value_type dice::parser::parse()
     return result;
 }
 
-bool dice::parser::is_valid_expr() const
+bool dice::parser::in_first_expr() const
 {
-    return is_valid_add();
+    return in_first_add();
 }
 
 dice::parser::value_type dice::parser::expr()
@@ -46,7 +46,7 @@ dice::parser::value_type dice::parser::expr()
         eat(token_type::left_square_bracket);
 
         // parse lower bound of the interval
-        if (!is_valid_add())
+        if (!in_first_add())
         {
             error("Invalid operand for the lower bound of operator in");
             return left;
@@ -56,7 +56,7 @@ dice::parser::value_type dice::parser::expr()
         eat(token_type::param_delim);
 
         // parse upper bound of the interval
-        if (!is_valid_add())
+        if (!in_first_add())
         {
             error("Invalid operand for the upper bound of operator in");
             return left;
@@ -82,9 +82,9 @@ dice::parser::value_type dice::parser::expr()
     return left;
 }
 
-bool dice::parser::is_valid_add() const 
+bool dice::parser::in_first_add() const 
 {
-    return is_valid_mult();
+    return in_first_mult();
 }
 
 dice::parser::value_type dice::parser::add()
@@ -110,7 +110,7 @@ dice::parser::value_type dice::parser::add()
         }
 
         // compute the operator if there won't be any parse error
-        if (is_valid_mult())
+        if (in_first_mult())
         {
             result = environment_.call(op, std::move(result), mult());
         }
@@ -122,9 +122,9 @@ dice::parser::value_type dice::parser::add()
     return result;
 }
 
-bool dice::parser::is_valid_mult() const 
+bool dice::parser::in_first_mult() const 
 {
-    return is_valid_dice_roll();
+    return in_first_dice_roll();
 }
 
 dice::parser::value_type dice::parser::mult()
@@ -150,7 +150,7 @@ dice::parser::value_type dice::parser::mult()
         }
 
         // compute the operation if there won't be any parse error
-        if (is_valid_dice_roll())
+        if (in_first_dice_roll())
         {
             result = environment_.call(op, std::move(result), dice_roll());
         }
@@ -162,9 +162,9 @@ dice::parser::value_type dice::parser::mult()
     return result;
 }
 
-bool dice::parser::is_valid_dice_roll() const 
+bool dice::parser::in_first_dice_roll() const 
 {
-    return lookahead_.type == token_type::sub || is_valid_factor();
+    return lookahead_.type == token_type::sub || in_first_factor();
 }
 
 dice::parser::value_type dice::parser::dice_roll()
@@ -193,7 +193,7 @@ dice::parser::value_type dice::parser::dice_roll()
             eat(token_type::roll_op);
 
             // only use the factor production if there won't be any parse error
-            if (is_valid_factor())
+            if (in_first_factor())
             {
                 result = environment_.call("roll", std::move(result), factor());
             }
@@ -214,7 +214,7 @@ dice::parser::value_type dice::parser::dice_roll()
     return result; 
 }
 
-bool dice::parser::is_valid_factor() const 
+bool dice::parser::in_first_factor() const 
 {
     return lookahead_.type == token_type::left_parent ||
         lookahead_.type == token_type::number ||
@@ -271,14 +271,14 @@ std::vector<dice::parser::value_type> dice::parser::param_list()
         while (lookahead_.type != token_type::end && 
             lookahead_.type != token_type::param_delim &&
             lookahead_.type != token_type::right_parent &&
-            !is_valid_expr())
+            !in_first_expr())
         {
             error("Invalid token at the beginning of an expression: " + 
                 to_string(lookahead_));
             eat(lookahead_.type);
         }
 
-        if (is_valid_expr())
+        if (in_first_expr())
         {
             args.emplace_back(expr());
         }

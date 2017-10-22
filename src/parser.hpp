@@ -57,15 +57,15 @@ namespace dice
         std::vector<value_type> param_list();
 
         // true <=> next token is in FIRST(expr)
-        bool is_valid_expr() const;
+        bool in_first_expr() const;
         // true <=> next token is in FIRST(add)
-        bool is_valid_add() const;
+        bool in_first_add() const;
         // true <=> next token is in FIRST(mult)
-        bool is_valid_mult() const;
+        bool in_first_mult() const;
         // true <=> next token is in FIRST(dice_roll)
-        bool is_valid_dice_roll() const;
+        bool in_first_dice_roll() const;
         // true <=> next token is in FIRST(factor)
-        bool is_valid_factor() const;
+        bool in_first_factor() const;
 
         void eat(token_type type);
         void error(const std::string& message);
