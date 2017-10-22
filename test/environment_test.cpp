@@ -53,13 +53,13 @@ TEST_CASE("Operator + converts an int to a random variable if one argument is a 
     REQUIRE(prob.find(4)->second == Approx(1 / 2.0));
 }
 
-TEST_CASE("Roll operators converts int arguments for the roll operator to a random variable", "[environment]")
+TEST_CASE("Roll operator converts int arguments to a random variable", "[environment]")
 {
     dice::environment env;
     auto a = dice::make<dice::type_int>(1);
     auto b = dice::make<dice::type_int>(6);
 
-    auto result = env.call("roll", std::move(a), std::move(b));
+    auto result = env.call("__roll_op", std::move(a), std::move(b));
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());

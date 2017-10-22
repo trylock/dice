@@ -216,7 +216,7 @@ namespace dice
                     // only use the factor production if there won't be any parse error
                     if (check_factor())
                     {
-                        result = env_->call("roll", std::move(result), factor());
+                        result = env_->call("__roll_op", std::move(result), factor());
                     }
                     else // otherwise, ignore the operator 
                     {

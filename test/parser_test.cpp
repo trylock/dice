@@ -82,7 +82,7 @@ public:
             a->data() = a->data() * b->data();
         else if (name == "/")
             a->data() = a->data() / b->data();
-        else if (name == "roll")
+        else if (name == "__roll_op")
             first = dice::make<dice::type_rand_var>(
                 std::make_pair(1, 1),
                 std::make_pair(2, 1),
