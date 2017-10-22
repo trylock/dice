@@ -66,6 +66,8 @@ namespace dice
         bool in_first_dice_roll() const;
         // true <=> next token is in FIRST(factor)
         bool in_first_factor() const;
+        // true <=> next token is in FIRST(param_list)
+        bool in_first_param_list() const;
 
         // true <=> next token is in FOLLOW(expr)
         bool in_follow_expr() const;
@@ -79,6 +81,13 @@ namespace dice
         bool in_follow_factor() const;
         // true <=> next token is in FOLLOW(param_list)
         bool in_follow_param_list() const;
+
+        bool check_expr();
+        bool check_add();
+        bool check_mult();
+        bool check_dice_roll();
+        bool check_factor();
+        bool check_param_list();
 
         void eat(token_type type);
         void error(const std::string& message);

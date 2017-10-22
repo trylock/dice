@@ -12,24 +12,27 @@ dice::parser::value_type dice::parser::parse()
 {
     lookahead_ = lexer_->read_token();
 
-    // check if it's valid to parse an expression
-    while (lookahead_.type != token_type::end && !in_first_expr())
+    // When using the expr as a start production, don't add 
+    // the whole FOLLOW(expr) to the synchronizing tokens.
+    // Use just the end symbol
+    while (!in_first_expr())
     {
-        error("Invalid token at the beginning of an expression: " + 
+        error("Invalid token at the beginning of an expression: " +
             to_string(lookahead_));
-        // just ignore the token, we can't do much with it at this point
         eat(lookahead_.type);
+        if (lookahead_.type == token_type::end)
+        {
+            break;
+        }
     }
 
-    // if there is nothing left, just end with 0
-    if (lookahead_.type == token_type::end)
+    if (in_first_expr())
     {
-        return make<type_int>(0);
+        auto result = expr();
+        eat(token_type::end); // make sure we've processed the whole expression
+        return result;
     }
-
-    auto result = expr();
-    eat(token_type::end); // make sure we've processed the whole expression
-    return result;
+    return make<type_int>(0);
 }
 
 bool dice::parser::in_first_expr() const
@@ -44,6 +47,17 @@ bool dice::parser::in_follow_expr() const
         in_follow_param_list();
 }
 
+bool dice::parser::check_expr()
+{
+    while (!in_follow_expr() && !in_first_expr())
+    {
+        error("Invalid token at the beginning of an expression: " + 
+            to_string(lookahead_));
+        eat(lookahead_.type);
+    }
+    return in_first_expr();
+}
+
 dice::parser::value_type dice::parser::expr()
 {
     auto left = add();
@@ -53,7 +67,7 @@ dice::parser::value_type dice::parser::expr()
         eat(token_type::left_square_bracket);
 
         // parse lower bound of the interval
-        if (!in_first_add())
+        if (!check_add())
         {
             error("Invalid operand for the lower bound of operator in");
             return left;
@@ -63,7 +77,7 @@ dice::parser::value_type dice::parser::expr()
         eat(token_type::param_delim);
 
         // parse upper bound of the interval
-        if (!in_first_add())
+        if (!check_add())
         {
             error("Invalid operand for the upper bound of operator in");
             return left;
@@ -105,6 +119,17 @@ bool dice::parser::in_follow_add() const
         in_follow_expr();
 }
 
+bool dice::parser::check_add()
+{
+    while (!in_first_add() && !in_follow_add())
+    {
+        error("Invalid token at the beginning of an addition: " + 
+            to_string(lookahead_));
+        eat(lookahead_.type);
+    }
+    return in_first_add();
+}
+
 dice::parser::value_type dice::parser::add()
 {
     std::string op;
@@ -128,7 +153,7 @@ dice::parser::value_type dice::parser::add()
         }
 
         // compute the operator if there won't be any parse error
-        if (in_first_mult())
+        if (check_mult())
         {
             result = environment_.call(op, std::move(result), mult());
         }
@@ -150,6 +175,17 @@ bool dice::parser::in_follow_mult() const
     return lookahead_.type == token_type::mult ||
         lookahead_.type == token_type::div ||
         in_follow_add();
+}
+
+bool dice::parser::check_mult()
+{
+    while (!in_first_mult() && !in_follow_mult())
+    {
+        error("Invalid token at the beginning of a multiplication: " + 
+            to_string(lookahead_));
+        eat(lookahead_.type);
+    }
+    return in_first_mult();
 }
 
 dice::parser::value_type dice::parser::mult()
@@ -175,7 +211,7 @@ dice::parser::value_type dice::parser::mult()
         }
 
         // compute the operation if there won't be any parse error
-        if (in_first_dice_roll())
+        if (check_dice_roll())
         {
             result = environment_.call(op, std::move(result), dice_roll());
         }
@@ -189,13 +225,25 @@ dice::parser::value_type dice::parser::mult()
 
 bool dice::parser::in_first_dice_roll() const 
 {
-    return lookahead_.type == token_type::sub || in_first_factor();
+    return lookahead_.type == token_type::sub || 
+        in_first_factor();
 }
 
 bool dice::parser::in_follow_dice_roll() const 
 {
     return lookahead_.type == token_type::roll_op ||
         in_follow_mult();
+}
+
+bool dice::parser::check_dice_roll()
+{
+    while (!in_first_dice_roll() && !in_follow_dice_roll())
+    {
+        error("Invalid token at the beginning of a dice roll: " + 
+            to_string(lookahead_));
+        eat(lookahead_.type);
+    }
+    return in_first_dice_roll();
 }
 
 dice::parser::value_type dice::parser::dice_roll()
@@ -224,7 +272,7 @@ dice::parser::value_type dice::parser::dice_roll()
             eat(token_type::roll_op);
 
             // only use the factor production if there won't be any parse error
-            if (in_first_factor())
+            if (check_factor())
             {
                 result = environment_.call("roll", std::move(result), factor());
             }
@@ -255,6 +303,17 @@ bool dice::parser::in_first_factor() const
 bool dice::parser::in_follow_factor() const 
 {
     return in_follow_dice_roll();
+}
+
+bool dice::parser::check_factor()
+{
+    while (!in_first_factor() && !in_follow_factor())
+    {
+        error("Invalid token at the beginning of a factor: " + 
+            to_string(lookahead_));
+        eat(lookahead_.type);
+    }
+    return in_first_factor();
 }
 
 dice::parser::value_type dice::parser::factor()
@@ -291,10 +350,27 @@ dice::parser::value_type dice::parser::factor()
     return make<type_int>(0);
 }
 
+bool dice::parser::in_first_param_list() const 
+{
+    return lookahead_.type == token_type::right_parent || 
+        in_first_expr();
+}
+
 bool dice::parser::in_follow_param_list() const 
 {
     return lookahead_.type == token_type::param_delim ||
         lookahead_.type == token_type::right_parent; // FOLLOW(opt_params)
+}
+
+bool dice::parser::check_param_list()
+{
+    while (!in_first_param_list() && !in_follow_param_list())
+    {
+        error("Invalid token at the beginning of parameter list: " + 
+            to_string(lookahead_));
+        eat(lookahead_.type);
+    }
+    return in_first_param_list();
 }
 
 std::vector<dice::parser::value_type> dice::parser::param_list()
@@ -305,24 +381,16 @@ std::vector<dice::parser::value_type> dice::parser::param_list()
         return args; // no arguments
     }
 
+    std::size_t number = 0;
     for (;;)
     {
-        // skip invalid tokens at the beginning
-        // until there is a valid token or 
-        // some of the tokes from FOLLOW(expr)
-        while (lookahead_.type != token_type::end && 
-            lookahead_.type != token_type::param_delim &&
-            lookahead_.type != token_type::right_parent &&
-            !in_first_expr())
-        {
-            error("Invalid token at the beginning of an expression: " + 
-                to_string(lookahead_));
-            eat(lookahead_.type);
-        }
-
-        if (in_first_expr())
+        if (check_expr())
         {
             args.emplace_back(expr());
+        }
+        else 
+        {
+            error("Invalid parameter " + std::to_string(number));
         }
 
         if (lookahead_.type != token_type::param_delim)
@@ -330,6 +398,7 @@ std::vector<dice::parser::value_type> dice::parser::param_list()
             break;
         }
         eat(token_type::param_delim);
+        ++number;
     }
     return args;
 }
