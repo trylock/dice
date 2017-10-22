@@ -37,6 +37,13 @@ bool dice::parser::in_first_expr() const
     return in_first_add();
 }
 
+bool dice::parser::in_follow_expr() const 
+{
+    return lookahead_.type == token_type::end ||
+        lookahead_.type == token_type::right_parent ||
+        in_follow_param_list();
+}
+
 dice::parser::value_type dice::parser::expr()
 {
     auto left = add();
@@ -87,6 +94,17 @@ bool dice::parser::in_first_add() const
     return in_first_mult();
 }
 
+bool dice::parser::in_follow_add() const 
+{
+    return lookahead_.type == token_type::add ||
+        lookahead_.type == token_type::sub ||
+        lookahead_.type == token_type::in ||
+        lookahead_.type == token_type::rel_op ||
+        lookahead_.type == token_type::param_delim ||
+        lookahead_.type == token_type::right_square_bracket ||
+        in_follow_expr();
+}
+
 dice::parser::value_type dice::parser::add()
 {
     std::string op;
@@ -127,6 +145,13 @@ bool dice::parser::in_first_mult() const
     return in_first_dice_roll();
 }
 
+bool dice::parser::in_follow_mult() const 
+{
+    return lookahead_.type == token_type::mult ||
+        lookahead_.type == token_type::div ||
+        in_follow_add();
+}
+
 dice::parser::value_type dice::parser::mult()
 {
     std::string op;
@@ -165,6 +190,12 @@ dice::parser::value_type dice::parser::mult()
 bool dice::parser::in_first_dice_roll() const 
 {
     return lookahead_.type == token_type::sub || in_first_factor();
+}
+
+bool dice::parser::in_follow_dice_roll() const 
+{
+    return lookahead_.type == token_type::roll_op ||
+        in_follow_mult();
 }
 
 dice::parser::value_type dice::parser::dice_roll()
@@ -221,6 +252,11 @@ bool dice::parser::in_first_factor() const
         lookahead_.type == token_type::id;
 }
 
+bool dice::parser::in_follow_factor() const 
+{
+    return in_follow_dice_roll();
+}
+
 dice::parser::value_type dice::parser::factor()
 {
     if (lookahead_.type == token_type::left_parent)
@@ -253,6 +289,12 @@ dice::parser::value_type dice::parser::factor()
         to_string(token_type::id) +  ", got " + 
         to_string(lookahead_) + "."); 
     return make<type_int>(0);
+}
+
+bool dice::parser::in_follow_param_list() const 
+{
+    return lookahead_.type == token_type::param_delim ||
+        lookahead_.type == token_type::right_parent; // FOLLOW(opt_params)
 }
 
 std::vector<dice::parser::value_type> dice::parser::param_list()

@@ -67,6 +67,19 @@ namespace dice
         // true <=> next token is in FIRST(factor)
         bool in_first_factor() const;
 
+        // true <=> next token is in FOLLOW(expr)
+        bool in_follow_expr() const;
+        // true <=> next token is in FOLLOW(add)
+        bool in_follow_add() const;
+        // true <=> next token is in FOLLOW(mult)
+        bool in_follow_mult() const;
+        // true <=> next token is in FOLLOW(dice_roll)
+        bool in_follow_dice_roll() const;
+        // true <=> next token is in FOLLOW(factor)
+        bool in_follow_factor() const;
+        // true <=> next token is in FOLLOW(param_list)
+        bool in_follow_param_list() const;
+
         void eat(token_type type);
         void error(const std::string& message);
     };
