@@ -4,6 +4,7 @@
 #include <vector>
 #include <iomanip>
 
+#include "logger.hpp"
 #include "parser.hpp"
 
 // Formatting functions
@@ -93,17 +94,10 @@ int main(int argc, char** argv)
         std::stringstream input{ expr };
 
         // parse and interpret the expression
-        dice::errors errs;
-        dice::lexer lexer{ &input, &errs };
-        dice::parser parser{ &lexer, &errs };
+        dice::logger log;
+        dice::lexer lexer{ &input, &log };
+        dice::parser parser{ &lexer, &log };
         auto result = parser.parse(); 
-        
-        // print errors if necessary
-        if (!errs.empty())
-        {
-            std::cerr << errs;
-        }
-
         print_result(std::move(result));
     }
     else 

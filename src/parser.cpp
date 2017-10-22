@@ -2,9 +2,9 @@
 
 // dice expression parser
 
-dice::parser::parser(lexer* l, errors* errs) : 
+dice::parser::parser(lexer* l, logger* log) : 
     lexer_(l),
-    errors_(errs)
+    log_(log)
 {
 }
 
@@ -306,5 +306,8 @@ void dice::parser::eat(token_type type)
 
 void dice::parser::error(const std::string& message)
 {
-    errors_->add(lexer_->location().line, lexer_->location().col, message);
+    log_->error(
+        lexer_->location().line, 
+        lexer_->location().col, 
+        message);
 }

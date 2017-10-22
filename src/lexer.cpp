@@ -1,8 +1,8 @@
 #include "lexer.hpp"
 
-dice::lexer::lexer(std::istream* input, errors* errs) : 
+dice::lexer::lexer(std::istream* input, logger* log) : 
     input_(input), 
-    errors_(errs) {}
+    log_(log) {}
 
 dice::token dice::lexer::read_token()
 {
@@ -123,7 +123,7 @@ int dice::lexer::get_char()
 
 void dice::lexer::error(const std::string& message)
 {
-    errors_->add(location_.line, location_.col, message);
+    log_->error(location_.line, location_.col, message);
 }
 
 

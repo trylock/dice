@@ -8,7 +8,7 @@
 #include <functional>
 #include <unordered_map>
 
-#include "errors.hpp"
+#include "logger.hpp"
 #include "value.hpp"
 #include "lexer.hpp"
 #include "environment.hpp"
@@ -29,7 +29,7 @@ namespace dice
     public:
         using value_type = std::unique_ptr<base_value>;
 
-        parser(lexer* l, errors* errs);
+        parser(lexer* l, logger* log);
 
         /** Parse expression provided by the lexer.
          * Operators are left associative unless stated otherwise.
@@ -45,9 +45,9 @@ namespace dice
 
     private:
         lexer* lexer_;
+        logger* log_;
         token lookahead_;
         environment environment_;
-        errors* errors_;
 
         value_type expr();
         value_type add();

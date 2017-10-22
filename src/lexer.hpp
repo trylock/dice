@@ -6,7 +6,7 @@
 #include <cctype>
 #include <istream>
 
-#include "errors.hpp"
+#include "logger.hpp"
 
 namespace dice 
 {
@@ -60,7 +60,7 @@ namespace dice
     class lexer 
     {
     public:
-        lexer(std::istream* input, errors* errs);
+        lexer(std::istream* input, logger* log);
 
         // disallow copy so that 2 lexers don't read from the same input
         lexer(const lexer&) = delete;
@@ -85,7 +85,7 @@ namespace dice
 
     private:
         std::istream* input_;
-        errors* errors_;
+        logger* log_;
         lexer_location location_;
 
         // skip sequence of whitespace at current location
