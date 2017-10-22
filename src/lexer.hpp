@@ -35,7 +35,7 @@ namespace dice
         std::string value;
 
         token() {}
-        explicit token(token_type type) : type(type) {}
+        token(token_type type) : type(type) {}
         token(token_type type, std::string value) :
             type(type),
             value(std::move(value)) {}
