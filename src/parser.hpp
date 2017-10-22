@@ -105,10 +105,15 @@ namespace dice
             {
                 auto op = lookahead_;
                 eat(token_type::rel_op);
-                auto right = add();
-        
-                // calculate the value
-                return env_->call(op.value, std::move(left), std::move(right));
+                if (check_add())
+                {
+                    auto right = add();
+                    return env_->call(op.value, std::move(left), std::move(right));
+                }
+                else 
+                {
+                    error("Invalid operand for binary operator " + to_string(op));
+                }
             }
             return left;
         }
