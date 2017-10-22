@@ -32,9 +32,8 @@ dice::user_function::return_type dice_add(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<T>(
-        fn::arg<T>(first)->data() + fn::arg<T>(first + 1)->data()
-    );
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() + fn::arg<T>(first + 1)->data();
+    return std::move(*first);
 }
 
 template<typename T>
@@ -43,9 +42,8 @@ dice::user_function::return_type dice_sub(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<T>(
-        fn::arg<T>(first)->data() - fn::arg<T>(first + 1)->data()
-    );
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() - fn::arg<T>(first + 1)->data();
+    return std::move(*first);
 }
 
 template<typename T>
@@ -54,9 +52,8 @@ dice::user_function::return_type dice_mult(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<T>(
-        fn::arg<T>(first)->data() * fn::arg<T>(first + 1)->data()
-    );
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() * fn::arg<T>(first + 1)->data();
+    return std::move(*first);
 }
 
 template<typename T>
@@ -65,9 +62,8 @@ dice::user_function::return_type dice_div(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<T>(
-        fn::arg<T>(first)->data() / fn::arg<T>(first + 1)->data()
-    );
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() / fn::arg<T>(first + 1)->data();
+    return std::move(*first);
 }
 
 template<typename T>
@@ -76,9 +72,8 @@ dice::user_function::return_type dice_unary_minus(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<T>(
-        -fn::arg<T>(first)->data()
-    );
+    fn::arg<T>(first)->data() = -fn::arg<T>(first)->data();
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_roll(
@@ -86,12 +81,12 @@ static dice::user_function::return_type dice_roll(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    return dice::make<dice::type_rand_var>(
-        dice::type_rand_var::value_type::roll(
-            fn::arg<dice::type_rand_var>(first)->data(),
-            fn::arg<dice::type_rand_var>(first + 1)->data()
-        )
+    using namespace dice;
+    fn::arg<type_rand_var>(first)->data() = type_rand_var::value_type::roll(
+        fn::arg<type_rand_var>(first)->data(),
+        fn::arg<type_rand_var>(first + 1)->data()
     );
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_rand_var_in(
@@ -100,12 +95,11 @@ static dice::user_function::return_type dice_rand_var_in(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().in(
-            fn::arg<type_double>(first + 1)->data(),
-            fn::arg<type_double>(first + 2)->data()
-        )
+    fn::arg<type_rand_var>(first)->data() = fn::arg<type_rand_var>(first)->data().in(
+        fn::arg<type_double>(first + 1)->data(),
+        fn::arg<type_double>(first + 2)->data()
     );
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_less_than(
@@ -114,11 +108,10 @@ static dice::user_function::return_type dice_less_than(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().less_than(
-            fn::arg<type_rand_var>(first + 1)->data()
-        )
-    );
+    auto a = fn::arg<type_rand_var>(first);
+    auto b = fn::arg<type_rand_var>(first + 1);
+    a->data() = a->data().less_than(b->data());
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_less_than_or_equal(
@@ -127,11 +120,10 @@ static dice::user_function::return_type dice_less_than_or_equal(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().less_than_or_equal(
-            fn::arg<type_rand_var>(first + 1)->data()
-        )
-    );
+    auto a = fn::arg<type_rand_var>(first);
+    auto b = fn::arg<type_rand_var>(first + 1);
+    a->data() = a->data().less_than_or_equal(b->data());
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_equal(
@@ -140,11 +132,10 @@ static dice::user_function::return_type dice_equal(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().equal(
-            fn::arg<type_rand_var>(first + 1)->data()
-        )
-    );
+    auto a = fn::arg<type_rand_var>(first);
+    auto b = fn::arg<type_rand_var>(first + 1);
+    a->data() = a->data().equal(b->data());
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_not_equal(
@@ -153,11 +144,10 @@ static dice::user_function::return_type dice_not_equal(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().not_equal(
-            fn::arg<type_rand_var>(first + 1)->data()
-        )
-    );
+    auto a = fn::arg<type_rand_var>(first);
+    auto b = fn::arg<type_rand_var>(first + 1);
+    a->data() = a->data().not_equal(b->data());
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_greater_than(
@@ -166,11 +156,10 @@ static dice::user_function::return_type dice_greater_than(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().greater_than(
-            fn::arg<type_rand_var>(first + 1)->data()
-        )
-    );
+    auto a = fn::arg<type_rand_var>(first);
+    auto b = fn::arg<type_rand_var>(first + 1);
+    a->data() = a->data().greater_than(b->data());
+    return std::move(*first);
 }
 
 static dice::user_function::return_type dice_greater_than_or_equal(
@@ -179,11 +168,10 @@ static dice::user_function::return_type dice_greater_than_or_equal(
 {
     using namespace dice;
     using fn = function_traits;
-    return dice::make<type_rand_var>(
-        fn::arg<type_rand_var>(first)->data().greater_than_or_equal(
-            fn::arg<type_rand_var>(first + 1)->data()
-        )
-    );
+    auto a = fn::arg<type_rand_var>(first);
+    auto b = fn::arg<type_rand_var>(first + 1);
+    a->data() = a->data().greater_than_or_equal(b->data());
+    return std::move(*first);
 }
 
 // environment code
