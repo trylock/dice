@@ -7,7 +7,7 @@ set(TESTS_DIR ${PROJECT_SOURCE_DIR}/test)
 
 set(dice_headers
     ${SRC_DIR}/utils.hpp
-    ${SRC_DIR}/errors.hpp
+    ${SRC_DIR}/logger.hpp
     ${SRC_DIR}/value.hpp
     ${SRC_DIR}/lexer.hpp
     ${SRC_DIR}/parser.hpp
@@ -18,7 +18,7 @@ set(dice_headers
 )
 
 set(dice_sources
-    ${SRC_DIR}/errors.cpp
+    ${SRC_DIR}/logger.cpp
     ${SRC_DIR}/lexer.cpp
     ${SRC_DIR}/parser.cpp
     ${SRC_DIR}/conversions.cpp
