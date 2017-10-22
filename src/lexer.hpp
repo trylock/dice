@@ -12,7 +12,8 @@ namespace dice
 {
     enum class token_type
     {
-        number,
+        number_fp,
+        number_int,
         id,
         rel_op,
         roll_op,

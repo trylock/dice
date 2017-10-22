@@ -115,16 +115,16 @@ TEST_CASE("Parse simple expression", "[parser]")
 {
     lexer_mock lexer{
         { dice::token_type::left_parent },
-        { dice::token_type::number, "1" },
+        { dice::token_type::number_int, "1" },
         { dice::token_type::add },
-        { dice::token_type::number, "2" },
+        { dice::token_type::number_int, "2" },
         { dice::token_type::right_parent },
         { dice::token_type::mult },
-        { dice::token_type::number, "3" },
+        { dice::token_type::number_int, "3" },
         { dice::token_type::div },
-        { dice::token_type::number, "5" },
+        { dice::token_type::number_int, "5" },
         { dice::token_type::add },
-        { dice::token_type::number, "1" },
+        { dice::token_type::number_int, "1" },
     };
     logger_mock log;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
@@ -137,13 +137,13 @@ TEST_CASE("Parse simple expression", "[parser]")
 TEST_CASE("+ and - operators are left associative", "[parser]")
 {
     lexer_mock lexer{
-        { dice::token_type::number, "1" },
+        { dice::token_type::number_int, "1" },
         { dice::token_type::add },
-        { dice::token_type::number, "2" },
+        { dice::token_type::number_int, "2" },
         { dice::token_type::sub },
-        { dice::token_type::number, "3" },
+        { dice::token_type::number_int, "3" },
         { dice::token_type::add },
-        { dice::token_type::number, "4" },
+        { dice::token_type::number_int, "4" },
     };
     logger_mock log;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
@@ -156,13 +156,13 @@ TEST_CASE("+ and - operators are left associative", "[parser]")
 TEST_CASE("* and / operators are left associative", "[parser]")
 {
     lexer_mock lexer{
-        { dice::token_type::number, "2" },
+        { dice::token_type::number_int, "2" },
         { dice::token_type::mult },
-        { dice::token_type::number, "3" },
+        { dice::token_type::number_int, "3" },
         { dice::token_type::div },
-        { dice::token_type::number, "4" },
+        { dice::token_type::number_int, "4" },
         { dice::token_type::mult },
-        { dice::token_type::number, "5" },
+        { dice::token_type::number_int, "5" },
     };
     logger_mock log;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
@@ -175,13 +175,13 @@ TEST_CASE("* and / operators are left associative", "[parser]")
 TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
 {
     lexer_mock lexer{
-        { dice::token_type::number, "1" },
+        { dice::token_type::number_int, "1" },
         { dice::token_type::add },
-        { dice::token_type::number, "2" },
+        { dice::token_type::number_int, "2" },
         { dice::token_type::mult },
-        { dice::token_type::number, "3" },
+        { dice::token_type::number_int, "3" },
         { dice::token_type::sub },
-        { dice::token_type::number, "4" },
+        { dice::token_type::number_int, "4" },
     };
     logger_mock log;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
@@ -194,15 +194,15 @@ TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
 TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
 {
     lexer_mock lexer{
-        { dice::token_type::number, "1" },
+        { dice::token_type::number_int, "1" },
         { dice::token_type::add },
-        { dice::token_type::number, "2" },
+        { dice::token_type::number_int, "2" },
         { dice::token_type::mult },
         { dice::token_type::sub },
-        { dice::token_type::number, "3" },
+        { dice::token_type::number_int, "3" },
         { dice::token_type::add },
         { dice::token_type::sub },
-        { dice::token_type::number, "4" },
+        { dice::token_type::number_int, "4" },
     };
     logger_mock log;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };
@@ -215,9 +215,9 @@ TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
 TEST_CASE("Parse dice roll operator", "[parser]")
 {
     lexer_mock lexer{
-        { dice::token_type::number, "1" },
+        { dice::token_type::number_int, "1" },
         { dice::token_type::roll_op },
-        { dice::token_type::number, "6" },
+        { dice::token_type::number_int, "6" },
     };
     logger_mock log;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log };

@@ -51,15 +51,32 @@ dice::token dice::lexer::read_token()
 
         if (std::isdigit(current))
         {
+            bool is_fp = false;
             std::string value(1, current);
             for (;;)
             {
                 if (std::isdigit(input_->peek()))
+                {
                     value += static_cast<char>(get_char());
+                }
+                else if (input_->peek() == '.')
+                {
+                    value += static_cast<char>(get_char());
+                    is_fp = true;
+                }
                 else
+                {
                     break;
+                }
             }
-            return token{ token_type::number, value };
+
+            if (value.back() == '.')
+            {
+                error("Invalid floating point number. Decimal part must not be empty: " + value);
+                value += "0";
+            }
+
+            return token{ is_fp ? token_type::number_fp : token_type::number_int, value };
         }
 
         if (std::isalpha(current))
@@ -149,8 +166,10 @@ std::string dice::to_string(token_type type)
         return "]";
     if (type == token_type::in)
         return "in";
-    if (type == token_type::number)
-        return "<number>";
+    if (type == token_type::number_int)
+        return "<integer>";
+    if (type == token_type::number_fp)
+        return "<double>";
     if (type == token_type::id)
         return "<identifier>";
     if (type == token_type::rel_op)

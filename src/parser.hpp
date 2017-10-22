@@ -236,11 +236,17 @@ namespace dice
                 eat(token_type::right_parent);
                 return result;
             }
-            else if (lookahead_.type == token_type::number)
+            else if (lookahead_.type == token_type::number_int)
             {
                 auto value = std::atoi(lookahead_.value.c_str());
                 eat(lookahead_.type);
                 return make<type_int>(std::move(value));
+            }
+            else if (lookahead_.type == token_type::number_fp)
+            {
+                auto value = std::atof(lookahead_.value.c_str());
+                eat(lookahead_.type);
+                return make<type_double>(std::move(value));
             }
             else if (lookahead_.type == token_type::id)
             {
@@ -255,7 +261,8 @@ namespace dice
             }
             
             error("Expected " + to_string(token_type::left_parent) + ", " + 
-                to_string(token_type::number) + " or " + 
+                to_string(token_type::number_int) + ", " + 
+                to_string(token_type::number_fp) + " or " + 
                 to_string(token_type::id) +  ", got " + 
                 to_string(lookahead_) + "."); 
             return make<type_int>(0);
@@ -320,7 +327,8 @@ namespace dice
         bool in_first_factor() const
         {
             return lookahead_.type == token_type::left_parent ||
-                lookahead_.type == token_type::number ||
+                lookahead_.type == token_type::number_int ||
+                lookahead_.type == token_type::number_fp ||
                 lookahead_.type == token_type::id;
         }
 
