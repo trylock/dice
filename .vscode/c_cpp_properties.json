@@ -32,8 +32,7 @@
                 "/usr/local/include",
                 "/usr/include",
                 "/usr/include/x86_64-linux-gnu",
-                "${workspaceRoot}/src",
-                "/usr/include/linux"
+                "${workspaceRoot}/src"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
