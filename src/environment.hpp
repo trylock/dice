@@ -38,7 +38,7 @@ namespace dice
         /** Call a function with arguments given by argument iterators
          * @param iterator pointing to the first argument
          * @param iterator pointing to the last argument
-         * @return computer value
+         * @return computed value
          */
         user_function::return_type call_var(
             const std::string& name, 
