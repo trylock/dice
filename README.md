@@ -38,10 +38,12 @@ The program implements a predictive parser for it is easy to write it by hand. O
                 
 <mult>        ::= <mult> * <dice_roll> 
                 | <mult> / <dice_roll> 
-                | <dice_roll> 
+                | <minus>
                 
-<dice_roll>   ::= -<dice_roll> 
-                | <dice_roll> d <factor> 
+<minus>       ::= -<minus> 
+                | <dice_roll>
+               
+<dice_roll>   ::= <dice_roll> d <factor> 
                 | <factor>
                 
 <factor>      ::= (<expr>) 
