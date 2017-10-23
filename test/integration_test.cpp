@@ -7,6 +7,20 @@
 #include <sstream>
 #include <string>
 
+void test_error_message(std::stringstream& stream, const std::string& msg)
+{
+    std::string error_msg;
+    std::getline(stream, error_msg);
+    // remove line, column number and "error:" string
+    auto pos = error_msg.find("error:") + 10;
+    while (pos < error_msg.size() && std::isspace(error_msg[pos]))
+    {
+        ++pos;
+    }
+    error_msg = error_msg.substr(pos); 
+    REQUIRE(error_msg == msg);
+}
+
 TEST_CASE("Interpret an empty expression", "[dice]")
 {
     std::stringstream input{ "" };
@@ -82,3 +96,25 @@ TEST_CASE("Interpret a function call", "[dice]")
     auto&& value = dynamic_cast<dice::type_double&>(*result).data();
     REQUIRE(value == Approx(3.5));
 }
+
+TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[dice]")
+{
+    std::stringstream input{ "* ) 1 + 2 * 3" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_int::id());
+    auto&& value = dynamic_cast<dice::type_int&>(*result).data();
+    REQUIRE(value == 7);
+
+    REQUIRE(!log.empty());
+    test_error_message(errors,  "Invalid token at the beginning of an expression: *");
+    test_error_message(errors,  "Invalid token at the beginning of an expression: )");
+    REQUIRE(errors.peek() == EOF);
+}
+
