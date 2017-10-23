@@ -293,7 +293,7 @@ namespace dice
                 }
                 else 
                 {
-                    error("Invalid parameter " + std::to_string(number));
+                    error("Invalid function parameter " + std::to_string(number));
                 }
         
                 if (lookahead_.type != token_type::param_delim)
