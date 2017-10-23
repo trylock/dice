@@ -112,7 +112,7 @@ namespace dice
                 }
                 else 
                 {
-                    error("Invalid operand for binary operator " + to_string(op));
+                    error("Invalid operand for " + to_string(op));
                 }
             }
             return left;

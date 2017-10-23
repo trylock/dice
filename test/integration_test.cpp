@@ -257,3 +257,74 @@ TEST_CASE("Interpret a relational operator >", "[dice]")
 
     REQUIRE(log.empty());
 }
+
+TEST_CASE("Don't interpret the in operator if the lower bound is invalid expression", "[dice]")
+{
+    std::stringstream input{ "1d4 in [, 3]" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+
+    REQUIRE(!log.empty());
+    test_error_message(errors,  "Invalid operand for the lower bound of operator in");
+    test_error_message(errors,  "Expected <end of expression>, got ,.");
+    REQUIRE(errors.peek() == EOF);
+}
+
+TEST_CASE("Don't interpret the in operator if the upper bound is invalid expression", "[dice]")
+{
+    std::stringstream input{ "1d4 in [1, +]" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+
+    REQUIRE(!log.empty());
+    test_error_message(errors,  "Invalid operand for the upper bound of operator in");
+    test_error_message(errors,  "Expected <end of expression>, got +.");
+    REQUIRE(errors.peek() == EOF);
+}
+
+TEST_CASE("Don't interpret relational operator if the second operand is invalid", "[dice]")
+{
+    std::stringstream input{ "1 < +" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_int::id());
+    auto&& value = dynamic_cast<dice::type_int&>(*result).data();
+    REQUIRE(value == 1);
+
+    REQUIRE(!log.empty());
+    test_error_message(errors,  "Invalid operand for <relational operator> '<'");
+    test_error_message(errors,  "Expected <end of expression>, got +.");
+    REQUIRE(errors.peek() == EOF);
+}
