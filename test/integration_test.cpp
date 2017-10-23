@@ -328,3 +328,24 @@ TEST_CASE("Don't interpret relational operator if the second operand is invalid"
     test_error_message(errors,  "Expected <end of expression>, got +.");
     REQUIRE(errors.peek() == EOF);
 }
+
+TEST_CASE("Resume interpreting relational operator after finding a sync symbol", "[dice]")
+{
+    std::stringstream input{ "1 < * 2" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1));
+
+    REQUIRE(!log.empty());
+    test_error_message(errors,  "Invalid token at the beginning of an addition: *");
+    REQUIRE(errors.peek() == EOF);
+}
