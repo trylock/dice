@@ -40,7 +40,7 @@ include_directories(
     ${SRC_DIR}
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -std=c++14 -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -std=c++14 -g --coverage")
 
 add_library(dice ${dice_headers} ${dice_sources})
 add_executable(dice_cli ${dice_cli})
@@ -51,3 +51,9 @@ target_link_libraries(tests dice)
 
 # Generate documentation
 add_custom_target(doc COMMAND doxygen ${PROJECT_SOURCE_DIR}/doxygen.conf)
+
+# Generate code coverage 
+add_custom_target(cov 
+    COMMAND lcov --capture --directory ${PROJECT_SOURCE_DIR} --output-file ${CMAKE_BINARY_DIR}/coverage.info
+    COMMAND genhtml ${CMAKE_BINARY_DIR}/coverage.info --output-directory ${CMAKE_BINARY_DIR}/cov
+)
