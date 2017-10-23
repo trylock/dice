@@ -32,7 +32,18 @@ namespace dice
             probability_({ 
                 std::make_pair(0, 1 - success_prob), 
                 std::make_pair(1, success_prob) 
-            }) {}
+            }) 
+        {
+            // make this a constant if the success probability is 1 or 0
+            if (success_prob <= 0)
+            {
+                probability_.erase(probability_.find(1));
+            }
+            else if (success_prob >= 1)
+            {
+                probability_.erase(probability_.find(0));
+            }
+        }
 
         // create distribution from a list of values and their frequency
         random_variable(std::initializer_list<std::pair<value_type, std::uint64_t>> list)
@@ -43,6 +54,9 @@ namespace dice
 
             for (auto&& item : list)
             {
+                if (item.second == 0)
+                    continue;
+
                 probability_.insert(std::make_pair(
                     item.first,
                     item.second / sum
