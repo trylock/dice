@@ -51,11 +51,8 @@ namespace dice
     // location in the input stream
     struct lexer_location
     {
-        int line;
-        int col;
-
-        lexer_location() : line(0), col(0) {}
-        lexer_location(int line, int col = 0) : line(line), col(col) {}
+        int line = 0;
+        int col = 0;
     };
 
     class lexer 
