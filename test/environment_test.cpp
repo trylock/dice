@@ -161,3 +161,25 @@ TEST_CASE("Call in operator on a random variable and int interval", "[environmen
     REQUIRE(prob.find(1)->second == Approx(3 / 5.0));
     REQUIRE(prob.find(0)->second == Approx(2 / 5.0));
 }
+
+TEST_CASE("Generate a random number from given distribution", "[environment]")
+{
+    dice::environment env;
+
+    // 15 (14.7 exactly) is the expected number of iterations to generate all numbers
+    for (int i = 0; i < 15; i++) 
+    {
+        auto var = dice::make<dice::type_rand_var>(
+            std::make_pair(1, 1),
+            std::make_pair(2, 1),
+            std::make_pair(3, 1),
+            std::make_pair(4, 1),
+            std::make_pair(5, 1),
+            std::make_pair(6, 1)
+        );
+        auto result = env.call("roll", std::move(var));
+        REQUIRE(result->type() == dice::type_int::id());
+        auto&& value = dynamic_cast<dice::type_int&>(*result).data();
+        REQUIRE((value >= 1 && value <= 6));
+    }
+}
