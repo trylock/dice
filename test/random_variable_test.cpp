@@ -109,3 +109,134 @@ TEST_CASE("Random variable with exactly 1 value is constant", "[dice]")
     REQUIRE(rv({ std::make_pair(4, 1), std::make_pair(5, 0) }).is_constant());
     REQUIRE(rv({ std::make_pair(4, 1), std::make_pair(5, 0) }).value() == 4);
 }
+
+TEST_CASE("Add random variables", "[dice]")
+{
+    dice::random_variable<int, double> a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    };
+    dice::random_variable<int, double> b{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+        std::make_pair(5, 1),
+        std::make_pair(6, 1),
+    };
+    auto result = a + b;
+    auto&& prob = result.probability();
+    REQUIRE(prob.find(2)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(3)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(4)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(5)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(6)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(7)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(8)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(9)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(10)->second == Approx(1 / 24.0));
+}
+
+TEST_CASE("Subtract random variables", "[dice]")
+{
+    dice::random_variable<int, double> a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    };
+    dice::random_variable<int, double> b{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+        std::make_pair(5, 1),
+        std::make_pair(6, 1),
+    };
+    auto result = a - b;
+    auto&& prob = result.probability();
+    REQUIRE(prob.find(-5)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(-4)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(-3)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(-2)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(-1)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(0)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(1)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(2)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 24.0));
+}
+
+TEST_CASE("Multiply random variables", "[dice]")
+{
+    dice::random_variable<int, double> a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    };
+    dice::random_variable<int, double> b{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+        std::make_pair(5, 1),
+        std::make_pair(6, 1),
+    };
+    auto result = a * b;
+    auto&& prob = result.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(2)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(3)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(4)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(5)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(6)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(8)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(9)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(10)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(12)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(15)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(16)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(18)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(20)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(24)->second == Approx(1 / 24.0));
+}
+
+TEST_CASE("Divide random variables", "[dice]")
+{
+    dice::random_variable<int, double> a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    };
+    dice::random_variable<int, double> b{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+        std::make_pair(5, 1),
+        std::make_pair(6, 1),
+    };
+    auto result = b / a;
+    auto&& prob = result.probability();
+    REQUIRE(prob.find(0)->second == Approx(6 / 24.0));
+    REQUIRE(prob.find(1)->second == Approx(9 / 24.0));
+    REQUIRE(prob.find(2)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(3)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(5)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(6)->second == Approx(1 / 24.0));
+}
+
+TEST_CASE("If number of sides or number of dice is an impossible event, the roll is an impossible as well", "[dice]")
+{
+    dice::random_variable<int, double> impossible{};
+    dice::random_variable<int, double> constant(dice::constant_tag{}, 5);
+    auto inv_dice = dice::random_variable<int, double>::roll(impossible, constant);
+    auto inv_sides = dice::random_variable<int, double>::roll(constant, impossible);
+
+    REQUIRE(inv_dice.probability().empty());
+    REQUIRE(inv_sides.probability().empty());
+}
