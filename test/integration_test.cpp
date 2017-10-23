@@ -118,3 +118,142 @@ TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[di
     REQUIRE(errors.peek() == EOF);
 }
 
+TEST_CASE("Interpret a relational operator in", "[dice]")
+{
+    std::stringstream input{ "1d6 in [2, 5]" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(2 / 3.0));
+    REQUIRE(prob.find(0)->second == Approx(1 / 3.0));
+
+    REQUIRE(log.empty());
+}
+
+TEST_CASE("Interpret a relational operator <", "[dice]")
+{
+    std::stringstream input{ "1d6 < 3" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 3.0));
+    REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
+
+    REQUIRE(log.empty());
+}
+
+TEST_CASE("Interpret a relational operator <=", "[dice]")
+{
+    std::stringstream input{ "1d6 <= 3" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 2.0));
+    REQUIRE(prob.find(0)->second == Approx(1 / 2.0));
+
+    REQUIRE(log.empty());
+}
+
+TEST_CASE("Interpret a relational operator ==", "[dice]")
+{
+    std::stringstream input{ "1d6 == 6" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 6.0));
+    REQUIRE(prob.find(0)->second == Approx(5 / 6.0));
+
+    REQUIRE(log.empty());
+}
+
+TEST_CASE("Interpret a relational operator !=", "[dice]")
+{
+    std::stringstream input{ "1d6 != 6" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(5 / 6.0));
+    REQUIRE(prob.find(0)->second == Approx(1 / 6.0));
+
+    REQUIRE(log.empty());
+}
+
+TEST_CASE("Interpret a relational operator >=", "[dice]")
+{
+    std::stringstream input{ "1d6 >= 5" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 3.0));
+    REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
+
+    REQUIRE(log.empty());
+}
+
+TEST_CASE("Interpret a relational operator >", "[dice]")
+{
+    std::stringstream input{ "1d6 > 4" };
+    std::stringstream errors;
+    
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_rand_var::id());
+    auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
+    auto&& prob = value.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 3.0));
+    REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
+
+    REQUIRE(log.empty());
+}
