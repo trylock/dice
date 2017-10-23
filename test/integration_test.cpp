@@ -38,6 +38,81 @@ TEST_CASE("Interpret an empty expression", "[dice]")
     REQUIRE(value == 0);
 }
 
+TEST_CASE("Interpret a single integer value", "[dice]")
+{
+    std::stringstream input{ "42" };
+    std::stringstream errors;
+
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(log.empty());
+    REQUIRE(result->type() == dice::type_int::id());
+    auto&& value = dynamic_cast<dice::type_int&>(*result).data();
+    REQUIRE(value == 42);
+}
+
+TEST_CASE("Interpret a single double value", "[dice]")
+{
+    std::stringstream input{ "3.1415" };
+    std::stringstream errors;
+
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(log.empty());
+    REQUIRE(result->type() == dice::type_double::id());
+    auto&& value = dynamic_cast<dice::type_double&>(*result).data();
+    REQUIRE(value == Approx(3.1415));
+}
+
+TEST_CASE("Interpret an invalid double value", "[dice]")
+{
+    std::stringstream input{ "3." };
+    std::stringstream errors;
+
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_double::id());
+    auto&& value = dynamic_cast<dice::type_double&>(*result).data();
+    REQUIRE(value == Approx(3.0));
+    
+    REQUIRE(!log.empty());
+    test_error_message(errors, "Invalid floating point number. Decimal part must not be empty: 3.");
+    REQUIRE(errors.peek() == EOF);
+}
+
+TEST_CASE("Skip unknown characters", "[dice]")
+{
+    std::stringstream input{ "?!4" };
+    std::stringstream errors;
+
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto result = parser.parse();
+
+    REQUIRE(result->type() == dice::type_int::id());
+    auto&& value = dynamic_cast<dice::type_int&>(*result).data();
+    REQUIRE(value == 4);
+    
+    REQUIRE(!log.empty());
+    test_error_message(errors, "Unexpected character: '?' (0x3F).");
+    test_error_message(errors, "Unexpected character: '!' (0x21).");
+    REQUIRE(errors.peek() == EOF);
+}
+
 TEST_CASE("Interpret an arithmetic expression", "[dice]")
 {
     std::stringstream input{ "1 + 2 * 3 / 4 - 5" };
