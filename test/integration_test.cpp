@@ -354,7 +354,7 @@ TEST_CASE("Don't interpret the in operator if the lower bound is invalid express
 
     REQUIRE(!log.empty());
     test_error_message(errors, "Invalid operand for the lower bound of operator in");
-    test_error_message(errors, "Expected <end of expression>, got ,.");
+    test_error_message(errors, "Expected <end of input>, got ,.");
     REQUIRE(errors.peek() == EOF);
 }
 
@@ -379,7 +379,7 @@ TEST_CASE("Don't interpret the in operator if the upper bound is invalid express
 
     REQUIRE(!log.empty());
     test_error_message(errors, "Invalid operand for the upper bound of operator in");
-    test_error_message(errors, "Expected <end of expression>, got +.");
+    test_error_message(errors, "Expected <end of input>, got +.");
     REQUIRE(errors.peek() == EOF);
 }
 
@@ -400,7 +400,7 @@ TEST_CASE("Don't interpret relational operator if the second operand is invalid"
 
     REQUIRE(!log.empty());
     test_error_message(errors, "Invalid operand for <relational operator> '<'");
-    test_error_message(errors, "Expected <end of expression>, got +.");
+    test_error_message(errors, "Expected <end of input>, got +.");
     REQUIRE(errors.peek() == EOF);
 }
 
@@ -442,7 +442,7 @@ TEST_CASE("Don't interpret the + operator if the second operand is invalid", "[d
 
     REQUIRE(!log.empty());
     test_error_message(errors, "Invalid operand for binary operator +");
-    test_error_message(errors, "Expected <end of expression>, got *.");
+    test_error_message(errors, "Expected <end of input>, got *.");
     REQUIRE(errors.peek() == EOF);
 }
 
@@ -483,7 +483,7 @@ TEST_CASE("Don't interpret the * operator if the second operand is invalid", "[d
 
     REQUIRE(!log.empty());
     test_error_message(errors, "Invalid operand for binary operator *");
-    test_error_message(errors, "Expected <end of expression>, got ).");
+    test_error_message(errors, "Expected <end of input>, got ).");
     REQUIRE(errors.peek() == EOF);
 }
 
@@ -597,7 +597,7 @@ TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[
 
     REQUIRE(!log.empty());
     test_error_message(errors,  "Invalid operand for binary operator D (dice roll)");
-    test_error_message(errors,  "Expected <end of expression>, got ).");
+    test_error_message(errors,  "Expected <end of input>, got ).");
     REQUIRE(errors.peek() == EOF);
 }
 

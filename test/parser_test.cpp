@@ -4,14 +4,14 @@
 class lexer_mock 
 {
 public:
-    explicit lexer_mock(std::initializer_list<dice::token> tokens) :
-        tokens_(tokens.begin(), tokens.end()), pos_(0) {}
+    explicit lexer_mock(std::vector<dice::symbol>&& tokens) : 
+        tokens_(std::move(tokens)), pos_(0) {}
 
-    dice::token read_token() 
+    dice::symbol read_token() 
     {
         if (pos_ >= tokens_.size())
-            return dice::token_type::end;
-        return tokens_[pos_++];
+            return dice::symbol{ dice::symbol_type::end };
+        return std::move(tokens_[pos_++]);
     }
 
     dice::lexer_location location()
@@ -19,7 +19,7 @@ public:
         return dice::lexer_location{ 0, 0 };
     }
 private:
-    std::vector<dice::token> tokens_;
+    std::vector<dice::symbol> tokens_;
     std::size_t pos_;
 };
 
@@ -102,7 +102,7 @@ public:
 
 TEST_CASE("Parse empty expression", "[parser]")
 {
-    lexer_mock lexer{};
+    lexer_mock lexer({});
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
@@ -114,19 +114,19 @@ TEST_CASE("Parse empty expression", "[parser]")
 
 TEST_CASE("Parse simple expression", "[parser]")
 {
-    lexer_mock lexer{
-        { dice::token_type::left_parent },
-        { dice::token_type::number_int, "1" },
-        { dice::token_type::add },
-        { dice::token_type::number_int, "2" },
-        { dice::token_type::right_parent },
-        { dice::token_type::mult },
-        { dice::token_type::number_int, "3" },
-        { dice::token_type::div },
-        { dice::token_type::number_int, "5" },
-        { dice::token_type::add },
-        { dice::token_type::number_int, "1" },
-    };
+    lexer_mock lexer({
+        { dice::symbol_type::left_paren },
+        { dice::symbol_type::number, "1" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::number, "2" },
+        { dice::symbol_type::right_paren },
+        { dice::symbol_type::times },
+        { dice::symbol_type::number, "3" },
+        { dice::symbol_type::divide },
+        { dice::symbol_type::number, "5" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::number, "1" },
+    });
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
@@ -138,15 +138,15 @@ TEST_CASE("Parse simple expression", "[parser]")
 
 TEST_CASE("+ and - operators are left associative", "[parser]")
 {
-    lexer_mock lexer{
-        { dice::token_type::number_int, "1" },
-        { dice::token_type::add },
-        { dice::token_type::number_int, "2" },
-        { dice::token_type::sub },
-        { dice::token_type::number_int, "3" },
-        { dice::token_type::add },
-        { dice::token_type::number_int, "4" },
-    };
+    lexer_mock lexer({
+        { dice::symbol_type::number, "1" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::number, "2" },
+        { dice::symbol_type::minus },
+        { dice::symbol_type::number, "3" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::number, "4" },
+    });
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
@@ -158,15 +158,15 @@ TEST_CASE("+ and - operators are left associative", "[parser]")
 
 TEST_CASE("* and / operators are left associative", "[parser]")
 {
-    lexer_mock lexer{
-        { dice::token_type::number_int, "2" },
-        { dice::token_type::mult },
-        { dice::token_type::number_int, "3" },
-        { dice::token_type::div },
-        { dice::token_type::number_int, "4" },
-        { dice::token_type::mult },
-        { dice::token_type::number_int, "5" },
-    };
+    lexer_mock lexer({
+        { dice::symbol_type::number, "2" },
+        { dice::symbol_type::times },
+        { dice::symbol_type::number, "3" },
+        { dice::symbol_type::divide },
+        { dice::symbol_type::number, "4" },
+        { dice::symbol_type::times },
+        { dice::symbol_type::number, "5" },
+    });
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
@@ -178,15 +178,15 @@ TEST_CASE("* and / operators are left associative", "[parser]")
 
 TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
 {
-    lexer_mock lexer{
-        { dice::token_type::number_int, "1" },
-        { dice::token_type::add },
-        { dice::token_type::number_int, "2" },
-        { dice::token_type::mult },
-        { dice::token_type::number_int, "3" },
-        { dice::token_type::sub },
-        { dice::token_type::number_int, "4" },
-    };
+    lexer_mock lexer({
+        { dice::symbol_type::number, "1" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::number, "2" },
+        { dice::symbol_type::times },
+        { dice::symbol_type::number, "3" },
+        { dice::symbol_type::minus },
+        { dice::symbol_type::number, "4" },
+    });
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
@@ -198,17 +198,17 @@ TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
 
 TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
 {
-    lexer_mock lexer{
-        { dice::token_type::number_int, "1" },
-        { dice::token_type::add },
-        { dice::token_type::number_int, "2" },
-        { dice::token_type::mult },
-        { dice::token_type::sub },
-        { dice::token_type::number_int, "3" },
-        { dice::token_type::add },
-        { dice::token_type::sub },
-        { dice::token_type::number_int, "4" },
-    };
+    lexer_mock lexer({
+        { dice::symbol_type::number, "1" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::number, "2" },
+        { dice::symbol_type::times },
+        { dice::symbol_type::minus },
+        { dice::symbol_type::number, "3" },
+        { dice::symbol_type::plus },
+        { dice::symbol_type::minus },
+        { dice::symbol_type::number, "4" },
+    });
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
@@ -220,11 +220,11 @@ TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
 
 TEST_CASE("Parse dice roll operator", "[parser]")
 {
-    lexer_mock lexer{
-        { dice::token_type::number_int, "1" },
-        { dice::token_type::roll_op },
-        { dice::token_type::number_int, "6" },
-    };
+    lexer_mock lexer({
+        { dice::symbol_type::number, "1" },
+        { dice::symbol_type::roll_op },
+        { dice::symbol_type::number, "6" },
+    });
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };

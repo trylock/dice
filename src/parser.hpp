@@ -11,6 +11,7 @@
 #include "logger.hpp"
 #include "value.hpp"
 #include "lexer.hpp"
+#include "symbols.hpp"
 #include "environment.hpp"
 #include "random_variable.hpp"
 
@@ -45,7 +46,7 @@ namespace dice
             // When using the expr as a start production, don't add 
             // the whole FOLLOW(expr) to the synchronizing tokens.
             // Use just the end symbol
-            while (lookahead_.type != token_type::end && !in_first_expr())
+            while (lookahead_.type != symbol_type::end && !in_first_expr())
             {
                 error("Invalid token at the beginning of an expression: " +
                     to_string(lookahead_));
@@ -56,7 +57,7 @@ namespace dice
             {
                 auto result = expr();
                 // make sure we've processed the whole expression
-                eat(token_type::end); 
+                eat(symbol_type::end); 
                 return result;
             }
             return make<type_int>(0);
@@ -66,15 +67,15 @@ namespace dice
         Lexer* lexer_;
         Logger* log_;
         Environment* env_;
-        token lookahead_;
+        symbol lookahead_;
 
         value_type expr()
         {
             auto left = add();
-            if (lookahead_.type == token_type::in)
+            if (lookahead_.type == symbol_type::in)
             {
-                eat(token_type::in);
-                eat(token_type::left_square_bracket);
+                eat(symbol_type::in);
+                eat(symbol_type::left_square_bracket);
         
                 // parse lower bound of the interval
                 if (!check_add())
@@ -84,7 +85,7 @@ namespace dice
                 }
                 auto lower_bound = add();
         
-                eat(token_type::param_delim);
+                eat(symbol_type::param_delim);
         
                 // parse upper bound of the interval
                 if (!check_add())
@@ -94,21 +95,21 @@ namespace dice
                 }
                 auto upper_bound = add();
         
-                eat(token_type::right_square_bracket);
+                eat(symbol_type::right_square_bracket);
         
                 return env_->call("in", 
                     std::move(left), 
                     std::move(lower_bound), 
                     std::move(upper_bound));
             }
-            else if (lookahead_.type == token_type::rel_op)
+            else if (lookahead_.type == symbol_type::rel_op)
             {
                 auto op = lookahead_;
-                eat(token_type::rel_op);
+                eat(symbol_type::rel_op);
                 if (check_add())
                 {
                     auto right = add();
-                    return env_->call(op.value, std::move(left), std::move(right));
+                    return env_->call(op.lexeme, std::move(left), std::move(right));
                 }
                 else 
                 {
@@ -125,14 +126,14 @@ namespace dice
             for (;;)
             {
                 // decide on the next operation
-                if (lookahead_.type == token_type::add)
+                if (lookahead_.type == symbol_type::plus)
                 {
-                    eat(token_type::add);
+                    eat(symbol_type::plus);
                     op = "+";
                 }
-                else if (lookahead_.type == token_type::sub)
+                else if (lookahead_.type == symbol_type::minus)
                 {
-                    eat(token_type::sub);
+                    eat(symbol_type::minus);
                     op = "-";
                 }
                 else 
@@ -160,14 +161,14 @@ namespace dice
             for (;;)
             {
                 // decide on the next operation
-                if (lookahead_.type == token_type::mult)
+                if (lookahead_.type == symbol_type::times)
                 {
-                    eat(token_type::mult);
+                    eat(symbol_type::times);
                     op = "*";
                 }
-                else if (lookahead_.type == token_type::div)
+                else if (lookahead_.type == symbol_type::divide)
                 {
-                    eat(token_type::div);
+                    eat(symbol_type::divide);
                     op = "/";
                 }
                 else 
@@ -194,9 +195,9 @@ namespace dice
             int count = 0;
             for (;;)
             {
-                if (lookahead_.type == token_type::sub)
+                if (lookahead_.type == symbol_type::minus)
                 {
-                    eat(token_type::sub);
+                    eat(symbol_type::minus);
                     ++count;
                 }
                 else 
@@ -209,9 +210,9 @@ namespace dice
             auto result = factor();
             for (;;)
             {
-                if (lookahead_.type == token_type::roll_op)
+                if (lookahead_.type == symbol_type::roll_op)
                 {
-                    eat(token_type::roll_op);
+                    eat(symbol_type::roll_op);
         
                     // only use the factor production if there won't be any parse error
                     if (check_factor())
@@ -237,41 +238,41 @@ namespace dice
 
         value_type factor()
         {
-            if (lookahead_.type == token_type::left_parent)
+            if (lookahead_.type == symbol_type::left_paren)
             {
-                eat(token_type::left_parent);
+                eat(symbol_type::left_paren);
                 auto result = expr();
-                eat(token_type::right_parent);
+                eat(symbol_type::right_paren);
                 return result;
             }
-            else if (lookahead_.type == token_type::number_int)
+            else if (lookahead_.type == symbol_type::number)
             {
-                auto value = std::atoi(lookahead_.value.c_str());
+                auto lexeme = lookahead_.lexeme;
                 eat(lookahead_.type);
-                return make<type_int>(std::move(value));
+                if (lexeme.find('.') != std::string::npos)
+                {
+                    return make<type_double>(std::atof(lexeme.c_str()));
+                }
+                else 
+                {
+                    return make<type_int>(std::atoi(lexeme.c_str()));
+                }
             }
-            else if (lookahead_.type == token_type::number_fp)
-            {
-                auto value = std::atof(lookahead_.value.c_str());
-                eat(lookahead_.type);
-                return make<type_double>(std::move(value));
-            }
-            else if (lookahead_.type == token_type::id)
+            else if (lookahead_.type == symbol_type::id)
             {
                 // parse a function call
                 auto id = lookahead_;
-                eat(token_type::id);
-                eat(token_type::left_parent);
+                eat(symbol_type::id);
+                eat(symbol_type::left_paren);
                 auto args = param_list();
-                eat(token_type::right_parent);
+                eat(symbol_type::right_paren);
                 
-                return env_->call_var(id.value, args.begin(), args.end());
+                return env_->call_var(id.lexeme, args.begin(), args.end());
             }
             
-            error("Expected " + to_string(token_type::left_parent) + ", " + 
-                to_string(token_type::number_int) + ", " + 
-                to_string(token_type::number_fp) + " or " + 
-                to_string(token_type::id) +  ", got " + 
+            error("Expected " + to_string(symbol_type::left_paren) + ", " + 
+                to_string(symbol_type::number) + " or " + 
+                to_string(symbol_type::id) +  ", got " + 
                 to_string(lookahead_) + "."); 
             return make<type_int>(0);
         }
@@ -279,7 +280,7 @@ namespace dice
         std::vector<value_type> param_list()
         {
             std::vector<value_type> args;
-            if (lookahead_.type == token_type::right_parent)
+            if (lookahead_.type == symbol_type::right_paren)
             {
                 return args; // no arguments
             }
@@ -296,11 +297,11 @@ namespace dice
                     error("Invalid function parameter " + std::to_string(number));
                 }
         
-                if (lookahead_.type != token_type::param_delim)
+                if (lookahead_.type != symbol_type::param_delim)
                 {
                     break;
                 }
-                eat(token_type::param_delim);
+                eat(symbol_type::param_delim);
                 ++number;
             }
             return args;
@@ -327,58 +328,57 @@ namespace dice
         // true <=> next token is in FIRST(dice_roll)
         bool in_first_dice_roll() const
         {
-            return lookahead_.type == token_type::sub || 
+            return lookahead_.type == symbol_type::minus || 
                 in_first_factor();
         }
 
         // true <=> next token is in FIRST(factor)
         bool in_first_factor() const
         {
-            return lookahead_.type == token_type::left_parent ||
-                lookahead_.type == token_type::number_int ||
-                lookahead_.type == token_type::number_fp ||
-                lookahead_.type == token_type::id;
+            return lookahead_.type == symbol_type::left_paren ||
+                lookahead_.type == symbol_type::number ||
+                lookahead_.type == symbol_type::id;
         }
 
         // true <=> next token is in FIRST(param_list)
         bool in_first_param_list() const
         {
-            return lookahead_.type == token_type::right_parent || 
+            return lookahead_.type == symbol_type::right_paren || 
                 in_first_expr();
         }
 
         // true <=> next token is in FOLLOW(expr)
         bool in_follow_expr() const
         {
-            return lookahead_.type == token_type::end ||
-                lookahead_.type == token_type::right_parent ||
+            return lookahead_.type == symbol_type::end ||
+                lookahead_.type == symbol_type::right_paren ||
                 in_follow_param_list();    
         }
 
         // true <=> next token is in FOLLOW(add)
         bool in_follow_add() const
         {
-            return lookahead_.type == token_type::add ||
-                lookahead_.type == token_type::sub ||
-                lookahead_.type == token_type::in ||
-                lookahead_.type == token_type::rel_op ||
-                lookahead_.type == token_type::param_delim ||
-                lookahead_.type == token_type::right_square_bracket ||
+            return lookahead_.type == symbol_type::plus ||
+                lookahead_.type == symbol_type::minus ||
+                lookahead_.type == symbol_type::in ||
+                lookahead_.type == symbol_type::rel_op ||
+                lookahead_.type == symbol_type::param_delim ||
+                lookahead_.type == symbol_type::right_square_bracket ||
                 in_follow_expr();
         }
 
         // true <=> next token is in FOLLOW(mult)
         bool in_follow_mult() const
         {
-            return lookahead_.type == token_type::mult ||
-                lookahead_.type == token_type::div ||
+            return lookahead_.type == symbol_type::times ||
+                lookahead_.type == symbol_type::divide ||
                 in_follow_add();
         }
 
         // true <=> next token is in FOLLOW(dice_roll)
         bool in_follow_dice_roll() const
         {
-            return lookahead_.type == token_type::roll_op ||
+            return lookahead_.type == symbol_type::roll_op ||
                in_follow_mult();
         }
 
@@ -391,8 +391,8 @@ namespace dice
         // true <=> next token is in FOLLOW(param_list)
         bool in_follow_param_list() const
         {
-            return lookahead_.type == token_type::param_delim ||
-                lookahead_.type == token_type::right_parent; // FOLLOW(opt_params)
+            return lookahead_.type == symbol_type::param_delim ||
+                lookahead_.type == symbol_type::right_paren; // FOLLOW(opt_params)
         }
 
         bool check_expr()
@@ -466,7 +466,7 @@ namespace dice
          * New token is read into the lookahead_ variable.
          * @param expected type
          */
-        void eat(token_type type)
+        void eat(symbol_type type)
         {
             if (lookahead_.type != type)
             {

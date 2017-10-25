@@ -7,47 +7,10 @@
 #include <istream>
 
 #include "logger.hpp"
+#include "symbols.hpp"
 
 namespace dice 
 {
-    enum class token_type
-    {
-        number_fp,
-        number_int,
-        id,
-        rel_op,
-        roll_op,
-        add,
-        sub,
-        mult,
-        div,
-        left_parent,
-        right_parent,
-        left_square_bracket,
-        right_square_bracket,
-        param_delim,
-        in,
-        end
-    };
-
-    struct token
-    {
-        token_type type;
-        std::string value;
-
-        token() {}
-        token(token_type type) : type(type) {}
-        token(token_type type, std::string value) :
-            type(type),
-            value(std::move(value)) {}
-    };
-
-    // convert token type to a human readable string
-    std::string to_string(token_type type);
-
-    // convert token value and type to a human readable string
-    std::string to_string(const token& token);
-
     // location in the input stream
     struct lexer_location
     {
@@ -73,7 +36,7 @@ namespace dice
          * advance in the input stream.
          * @return token at current position
          */
-        token read_token();
+        symbol read_token();
 
         // Return current location of the lexer in the input stream
         inline const lexer_location& location() const 

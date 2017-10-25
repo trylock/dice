@@ -9,7 +9,7 @@ TEST_CASE("Run lexer on an empty input", "[lexer]")
     dice::logger log;
     dice::lexer lex{ &input, &log };
 
-    REQUIRE(lex.read_token().type == dice::token_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }
 
@@ -18,16 +18,16 @@ TEST_CASE("Find operator tokens and parentheses", "[lexer]")
     std::stringstream input{ " \t\n+ \t \n-*/)(," };
     dice::logger log;
     dice::lexer lex{ &input, &log };
-    REQUIRE(lex.read_token().type == dice::token_type::add);
-    REQUIRE(lex.read_token().type == dice::token_type::sub);
-    REQUIRE(lex.read_token().type == dice::token_type::mult);
-    REQUIRE(lex.read_token().type == dice::token_type::div);
-    REQUIRE(lex.read_token().type == dice::token_type::right_parent);
-    REQUIRE(lex.read_token().type == dice::token_type::left_parent);
-    REQUIRE(lex.read_token().type == dice::token_type::param_delim);
-    REQUIRE(lex.read_token().type == dice::token_type::end);
-    REQUIRE(lex.read_token().type == dice::token_type::end);
-    REQUIRE(lex.read_token().type == dice::token_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::plus);
+    REQUIRE(lex.read_token().type == dice::symbol_type::minus);
+    REQUIRE(lex.read_token().type == dice::symbol_type::times);
+    REQUIRE(lex.read_token().type == dice::symbol_type::divide);
+    REQUIRE(lex.read_token().type == dice::symbol_type::right_paren);
+    REQUIRE(lex.read_token().type == dice::symbol_type::left_paren);
+    REQUIRE(lex.read_token().type == dice::symbol_type::param_delim);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }
 
@@ -38,33 +38,33 @@ TEST_CASE("Find relational operator tokens", "[lexer]")
     dice::lexer lex{ &input, &log };
 
     auto token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::rel_op);
-    REQUIRE(token.value == "<=");
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == "<=");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::rel_op);
-    REQUIRE(token.value == "<");
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == "<");
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::rel_op);
-    REQUIRE(token.value == "!=");
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == "!=");
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::rel_op);
-    REQUIRE(token.value == "==");
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == "==");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::rel_op);
-    REQUIRE(token.value == ">");
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == ">");
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::rel_op);
-    REQUIRE(token.value == ">=");
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == ">=");
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::in);
+    REQUIRE(token.type == dice::symbol_type::in);
 
-    REQUIRE(lex.read_token().type == dice::token_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }
 
@@ -75,27 +75,27 @@ TEST_CASE("Find dice operator", "[lexer]")
     dice::lexer lex{ &input, &log };
 
     auto token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::roll_op);
+    REQUIRE(token.type == dice::symbol_type::roll_op);
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::id);
-    REQUIRE(token.value == "di");
+    REQUIRE(token.type == dice::symbol_type::id);
+    REQUIRE(token.lexeme == "di");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::roll_op);
+    REQUIRE(token.type == dice::symbol_type::roll_op);
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::id);
-    REQUIRE(token.value == "Da");
+    REQUIRE(token.type == dice::symbol_type::id);
+    REQUIRE(token.lexeme == "Da");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::roll_op);
+    REQUIRE(token.type == dice::symbol_type::roll_op);
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_int);
-    REQUIRE(token.value == "6");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "6");
 
-    REQUIRE(lex.read_token().type == dice::token_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }
 
@@ -106,18 +106,18 @@ TEST_CASE("Find a number", "[lexer]")
     dice::lexer lex{ &input, &log };
 
     auto token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_int);
-    REQUIRE(token.value == "42");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "42");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::id);
-    REQUIRE(token.value == "a24");
+    REQUIRE(token.type == dice::symbol_type::id);
+    REQUIRE(token.lexeme == "a24");
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_int);
-    REQUIRE(token.value == "1");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "1");
 
-    REQUIRE(lex.read_token().type == dice::token_type::end);
+    REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }
 
@@ -128,22 +128,22 @@ TEST_CASE("Find an integer and a double", "[lexer]")
     dice::lexer lex{ &input, &log };
 
     auto token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_fp);
-    REQUIRE(token.value == "0.45");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "0.45");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_fp);
-    REQUIRE(token.value == "14.0");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "14.0");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_int);
-    REQUIRE(token.value == "14");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "14");
     
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::number_fp);
-    REQUIRE(token.value == "1.001");
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "1.001");
 
     token = lex.read_token();
-    REQUIRE(token.type == dice::token_type::end);
+    REQUIRE(token.type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }

@@ -4,7 +4,7 @@ dice::lexer::lexer(std::istream* input, logger* log) :
     input_(input), 
     log_(log) {}
 
-dice::token dice::lexer::read_token()
+dice::symbol dice::lexer::read_token()
 {
     for (;;)
     {
@@ -12,47 +12,46 @@ dice::token dice::lexer::read_token()
 
         auto current = static_cast<char>(get_char());
         if (input_->fail())
-            return token{ token_type::end };
+            return { symbol_type::end };
 
         auto next = static_cast<char>(input_->peek());
         if (current == '+')
-            return token{ token_type::add };
+            return symbol{ symbol_type::plus };
         if (current == '-')
-            return token{ token_type::sub };
+            return symbol{ symbol_type::minus };
         if (current == '*')
-            return token{ token_type::mult };
+            return symbol{ symbol_type::times };
         if (current == '/')
-            return token{ token_type::div };
+            return symbol{ symbol_type::divide };
         if (std::tolower(current) == 'd' && !std::isalpha(next))
-            return token{ token_type::roll_op };
+            return symbol{ symbol_type::roll_op };
         if (current == '(')
-            return token{ token_type::left_parent };
+            return symbol{ symbol_type::left_paren };
         if (current == ')')
-            return token{ token_type::right_parent };
+            return symbol{ symbol_type::right_paren };
         if (current == '[')
-            return token{ token_type::left_square_bracket };
+            return symbol{ symbol_type::left_square_bracket };
         if (current == ']')
-            return token{ token_type::right_square_bracket };
+            return symbol{ symbol_type::right_square_bracket };
         if (current == ',')
-            return token{ token_type::param_delim };
+            return symbol{ symbol_type::param_delim };
 
         if (current == '<' || current == '>' || current == '!' || current == '=')
         {
             if (next == '=')
             {
                 get_char();
-                return token{ token_type::rel_op, std::string(1, current) + "=" };
+                return symbol{ symbol_type::rel_op, std::string(1, current) + "=" };
             }
             else if (current == '<' || current == '>')
             {
-                return token{ token_type::rel_op, std::string(1, current) };
+                return symbol{ symbol_type::rel_op, std::string(1, current) };
             }
         }
 
         // parse numbers
         if (std::isdigit(current))
         {
-            bool is_fp = false;
             std::string value(1, current);
             for (;;)
             {
@@ -63,7 +62,6 @@ dice::token dice::lexer::read_token()
                 else if (input_->peek() == '.')
                 {
                     value += static_cast<char>(get_char());
-                    is_fp = true;
                 }
                 else
                 {
@@ -73,11 +71,15 @@ dice::token dice::lexer::read_token()
 
             if (value.back() == '.')
             {
-                error("Invalid floating point number. Decimal part must not be empty: " + value);
+                error("Invalid floating point number. " 
+                    "Decimal part must not be empty: " + value);
                 value += "0";
             }
 
-            return token{ is_fp ? token_type::number_fp : token_type::number_int, value };
+            return symbol{
+                symbol_type::number,
+                value
+            };
         }
 
         // parse identifiers
@@ -96,10 +98,10 @@ dice::token dice::lexer::read_token()
 
             // check if it's a reserved keyword
             if (value == "in")
-                return token{ token_type::in };
+                return symbol{ symbol_type::in };
 
             // otherwise, it's an identifier
-            return token{ token_type::id, value };
+            return symbol{ symbol_type::id, value };
         }
 
         // format an error message
@@ -143,51 +145,4 @@ int dice::lexer::get_char()
 void dice::lexer::error(const std::string& message)
 {
     log_->error(location_.line, location_.col, message);
-}
-
-
-// Debug functions
-
-std::string dice::to_string(token_type type)
-{
-    if (type == token_type::add)
-        return "+";
-    if (type == token_type::sub)
-        return "-";
-    if (type == token_type::mult)
-        return "*";
-    if (type == token_type::div)
-        return "/";
-    if (type == token_type::left_parent)
-        return "(";
-    if (type == token_type::right_parent)
-        return ")";
-    if (type == token_type::left_square_bracket)
-        return "[";
-    if (type == token_type::right_square_bracket)
-        return "]";
-    if (type == token_type::in)
-        return "in";
-    if (type == token_type::number_int)
-        return "<integer>";
-    if (type == token_type::number_fp)
-        return "<double>";
-    if (type == token_type::id)
-        return "<identifier>";
-    if (type == token_type::rel_op)
-        return "<relational operator>";
-    if (type == token_type::roll_op)
-        return "<dice roll operator>";
-    if (type == token_type::param_delim)
-        return ",";
-    if (type == token_type::end)
-        return "<end of expression>";
-    return "<unknown token type>";
-}
-
-std::string dice::to_string(const token& token)
-{
-    if (token.value.size() > 0)
-        return to_string(token.type) + " '" + token.value + "'";
-    return to_string(token.type);
 }

@@ -11,6 +11,7 @@ set(dice_headers
     ${SRC_DIR}/value.hpp
     ${SRC_DIR}/lexer.hpp
     ${SRC_DIR}/parser.hpp
+    ${SRC_DIR}/symbols.hpp
     ${SRC_DIR}/functions.hpp
     ${SRC_DIR}/conversions.hpp
     ${SRC_DIR}/environment.hpp
@@ -20,6 +21,7 @@ set(dice_headers
 set(dice_sources
     ${SRC_DIR}/logger.cpp
     ${SRC_DIR}/lexer.cpp
+    ${SRC_DIR}/symbols.cpp
     ${SRC_DIR}/conversions.cpp
     ${SRC_DIR}/environment.cpp
 )
