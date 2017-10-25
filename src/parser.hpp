@@ -69,7 +69,6 @@ namespace dice
         Environment* env_;
         symbol lookahead_;
 
-
         bool check_expr()
         {
             while (!in_follow_expr() && !in_first_expr())

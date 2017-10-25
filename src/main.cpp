@@ -88,9 +88,9 @@ int main(int argc, char** argv)
     if (argc > 1)
     {
         // concatenate arguments to form an expression
-        std::string expr;
-        for (int i = 1; i < argc; ++i)
-            expr += argv[i];
+        std::string expr = argv[1];
+        for (int i = 2; i < argc; ++i)
+            expr += " " + std::string(argv[i]);
         std::stringstream input{ expr };
 
         // parse and interpret the expression
