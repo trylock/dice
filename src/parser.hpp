@@ -69,6 +69,32 @@ namespace dice
         Environment* env_;
         symbol lookahead_;
 
+
+        bool check_expr()
+        {
+            while (!in_follow_expr() && !in_first_expr())
+            {
+                error("Invalid token at the beginning of an expression: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_expr();
+        }
+
+        // true <=> next token is in FIRST(expr)
+        bool in_first_expr() const 
+        {
+            return in_first_add();
+        }
+
+        // true <=> next token is in FOLLOW(expr)
+        bool in_follow_expr() const
+        {
+            return lookahead_.type == symbol_type::end ||
+                lookahead_.type == symbol_type::right_paren ||
+                in_follow_param_list();    
+        }
+
         value_type expr()
         {
             auto left = add();
@@ -118,6 +144,35 @@ namespace dice
             }
             return left;
         }
+        
+        // true <=> next token is in FIRST(add)
+        bool in_first_add() const
+        {
+            return in_first_mult();
+        }
+        
+        // true <=> next token is in FOLLOW(add)
+        bool in_follow_add() const
+        {
+            return lookahead_.type == symbol_type::plus ||
+                lookahead_.type == symbol_type::minus ||
+                lookahead_.type == symbol_type::in ||
+                lookahead_.type == symbol_type::rel_op ||
+                lookahead_.type == symbol_type::param_delim ||
+                lookahead_.type == symbol_type::right_square_bracket ||
+                in_follow_expr();
+        }
+        
+        bool check_add()
+        {
+            while (!in_first_add() && !in_follow_add())
+            {
+                error("Invalid token at the beginning of an addition: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_add();
+        }
 
         value_type add()
         {
@@ -154,6 +209,31 @@ namespace dice
             return result;
         }
 
+        // true <=> next token is in FIRST(mult)
+        bool in_first_mult() const
+        {
+            return in_first_dice_roll(); 
+        }
+
+        // true <=> next token is in FOLLOW(mult)
+        bool in_follow_mult() const
+        {
+            return lookahead_.type == symbol_type::times ||
+                lookahead_.type == symbol_type::divide ||
+                in_follow_add();
+        }
+        
+        bool check_mult()
+        {
+            while (!in_first_mult() && !in_follow_mult())
+            {
+                error("Invalid token at the beginning of a multiplication: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_mult();
+        }
+
         value_type mult()
         {
             std::string op;
@@ -187,6 +267,31 @@ namespace dice
                 }
             }
             return result;
+        }
+
+        // true <=> next token is in FIRST(dice_roll)
+        bool in_first_dice_roll() const
+        {
+            return lookahead_.type == symbol_type::minus || 
+                in_first_factor();
+        }
+        
+        // true <=> next token is in FOLLOW(dice_roll)
+        bool in_follow_dice_roll() const
+        {
+            return lookahead_.type == symbol_type::roll_op ||
+               in_follow_mult();
+        }
+        
+        bool check_dice_roll()
+        {
+            while (!in_first_dice_roll() && !in_follow_dice_roll())
+            {
+                error("Invalid token at the beginning of a dice roll: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_dice_roll();
         }
 
         value_type dice_roll()
@@ -236,6 +341,31 @@ namespace dice
             return result; 
         }
 
+        // true <=> next token is in FIRST(factor)
+        bool in_first_factor() const
+        {
+            return lookahead_.type == symbol_type::left_paren ||
+                lookahead_.type == symbol_type::number ||
+                lookahead_.type == symbol_type::id;
+        }
+        
+        // true <=> next token is in FOLLOW(factor)
+        bool in_follow_factor() const
+        {
+            return in_follow_dice_roll();
+        }
+        
+        bool check_factor()
+        {
+            while (!in_first_factor() && !in_follow_factor())
+            {
+                error("Invalid token at the beginning of a factor: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_factor();
+        }
+
         value_type factor()
         {
             if (lookahead_.type == symbol_type::left_paren)
@@ -277,6 +407,31 @@ namespace dice
             return make<type_int>(0);
         }
 
+        // true <=> next token is in FIRST(param_list)
+        bool in_first_param_list() const
+        {
+            return lookahead_.type == symbol_type::right_paren || 
+                in_first_expr();
+        }
+
+        // true <=> next token is in FOLLOW(param_list)
+        bool in_follow_param_list() const
+        {
+            return lookahead_.type == symbol_type::param_delim ||
+                lookahead_.type == symbol_type::right_paren; // FOLLOW(opt_params)
+        }
+
+        bool check_param_list()
+        {
+            while (!in_first_param_list() && !in_follow_param_list())
+            {
+                error("Invalid token at the beginning of parameter list: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_param_list();
+        }
+
         std::vector<value_type> param_list()
         {
             std::vector<value_type> args;
@@ -305,160 +460,6 @@ namespace dice
                 ++number;
             }
             return args;
-        }
-
-        // true <=> next token is in FIRST(expr)
-        bool in_first_expr() const 
-        {
-            return in_first_add();
-        }
-
-        // true <=> next token is in FIRST(add)
-        bool in_first_add() const
-        {
-            return in_first_mult();
-        }
-
-        // true <=> next token is in FIRST(mult)
-        bool in_first_mult() const
-        {
-            return in_first_dice_roll(); 
-        }
-
-        // true <=> next token is in FIRST(dice_roll)
-        bool in_first_dice_roll() const
-        {
-            return lookahead_.type == symbol_type::minus || 
-                in_first_factor();
-        }
-
-        // true <=> next token is in FIRST(factor)
-        bool in_first_factor() const
-        {
-            return lookahead_.type == symbol_type::left_paren ||
-                lookahead_.type == symbol_type::number ||
-                lookahead_.type == symbol_type::id;
-        }
-
-        // true <=> next token is in FIRST(param_list)
-        bool in_first_param_list() const
-        {
-            return lookahead_.type == symbol_type::right_paren || 
-                in_first_expr();
-        }
-
-        // true <=> next token is in FOLLOW(expr)
-        bool in_follow_expr() const
-        {
-            return lookahead_.type == symbol_type::end ||
-                lookahead_.type == symbol_type::right_paren ||
-                in_follow_param_list();    
-        }
-
-        // true <=> next token is in FOLLOW(add)
-        bool in_follow_add() const
-        {
-            return lookahead_.type == symbol_type::plus ||
-                lookahead_.type == symbol_type::minus ||
-                lookahead_.type == symbol_type::in ||
-                lookahead_.type == symbol_type::rel_op ||
-                lookahead_.type == symbol_type::param_delim ||
-                lookahead_.type == symbol_type::right_square_bracket ||
-                in_follow_expr();
-        }
-
-        // true <=> next token is in FOLLOW(mult)
-        bool in_follow_mult() const
-        {
-            return lookahead_.type == symbol_type::times ||
-                lookahead_.type == symbol_type::divide ||
-                in_follow_add();
-        }
-
-        // true <=> next token is in FOLLOW(dice_roll)
-        bool in_follow_dice_roll() const
-        {
-            return lookahead_.type == symbol_type::roll_op ||
-               in_follow_mult();
-        }
-
-        // true <=> next token is in FOLLOW(factor)
-        bool in_follow_factor() const
-        {
-            return in_follow_dice_roll();
-        }
-
-        // true <=> next token is in FOLLOW(param_list)
-        bool in_follow_param_list() const
-        {
-            return lookahead_.type == symbol_type::param_delim ||
-                lookahead_.type == symbol_type::right_paren; // FOLLOW(opt_params)
-        }
-
-        bool check_expr()
-        {
-            while (!in_follow_expr() && !in_first_expr())
-            {
-                error("Invalid token at the beginning of an expression: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_expr();
-        }
-
-        bool check_add()
-        {
-            while (!in_first_add() && !in_follow_add())
-            {
-                error("Invalid token at the beginning of an addition: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_add();
-        }
-
-        bool check_mult()
-        {
-            while (!in_first_mult() && !in_follow_mult())
-            {
-                error("Invalid token at the beginning of a multiplication: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_mult();
-        }
-
-        bool check_dice_roll()
-        {
-            while (!in_first_dice_roll() && !in_follow_dice_roll())
-            {
-                error("Invalid token at the beginning of a dice roll: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_dice_roll();
-        }
-
-        bool check_factor()
-        {
-            while (!in_first_factor() && !in_follow_factor())
-            {
-                error("Invalid token at the beginning of a factor: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_factor();
-        }
-
-        bool check_param_list()
-        {
-            while (!in_first_param_list() && !in_follow_param_list())
-            {
-                error("Invalid token at the beginning of parameter list: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_param_list();
         }
 
         /** Read token of given type from the input.
