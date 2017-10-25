@@ -15,6 +15,10 @@ In all of these examples I assume that dice rolls are independent discrete (inte
 - `3d6 == 6`: compute the indicator that `3d6` is exactly eqaul to 6
 - `2d100 in [4, 32]`: compute the indicator that `2d100` is in the `[4, 32]` closed interval
 
+## Pitfalls
+- **independence**: The program works with random variables. **Each operation on them assumes their independence**. This assumption is quite limiting. Consider following expression: `2 * (1d20 == 19) + 3 * (1d20 == 20)`. Some misguided assumption clould be that this expression is equal to 2 if we roll a 19 and 3 if we roll a 20. This is *not* the case. Both subexpressions `1d20` are independent - they are completely different rolls. In this example, we can get 0, 2, 3 or 5. 
+- **int vs double**: The program can work only with integer random variables (that is, value of a variable can only be an integer). Therefore it is invalid to use operands on random variables in conjunction with a floating point numbers. For example: `1d6 * 2.5` or even `1d6 + 2.0` are invalid. 
+
 ## Operators
 Operators in this list are sorted by increasing precedence. All operators are left-associative unless stated otherwise:
 
