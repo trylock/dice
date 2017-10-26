@@ -382,12 +382,12 @@ namespace dice
             return dist;
         }
 
-        const std::unordered_map<value_type, probability_type>& probability() const 
+        const std::map<value_type, probability_type>& probability() const 
         {
             return probability_; 
         }
     private:
-        std::unordered_map<value_type, probability_type> probability_;
+        std::map<value_type, probability_type> probability_;
     };
 
     // Calculate max(X, Y) for independent r.v. X and Y
