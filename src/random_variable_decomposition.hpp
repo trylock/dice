@@ -194,7 +194,7 @@ namespace dice
                 return result;
             }
 
-            // store variables distributions in an array so we can acces ith 
+            // store variables distributions in an array so we can access ith 
             // element faster
             std::vector<
                 std::vector<
