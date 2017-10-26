@@ -16,6 +16,7 @@ set(dice_headers
     ${SRC_DIR}/conversions.hpp
     ${SRC_DIR}/environment.hpp
     ${SRC_DIR}/random_variable.hpp
+    ${SRC_DIR}/random_variable_decomposition.hpp
 )
 
 set(dice_sources
@@ -33,9 +34,10 @@ set(all_tests
     ${TESTS_DIR}/main.cpp
     ${TESTS_DIR}/lexer_test.cpp
     ${TESTS_DIR}/parser_test.cpp
-    ${TESTS_DIR}/random_variable_test.cpp
     ${TESTS_DIR}/environment_test.cpp
     ${TESTS_DIR}/integration_test.cpp
+    ${TESTS_DIR}/random_variable_test.cpp
+    ${TESTS_DIR}/random_variable_decomposition_test.cpp
 )
 
 include_directories(

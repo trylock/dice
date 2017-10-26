@@ -6,16 +6,21 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <map>
 
 namespace dice 
 {
     class bernoulli_tag{};
     class constant_tag{};
 
+    template<typename ValueType, typename ProbabilityType>
+    class random_variable_decomposition;
+
     // discrete random variable
     template<typename ValueType, typename ProbabilityType>
     class random_variable 
     {
+        friend class random_variable_decomposition<ValueType, ProbabilityType>;
     public:
         using value_type = ValueType;
         using probability_type = ProbabilityType;
@@ -72,7 +77,7 @@ namespace dice
         random_variable(random_variable&&) = default;
         random_variable& operator=(random_variable&&) = default;
 
-        // true IFF there is only 1 value in its domain
+        // true IFF there is only 1 value in its range
         bool is_constant() const 
         {
             return probability_.size() == 1;
