@@ -6,6 +6,7 @@
 #include <typeinfo>
 
 #include "random_variable.hpp"
+#include "random_variable_decomposition.hpp"
 
 namespace dice 
 {
@@ -54,7 +55,8 @@ namespace dice
     // used data types
     using type_int = typed_value<int>;
     using type_double = typed_value<double>;
-    using type_rand_var = typed_value<random_variable<int, double>>;
+    using type_rand_var = typed_value<
+        random_variable_decomposition<int, double>>;
 
     template<typename T, typename... Value>
     std::unique_ptr<T> make(Value&&... data)
