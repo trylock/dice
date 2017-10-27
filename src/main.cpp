@@ -80,7 +80,7 @@ void print_result(std::unique_ptr<dice::base_value>&& value)
         return;
     }
     auto rv = dynamic_cast<dice::type_rand_var*>(value.get());
-    print_result(rv->data());
+    print_result(rv->data().to_random_variable());
 }
 
 int main(int argc, char** argv)
