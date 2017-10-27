@@ -54,6 +54,7 @@ namespace dice
         Logger* log_;
         Environment* env_;
         symbol lookahead_;
+        bool is_definition_ = false;
 
         std::vector<value_type> stmts()
         {
@@ -125,7 +126,10 @@ namespace dice
                 auto id = lookahead_;
                 eat(symbol_type::id);
                 eat(symbol_type::assign);
+                
+                is_definition_ = true;
                 auto value = expr();
+                is_definition_ = false;
 
                 env_->set_var(id.lexeme, std::move(value));
                 return nullptr;
@@ -485,6 +489,13 @@ namespace dice
                     auto var = dynamic_cast<type_rand_var*>(value);
                     if (var != nullptr)
                     {
+                        if (is_definition_)
+                        {
+                            error("Using names of random variables in name "
+                                "definition is supported only partially and " 
+                                "may lead to incorrect results.");
+                        }
+
                         return make<type_rand_var>(
                             dependent_tag{},
                             &var->data().rand_var()
