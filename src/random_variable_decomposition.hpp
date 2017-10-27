@@ -93,7 +93,7 @@ namespace dice
                 return value_a * value_b;
             });
         }
-
+        
         /** Divide this variable by other variable.
          * Random variables don't need to be indendent.
          * @param right hand side of the operator
@@ -105,6 +105,22 @@ namespace dice
             {
                 return value_a / value_b;
             });
+        }
+        
+        /** Roll num_rolls times with a dice of num_sides.
+         * Random variables have to be independent.
+         * @param number of rolls
+         * @param number of dice sides
+         * @return distribution of the dice roll
+         */
+        friend auto roll(
+            const random_variable_decomposition& num_rolls, 
+            const random_variable_decomposition& num_sides)
+        {
+            if (num_rolls.vars_.size() > 1 || num_sides.vars_.size()  > 1)
+                throw std::runtime_error(
+                    "Variable names are not supported in roll operator");
+            return roll(num_rolls.vars_.front(), num_sides.vars_.front());
         }
 
         template<typename CombinationFunc>
