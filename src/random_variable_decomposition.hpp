@@ -20,13 +20,15 @@ namespace dice
 
     /** Object representing a decomposition of a function of random variables.
      * 
-     * Denote X a random variable. Let us assume that X depends on random 
-     * variables A1, ..., An. Then, from Law of total probability: 
-     * `X = sum(X | A1 = a1, ..., An = an for all a1, ..., an)`
-     * Because events `A1 = a1, ..., An = an` are disjoint and they form 
-     * the whole sample space (we are considering all such ai's)
+     * Denote A a random variable. Let us assume that A depends on random 
+     * variables X1,..., Xn. Then, from Law of total probability: 
+     * P(A = k) = sum of 
+     *      P(A = k | X1 = x1, ..., Xn = xn) * P(X1 = x1, ..., Xn = xn) 
+     * for all x1, ..., xn
+     * Because events `X1 = x1, ..., Xn = xn` are disjoint and they form 
+     * the whole sample space (we are considering all such xi's)
      * 
-     * Purpose of this is that variables `X | A1 = a1, ..., An = an` might 
+     * Purpose of this is that variables `A | X1 = x1, ..., Xn = xn` might 
      * be independent.
      */
     template<typename ValueType, typename ProbabilityType>
@@ -121,10 +123,10 @@ namespace dice
             return result;
         }
 
-        /** Compute indicator: X < Y (where X is this random variale).
+        /** Compute indicator: A < B (where A is this random variale).
          * Variables does not need to be indepedent.
-         * @param other random variable Y
-         * @return indicator of X < Y 
+         * @param other random variable B
+         * @return indicator of A < B 
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto less_than(const random_variable_decomposition& other) const 
@@ -135,10 +137,10 @@ namespace dice
             });
         }
 
-        /** Compute indicator: X <= Y (where X is this random variale).
+        /** Compute indicator: A <= B (where A is this random variale).
          * Variables does not need to be indepedent.
-         * @param other random variable Y
-         * @return indicator of X <= Y 
+         * @param other random variable B
+         * @return indicator of A <= B 
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto less_than_or_equal(
@@ -150,10 +152,10 @@ namespace dice
             });
         }
 
-        /** Compute indicator: X = Y (where X is this random variale).
+        /** Compute indicator: A = B (where A is this random variale).
          * Variables does not need to be indepedent.
-         * @param other random variable Y
-         * @return indicator of X = Y 
+         * @param other random variable B
+         * @return indicator of A = B
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto equal(const random_variable_decomposition& other) const 
@@ -164,10 +166,10 @@ namespace dice
             });
         }
 
-        /** Compute indicator: X != Y (where X is this random variale).
+        /** Compute indicator: A != B (where A is this random variale).
          * Variables does not need to be indepedent.
          * @param other random variable Y
-         * @return indicator of X != Y 
+         * @return indicator of A != B 
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto not_equal(const random_variable_decomposition& other) const 
@@ -178,10 +180,10 @@ namespace dice
             });
         }
 
-        /** Compute indicator: X > Y (where X is this random variale).
+        /** Compute indicator: A > B (where A is this random variale).
          * Variables does not need to be indepedent.
-         * @param other random variable Y
-         * @return indicator of X > Y 
+         * @param other random variable B
+         * @return indicator of A > B 
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto greater_than(const random_variable_decomposition& other) const 
@@ -192,10 +194,10 @@ namespace dice
             });
         }
         
-        /** Compute indicator: X >= Y (where X is this random variale).
+        /** Compute indicator: A >= B (where A is this random variale).
          * Variables does not need to be indepedent.
          * @param other random variable Y
-         * @return indicator of X >= Y 
+         * @return indicator of A >= YB
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto greater_than_or_equal(
@@ -207,11 +209,11 @@ namespace dice
             });
         }
 
-        /** Compute indicator: X in [A, B] (where X is this random variable).
+        /** Compute indicator: A in [a, b] (where X is this random variable).
          * The interval is closed.
-         * @param lower bound of the interval A
-         * @param upper bound of the interval B
-         * @return indicator of X in [A, B]
+         * @param lower bound of the interval (a)
+         * @param upper bound of the interval (b)
+         * @return indicator of A in [a, b]
          * (i.e. a random variable with a bernoulli distribution)
          */
         template<typename T>
@@ -242,11 +244,11 @@ namespace dice
             return roll(num_rolls.vars_.front(), num_sides.vars_.front());
         }
 
-        /** Compute function of 2 random variables: X and Y.
+        /** Compute function of 2 random variables: A and B.
          * Variables does not need to be independent. 
-         * @param other random variable Y
+         * @param other random variable B
          * @param combination function
-         * @return random variable that is a function of X and Y
+         * @return random variable that is a function of A and B
          */
         template<typename CombinationFunc>
         auto combine(
