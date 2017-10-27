@@ -13,7 +13,7 @@ namespace dice
     {
         plus, minus, times, divide, rel_op, roll_op, in,
         left_paren, right_paren, left_square_bracket, right_square_bracket,
-        param_delim, number, id, end
+        param_delim, semicolon, var, assign, number, id, end
     };
 
     struct symbol

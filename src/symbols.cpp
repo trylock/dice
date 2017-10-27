@@ -21,6 +21,9 @@ static const std::string symbol_names[] = {
     "[",
     "]",
     ",",
+    ";",
+    "var",
+    "=",
     "<number>",
     "<identifier>",
     "<end of input>"

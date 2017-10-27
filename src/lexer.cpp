@@ -35,6 +35,8 @@ dice::symbol dice::lexer::read_token()
             return symbol{ symbol_type::right_square_bracket };
         if (current == ',')
             return symbol{ symbol_type::param_delim };
+        if (current == ';')
+            return symbol{ symbol_type::semicolon };
 
         if (current == '<' || current == '>' || current == '!' || 
             current == '=')
@@ -49,6 +51,10 @@ dice::symbol dice::lexer::read_token()
             {
                 return symbol{ symbol_type::rel_op, 
                     std::string(1, current) };
+            }
+            else if (current == '=')
+            {
+                return symbol{ symbol_type::assign };
             }
         }
 
@@ -102,6 +108,8 @@ dice::symbol dice::lexer::read_token()
             // check if it's a reserved keyword
             if (value == "in")
                 return symbol{ symbol_type::in };
+            else if (value == "var")
+                return symbol{ symbol_type::var };
 
             // otherwise, it's an identifier
             return symbol{ symbol_type::id, value };

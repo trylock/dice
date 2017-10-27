@@ -147,3 +147,92 @@ TEST_CASE("Find an integer and a double", "[lexer]")
     REQUIRE(token.type == dice::symbol_type::end);
     REQUIRE(log.empty());
 }
+
+TEST_CASE("Recognize expressions delimiter", "[lexer]")
+{
+    std::stringstream input{ "1 ; 2; 42 ;" };
+    dice::logger log;
+    dice::lexer lex{ &input, &log };
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "1");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::semicolon);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "2");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::semicolon);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "42");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::semicolon);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+    REQUIRE(token.lexeme == "");
+}
+
+TEST_CASE("Recognize assignment", "[lexer]")
+{
+    std::stringstream input{ "val = 1; ===" };
+    dice::logger log;
+    dice::lexer lex{ &input, &log };
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::id);
+    REQUIRE(token.lexeme == "val");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::assign);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(token.lexeme == "1");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::semicolon);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::rel_op);
+    REQUIRE(token.lexeme == "==");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::assign);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+    REQUIRE(token.lexeme == "");
+}
+
+TEST_CASE("Recognize var keyword", "[lexer]")
+{
+    std::stringstream input{ "var variable" };
+    dice::logger log;
+    dice::lexer lex{ &input, &log };
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::var);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::id);
+    REQUIRE(token.lexeme == "variable");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+    REQUIRE(token.lexeme == "");
+}
