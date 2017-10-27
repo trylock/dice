@@ -192,7 +192,7 @@ namespace dice
                 return static_cast<value_type>(a >= b);
             });
         }
-        
+
         /** Compute indicator: X in [A, B] (where X is this random variable).
          * The interval is closed.
          * @param lower bound of the interval A
@@ -363,9 +363,13 @@ namespace dice
          * Each item on this list is a r.v.: `A | X = x` where X is a random
          * vector deps_ and x is a value of this random vector.
          * 
-         * `x` is defined implicitly by the lexicographical order on (i, j) 
-         * where i is index of a component of X and j is index of a value 
-         * of this component.
+         * `x` is defined implicitly by the index. For example, consider 
+         * variables deps_ = (X, Y) whose values are 1 or 2. Order of variables
+         * in this list is as follows:
+         * -# A | X = 1, Y = 1 
+         * -# A | X = 2, Y = 1 
+         * -# A | X = 1, Y = 2 
+         * -# A | X = 2, Y = 2
          */
         std::vector<var_type> vars_;
 
