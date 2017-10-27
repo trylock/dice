@@ -1,5 +1,5 @@
 # Dice expressions interpreter
-Essential part of many tabletop games are random events. They are often introduced to the game in form of dice rolls. This program can help you to understand those dice rolls. You can give it a dice expression and it computes the probabilities and some statistics for you.
+Essential part of many tabletop games are random events. They are often introduced to the game in form of dice rolls. This program can help you to understand those dice rolls. You can give it a dice expression and it computes the probabilities and some statistics for you. It can even deal with some form of depedence using names (see examples).
 
 ## Examples
 In all of these examples I assume that dice rolls are independent discrete (integer) random variables. 
@@ -79,3 +79,10 @@ Here are some non-trivial terminals and their regular expressions:
 
 ## Types
 The program works with 3 basic types: `int` (signed integer), `double` (a floating point number) and `rand_var` (a discrete random variable). It can convert a value of type `integer` to all other types but not vice versa. Integers are therefore implicitly converted to those types when needed (in function calls or when evaluating an operator).
+
+## How to build
+You will need `cmake` version 3.0 or later and a C++ compiler that supports C++14 (tested on gcc version 7.2.0).
+
+1. Create a build directory (say `build`) in the project root
+2. In this directory run `cmake ..` (use the `-G` option to specify generator)
+3. Compile (for example: run `make` if you've used `Unix Makefiles`)
