@@ -247,7 +247,7 @@ namespace dice
             });
         }
 
-        /** Compute indicator: A in [a, b] (where X is this random variable).
+        /** Compute indicator: A in [a, b] (where A is this random variable).
          * The interval is closed.
          * @param lower bound of the interval (a)
          * @param upper bound of the interval (b)
@@ -313,7 +313,7 @@ namespace dice
             random_variable_decomposition result;
 
             // compute union of the deps_ sets
-            sorted_union(deps_, other.deps_, result.deps_);
+            result.deps_ = sorted_union(deps_, other.deps_);
 
             // compute number of values for the deps_ vector
             std::size_t num_values = 1;
@@ -476,16 +476,16 @@ namespace dice
          * Both lists have to be sorted by given comparer.
          * @param sorted list A
          * @param sorted list B
-         * @param list where the sorted union will be stored
          * @param comparer
+         * @return sorted union of lists A and B
          */
         template<typename T, typename Less = std::less<T>>
-        static void sorted_union(
+        static std::vector<T> sorted_union(
             const std::vector<T>& a, 
             const std::vector<T>& b,
-            std::vector<T>& result,
             Less is_less = Less())
         {
+            std::vector<T> result;
             auto left = a.begin();
             auto right = b.begin();
             for (;;)
@@ -517,6 +517,7 @@ namespace dice
                     ++right;
                 }
             }
+            return result;
         }
     };
 }
