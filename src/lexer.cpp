@@ -36,16 +36,19 @@ dice::symbol dice::lexer::read_token()
         if (current == ',')
             return symbol{ symbol_type::param_delim };
 
-        if (current == '<' || current == '>' || current == '!' || current == '=')
+        if (current == '<' || current == '>' || current == '!' || 
+            current == '=')
         {
             if (next == '=')
             {
                 get_char();
-                return symbol{ symbol_type::rel_op, std::string(1, current) + "=" };
+                return symbol{ symbol_type::rel_op, 
+                    std::string(1, current) + "=" };
             }
             else if (current == '<' || current == '>')
             {
-                return symbol{ symbol_type::rel_op, std::string(1, current) };
+                return symbol{ symbol_type::rel_op, 
+                    std::string(1, current) };
             }
         }
 
