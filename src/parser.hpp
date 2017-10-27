@@ -459,14 +459,29 @@ namespace dice
             }
             else if (lookahead_.type == symbol_type::id)
             {
-                // parse a function call
                 auto id = lookahead_;
                 eat(symbol_type::id);
-                eat(symbol_type::left_paren);
-                auto args = param_list();
-                eat(symbol_type::right_paren);
-                
-                return env_->call_var(id.lexeme, args.begin(), args.end());
+
+                if (lookahead_.type == symbol_type::left_paren) 
+                {
+                    // function call
+                    eat(symbol_type::left_paren);
+                    auto args = param_list();
+                    eat(symbol_type::right_paren);
+                    
+                    return env_->call_var(id.lexeme, args.begin(), args.end());
+                }
+                else // variable 
+                {
+                    auto value = env_->get_var(id.lexeme);
+                    if (value == nullptr)
+                    {
+                        error("Unknown variable '" + id.lexeme + "'.");
+                        return make<type_int>(0);
+                    }
+
+                    return value->clone();
+                }
             }
             
             error("Expected " + to_string(symbol_type::left_paren) + ", " + 

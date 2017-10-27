@@ -25,6 +25,11 @@ namespace dice
          * (i.e. multiple values of the same type will return the same type id)
          */
         virtual type_id type() const = 0;
+
+        /** Create a copy of this value.
+         * @return copied value 
+         */
+        virtual std::unique_ptr<base_value> clone() const = 0;
     };
 
     // Value with data
@@ -40,10 +45,17 @@ namespace dice
         }
 
         typed_value() {}
+        explicit typed_value(const value_type& value) : value_(value) {}
         explicit typed_value(value_type&& value) : value_(std::move(value)) {}
 
         // get type id
         type_id type() const override { return id(); }
+
+        // copy value
+        std::unique_ptr<base_value> clone() const override
+        {
+            return std::make_unique<typed_value>(data());
+        }
 
         // value getter setter
         value_type& data() { return value_; }
