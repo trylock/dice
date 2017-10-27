@@ -22,15 +22,21 @@ namespace dice
         };
 
         // cost of an impossible conversion
-        static const cost_type max_cost = std::numeric_limits<cost_type>::max();
+        static const cost_type max_cost = 
+            std::numeric_limits<cost_type>::max();
 
         template<typename Func>
-        void add_conversion(type_id from, type_id to, Func&& func, cost_type cost)
+        void add_conversion(
+            type_id from, 
+            type_id to, 
+            Func&& func, cost_type cost)
         {
-            convert_.insert(std::make_pair(std::make_pair(from, to), conversion{
-                std::forward<Func>(func),
-                cost
-            }));
+            convert_.insert(
+                std::make_pair(std::make_pair(from, to), 
+                conversion{
+                    std::forward<Func>(func),
+                    cost
+                }));
         }
 
         /** Find conversion cost from type <from> to type <to>
@@ -50,6 +56,9 @@ namespace dice
          */ 
         value_ptr convert(type_id from, type_id to, value_ptr&& value) const;
     private:
-        std::unordered_map<key_type, conversion, pair_hash<type_id, type_id>> convert_;
+        std::unordered_map<
+            key_type, 
+            conversion,
+            pair_hash<type_id, type_id>> convert_;
     };
 }

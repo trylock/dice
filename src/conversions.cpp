@@ -1,6 +1,8 @@
 #include "conversions.hpp"
 
-dice::conversions::cost_type dice::conversions::cost(type_id from, type_id to) const
+dice::conversions::cost_type dice::conversions::cost(
+    type_id from, 
+    type_id to) const
 {
     if (from == to)
     {
@@ -15,7 +17,10 @@ dice::conversions::cost_type dice::conversions::cost(type_id from, type_id to) c
     return it->second.cost;
 }
 
-dice::conversions::value_ptr dice::conversions::convert(type_id from, type_id to, value_ptr&& value) const 
+dice::conversions::value_ptr dice::conversions::convert(
+    type_id from, 
+    type_id to, 
+    value_ptr&& value) const 
 {
     if (from == to)
     {
