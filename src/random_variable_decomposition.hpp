@@ -388,10 +388,10 @@ namespace dice
         std::vector<var_type> vars_;
 
         /** Compute union of sorted lists A and B.
-         * Both lists habe to be sorted by given comparer.
+         * Both lists have to be sorted by given comparer.
          * @param sorted list A
          * @param sorted list B
-         * @param list where the union will be stored
+         * @param list where the sorted union will be stored
          * @param comparer
          */
         template<typename T, typename Less = std::less<T>>
