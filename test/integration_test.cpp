@@ -703,3 +703,24 @@ TEST_CASE("Resume interpreting an expression in function arguments after finding
     test_error_message(errors,  "Invalid token at the beginning of an expression: +");
     REQUIRE(errors.peek() == EOF);
 }
+
+TEST_CASE("Interpret expression with variables", "[dice]")
+{
+    std::stringstream input{ "var X = 1d6; (X == 5) * 4 + (1 - (X == 5)) * 2" };
+    std::stringstream errors;
+
+    dice::logger log{ &errors };
+    dice::lexer lexer{ &input, &log };
+
+    dice::environment env;
+    dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
+    auto results = parser.parse();
+    REQUIRE(results.size() == 2);
+    REQUIRE(results[0] == nullptr);
+    auto result = std::move(results[1]);
+
+    auto var = dynamic_cast<dice::type_rand_var&>(*result);
+    auto prob = var.data().probability();
+    REQUIRE(prob.find(4)->second == Approx(1 / 6.0));
+    REQUIRE(prob.find(2)->second == Approx(5 / 6.0));
+}

@@ -480,6 +480,17 @@ namespace dice
                         return make<type_int>(0);
                     }
 
+                    // if the name represents a random variable, it can
+                    // depend on other subexpressions
+                    auto var = dynamic_cast<type_rand_var*>(value);
+                    if (var != nullptr)
+                    {
+                        return make<type_rand_var>(
+                            dependent_tag{},
+                            &var->data().rand_var()
+                        );
+                    }
+
                     return value->clone();
                 }
             }

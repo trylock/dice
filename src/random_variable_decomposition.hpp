@@ -286,19 +286,17 @@ namespace dice
         /** Compute expected value of this random variable.
          * @return expected value of this variable
          */
-        auto expected_value() const 
+        auto expected_value()  
         {
-            auto var = to_random_variable();
-            return var.expected_value();
+            return rand_var().expected_value();
         }
 
         /** Compute variance of this random variable.
          * @return variance of this variable
          */
-        auto variance() const 
+        auto variance() 
         {
-            auto var = to_random_variable();
-            return var.variance();
+            return rand_var().variance();
         }
 
         /** Compute function of 2 random variables: A and B.
@@ -324,7 +322,8 @@ namespace dice
                 num_values *= var->probability().size();
             }
 
-            std::unordered_set<const var_type*> in_a{ deps_.begin(), deps_.end() };
+            std::unordered_set<const var_type*> in_a{ 
+                deps_.begin(), deps_.end() };
             std::unordered_set<const var_type*> in_b{ 
                 other.deps_.begin(), other.deps_.end() };
 
@@ -423,13 +422,31 @@ namespace dice
         /** Map value -> probability of this random variable.
          * @return probability map
          */
-        auto probability() const 
+        auto probability() const
         {
             auto var = to_random_variable();
             return var.probability();
         }
 
+        /** Return a reference to a basic random variable with the same 
+         * distribution. This object is converted in the first call.
+         * Subsequent calls just retrieve the cached value.
+         */
+        const var_type& rand_var() 
+        {
+            if (dist_.probability_.empty())
+            {
+                dist_ = to_random_variable();
+            }
+            return dist_;
+        }
+
     private:
+        /** Resulting random variable.
+         * This is cached value of the to_random_variable() call.
+         */
+        var_type dist_;
+
         /** Set of variables on which this random variable depends.
          * It is kept sorted by the pointer value. This simplifies the
          * combination algorithm as we can make some assumptions in the
