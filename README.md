@@ -32,6 +32,13 @@ Operators in this list are sorted by increasing precedence. All operators are le
 The program implements a predictive parser for it is easy to write it by hand. Original grammar is listed here. It is necessary to modify the grammar for a straightforward implementation (for example: get rid of the left recursion).
 
 ```
+<stmts>        ::= <stmt>; <stmts> 
+                 | <stmt>
+                 | ""
+
+<stmt>        ::= var <id> = <expr>
+                | <expr>
+
 <expr>        ::= <add> in [<add>, <add>] 
                 | <add> <rel_op> <add> 
                 | <add>
@@ -53,6 +60,7 @@ The program implements a predictive parser for it is easy to write it by hand. O
 <factor>      ::= (<expr>) 
                 | <number>
                 | <identifier>(<opt_params>)
+                | <identifier>
                 
 <opt_params>  ::= <param_list> 
                 | "" 
