@@ -209,6 +209,12 @@ namespace dice
             return roll(num_rolls.vars_.front(), num_sides.vars_.front());
         }
 
+        /** Compute function of 2 random variables: X and Y.
+         * Variables does not need to be independent. 
+         * @param other random variable Y
+         * @param combination function
+         * @return random variable that is a function of X and Y
+         */
         template<typename CombinationFunc>
         auto combine(
             const random_variable_decomposition& other, 
@@ -217,37 +223,7 @@ namespace dice
             random_variable_decomposition result;
 
             // compute union of the deps_ sets
-            auto left = deps_.begin();
-            auto right = other.deps_.begin();
-            for (;;)
-            {
-                if (left == deps_.end() && right == other.deps_.end())
-                {
-                    break;
-                }
-                else if (right == other.deps_.end())
-                {
-                    result.deps_.push_back(*left++);
-                }
-                else if (left == deps_.end())
-                {
-                    result.deps_.push_back(*right++);
-                }
-                else if (*left < *right)
-                {
-                    result.deps_.push_back(*left++);
-                }
-                else if (*left == *right)
-                {
-                    result.deps_.push_back(*left);
-                    ++left;
-                    ++right;
-                }
-                else 
-                {
-                    result.deps_.push_back(*right++);
-                }
-            }
+            sorted_union(deps_, other.deps_, result.deps_);
 
             // compute number of values for the deps_ vector
             std::size_t num_values = 1;
@@ -373,6 +349,53 @@ namespace dice
          * of this component.
          */
         std::vector<var_type> vars_;
+
+        /** Compute union of sorted lists A and B.
+         * Both lists habe to be sorted by given comparer.
+         * @param sorted list A
+         * @param sorted list B
+         * @param list where the union will be stored
+         * @param comparer
+         */
+        template<typename T, typename Less = std::less<T>>
+        static void sorted_union(
+            const std::vector<T>& a, 
+            const std::vector<T>& b,
+            std::vector<T>& result,
+            Less is_less = Less())
+        {
+            auto left = a.begin();
+            auto right = b.begin();
+            for (;;)
+            {
+                if (left == a.end() && right == b.end())
+                {
+                    break;
+                }
+                else if (right == b.end())
+                {
+                    result.push_back(*left++);
+                }
+                else if (left == a.end())
+                {
+                    result.push_back(*right++);
+                }
+                else if (is_less(*left, *right))
+                {
+                    result.push_back(*left++);
+                }
+                else if (is_less(*right, *left))
+                {
+                    result.push_back(*right++);
+                }
+                else // *left == *right
+                {
+                    result.push_back(*left);
+                    ++left;
+                    ++right;
+                }
+            }
+        }
     };
 }
 
