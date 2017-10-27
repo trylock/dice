@@ -40,13 +40,15 @@ namespace dice
 
     /** Convert given symbol to string
      * @param a symbol
-     * @return string representation of the symbol (for debugging and error messages)
+     * @return string representation of the symbol 
+     *         for debugging and error messages
      */
     std::string to_string(const symbol& symbol);
 
     /** Convert given symbol type to string
      * @param symbol type (terminal or non-terminal)
-     * @return string representation of the symbol type for debugging and error messages 
+     * @return string representation of the symbol type 
+     *         for debugging and error messages 
      */
     std::string to_string(symbol_type type);
 }
