@@ -32,35 +32,21 @@ namespace dice
         /** Parse expression provided by the lexer.
          * Operators are left associative unless stated otherwise.
          * List of operators (from lowest to highest precedence): 
-         * -#  <, <=, !=, ==, >=, >, in (relational operators, not assosiative)
+         * -#  = (assignment, non-associative)
+         * -#  <, <=, !=, ==, >=, >, in (relational operators, non-assosiative)
          * -#  + (add), - (subtract)
          * -#  * (multiply), / (divide) 
          * -#  - (unary minus)
          * -#  D|d (roll dice)
-         * @return calculated value 
+         * @return vector of computed values
          */
-        value_type parse()
+        std::vector<value_type> parse()
         {
             lookahead_ = lexer_->read_token();
-        
-            // When using the expr as a start production, don't add 
-            // the whole FOLLOW(expr) to the synchronizing tokens.
-            // Use just the end symbol
-            while (lookahead_.type != symbol_type::end && !in_first_expr())
-            {
-                error("Invalid token at the beginning of an expression: " +
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-        
-            if (in_first_expr())
-            {
-                auto result = expr();
-                // make sure we've processed the whole expression
-                eat(symbol_type::end); 
-                return result;
-            }
-            return make<type_int>(0);
+            auto result = stmts();
+            // make sure we've processed the whole expression
+            eat(symbol_type::end); 
+            return result;
         }
 
     private:
@@ -68,6 +54,84 @@ namespace dice
         Logger* log_;
         Environment* env_;
         symbol lookahead_;
+
+        std::vector<value_type> stmts()
+        {
+            while (lookahead_.type != symbol_type::end && !in_first_stmt())
+            {
+                error("Invalid token at the beginning of an expression: " +
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+
+            std::vector<value_type> values;
+            if (lookahead_.type == symbol_type::end)
+            {
+                return values;
+            }
+            
+            values.push_back(stmt());
+            for (;;)
+            {
+                if (lookahead_.type == symbol_type::semicolon)
+                {
+                    eat(lookahead_.type);
+                    if (check_stmt())
+                    {
+                        values.push_back(stmt());
+                    }
+                    else 
+                    {
+                        error("Invalid statement.");
+                    }
+                }
+                else 
+                {
+                    break;
+                }
+            }
+            return values;
+        }
+
+        bool in_first_stmt() const
+        {
+            return lookahead_.type == symbol_type::var ||
+                in_first_expr();
+        }
+
+        bool in_follow_stmt() const
+        {
+            return lookahead_.type == symbol_type::semicolon ||
+                // FOLLOW(stmts):
+                lookahead_.type == symbol_type::end;
+        }
+
+        bool check_stmt() 
+        {
+            while (!in_follow_stmt() && !in_first_stmt())
+            {
+                error("Invalid token at the beginning of a statement: " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first_stmt();
+        }
+
+        value_type stmt()
+        {
+            if (lookahead_.type == symbol_type::var)
+            {
+                eat(lookahead_.type);
+                auto id = lookahead_;
+                eat(symbol_type::id);
+                eat(symbol_type::assign);
+                auto value = expr();
+
+                env_->set_var(id.lexeme, std::move(value));
+                return nullptr;
+            }
+            return expr();
+        }
 
         bool check_expr()
         {

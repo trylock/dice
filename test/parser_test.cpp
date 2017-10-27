@@ -57,6 +57,27 @@ public:
     using value_type = std::unique_ptr<dice::base_value>;
     using args_iterator = std::vector<value_type>::iterator;
 
+    void set_var(const std::string& name, value_type&& value)
+    {
+        vars_[name] = std::move(value);
+    }
+
+    dice::base_value* get_var(const std::string& name)
+    {
+        auto it = vars_.find(name);
+        if (it == vars_.end())
+            return nullptr;
+        return it->second.get();
+    }
+    
+    const dice::base_value* get_var(const std::string& name) const
+    {
+        auto it = vars_.find(name);
+        if (it == vars_.end())
+            return nullptr;
+        return it->second.get();
+    }
+
     value_type call_var(const std::string&, args_iterator, args_iterator)
     {
         throw std::runtime_error("Not supported.");
@@ -100,6 +121,9 @@ public:
     {
         throw std::runtime_error("Not supported.");
     }
+
+private:
+    std::unordered_map<std::string, value_type> vars_;
 };
 
 TEST_CASE("Parse empty expression", "[parser]")
@@ -108,10 +132,9 @@ TEST_CASE("Parse empty expression", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 0);
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 0);
 }
 
 TEST_CASE("Parse simple expression", "[parser]")
@@ -132,7 +155,11 @@ TEST_CASE("Parse simple expression", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
+
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
     REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 2);
@@ -152,7 +179,11 @@ TEST_CASE("+ and - operators are left associative", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
+
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
     REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 4);
@@ -172,7 +203,11 @@ TEST_CASE("* and / operators are left associative", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
+
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
     REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 5);
@@ -192,7 +227,11 @@ TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
+
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
     REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 3);
@@ -214,7 +253,11 @@ TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
+
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_int::id());
     REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == -9);
@@ -230,7 +273,11 @@ TEST_CASE("Parse dice roll operator", "[parser]")
     logger_mock log;
     env_mock<dice::type_int> env;
     dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
+
     REQUIRE(log.errors().empty());
     REQUIRE(result->type() == dice::type_rand_var::id());
 }

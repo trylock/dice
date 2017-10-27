@@ -11,6 +11,8 @@ void test_error_message(std::stringstream& stream, const std::string& msg)
 {
     std::string error_msg;
     std::getline(stream, error_msg);
+    REQUIRE(error_msg.size() > 0);
+
     // remove line, column number and "error:" string
     auto pos = error_msg.find("error:") + 10;
     while (pos < error_msg.size() && std::isspace(error_msg[pos]))
@@ -30,12 +32,8 @@ TEST_CASE("Interpret an empty expression", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
-
-    REQUIRE(log.empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    auto&& value = dynamic_cast<dice::type_int&>(*result).data();
-    REQUIRE(value == 0);
+    auto results = parser.parse();
+    REQUIRE(results.size() == 0);
 }
 
 TEST_CASE("Interpret a single integer value", "[dice]")
@@ -47,7 +45,9 @@ TEST_CASE("Interpret a single integer value", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(log.empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -64,7 +64,9 @@ TEST_CASE("Interpret a single double value", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(log.empty());
     REQUIRE(result->type() == dice::type_double::id());
@@ -81,7 +83,9 @@ TEST_CASE("Interpret an invalid double value", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_double::id());
     auto&& value = dynamic_cast<dice::type_double&>(*result).data();
@@ -101,7 +105,9 @@ TEST_CASE("Skip unknown characters", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -122,7 +128,9 @@ TEST_CASE("Interpret an arithmetic expression", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(log.empty());
     REQUIRE(result->type() == dice::type_int::id());
@@ -139,7 +147,9 @@ TEST_CASE("Interpret a dice roll expression", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(log.empty());
     REQUIRE(result->type() == dice::type_rand_var::id());
@@ -164,7 +174,9 @@ TEST_CASE("Interpret a function call", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(log.empty());
     REQUIRE(result->type() == dice::type_double::id());
@@ -181,7 +193,9 @@ TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[di
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -202,7 +216,9 @@ TEST_CASE("Interpret a relational operator in", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -222,7 +238,9 @@ TEST_CASE("Interpret a relational operator <", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -242,7 +260,9 @@ TEST_CASE("Interpret a relational operator <=", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -262,7 +282,9 @@ TEST_CASE("Interpret a relational operator ==", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -282,7 +304,9 @@ TEST_CASE("Interpret a relational operator !=", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -302,7 +326,9 @@ TEST_CASE("Interpret a relational operator >=", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -322,7 +348,9 @@ TEST_CASE("Interpret a relational operator >", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -342,7 +370,10 @@ TEST_CASE("Don't interpret the in operator if the lower bound is invalid express
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -367,7 +398,9 @@ TEST_CASE("Don't interpret the in operator if the upper bound is invalid express
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -392,7 +425,9 @@ TEST_CASE("Don't interpret relational operator if the second operand is invalid"
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -413,7 +448,9 @@ TEST_CASE("Resume interpreting relational operator after finding a sync symbol",
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -434,7 +471,9 @@ TEST_CASE("Don't interpret the + operator if the second operand is invalid", "[d
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -455,7 +494,9 @@ TEST_CASE("Resume interpreting the + operator if we find a sync symbol", "[dice]
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -475,7 +516,9 @@ TEST_CASE("Don't interpret the * operator if the second operand is invalid", "[d
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -496,7 +539,9 @@ TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -516,7 +561,9 @@ TEST_CASE("Interpret arithmetic expressing with doubles and ints", "[dice]")
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_double::id());
     auto&& value = dynamic_cast<dice::type_double&>(*result).data();
@@ -539,7 +586,9 @@ TEST_CASE("Interpret a function with no arguments", "[dice]")
         return dice::make<dice::type_int>(1); 
     }));
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -568,7 +617,9 @@ TEST_CASE("Interpret a function with invalid first argument", "[dice]")
         }, { dice::type_int::id(), dice::type_int::id() }
     ));
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -589,7 +640,9 @@ TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[
 
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_int::id());
     auto&& value = dynamic_cast<dice::type_int&>(*result).data();
@@ -611,7 +664,9 @@ TEST_CASE("Resume interpreting the dice roll operator if we find a sync symbol",
 
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_rand_var::id());
     auto&& value = dynamic_cast<dice::type_rand_var&>(*result).data();
@@ -636,7 +691,9 @@ TEST_CASE("Resume interpreting an expression in function arguments after finding
 
     dice::environment env;
     dice::parser<dice::lexer, dice::logger, dice::environment> parser{ &lexer, &log, &env };
-    auto result = parser.parse();
+    auto results = parser.parse();
+    REQUIRE(results.size() == 1);
+    auto result = std::move(results[0]);
 
     REQUIRE(result->type() == dice::type_double::id());
     auto&& value = dynamic_cast<dice::type_double&>(*result).data();
