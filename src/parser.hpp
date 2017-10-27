@@ -105,7 +105,8 @@ namespace dice
                 // parse lower bound of the interval
                 if (!check_add())
                 {
-                    error("Invalid operand for the lower bound of operator in");
+                    error(
+                        "Invalid operand for the lower bound of operator in");
                     return left;
                 }
                 auto lower_bound = add();
@@ -115,7 +116,8 @@ namespace dice
                 // parse upper bound of the interval
                 if (!check_add())
                 {
-                    error("Invalid operand for the upper bound of operator in");
+                    error(
+                        "Invalid operand for the upper bound of operator in");
                     return left;
                 }
                 auto upper_bound = add();
@@ -134,7 +136,8 @@ namespace dice
                 if (check_add())
                 {
                     auto right = add();
-                    return env_->call(op.lexeme, std::move(left), std::move(right));
+                    return env_->call(op.lexeme, std::move(left), 
+                        std::move(right));
                 }
                 else 
                 {
@@ -226,7 +229,7 @@ namespace dice
         {
             while (!in_first_mult() && !in_follow_mult())
             {
-                error("Invalid token at the beginning of a multiplication: " + 
+                error("Invalid token at the beginning of a multiplication: " +
                     to_string(lookahead_));
                 eat(lookahead_.type);
             }
@@ -317,15 +320,18 @@ namespace dice
                 if (lookahead_.type == symbol_type::roll_op)
                 {
                     eat(symbol_type::roll_op);
-        
-                    // only use the factor production if there won't be any parse error
+
+                    // only use the factor production if there won't be any 
+                    // parse error
                     if (check_factor())
                     {
-                        result = env_->call("__roll_op", std::move(result), factor());
+                        result = env_->call("__roll_op", std::move(result), 
+                            factor());
                     }
                     else // otherwise, ignore the operator 
                     {
-                        error("Invalid operand for binary operator D (dice roll)");
+                        error("Invalid operand for binary operator "  
+                            "D (dice roll)");
                     }
                 }
                 else 
@@ -417,7 +423,8 @@ namespace dice
         bool in_follow_param_list() const
         {
             return lookahead_.type == symbol_type::param_delim ||
-                lookahead_.type == symbol_type::right_paren; // FOLLOW(opt_params)
+                // FOLLOW(opt_params):
+                lookahead_.type == symbol_type::right_paren; 
         }
 
         bool check_param_list()
@@ -448,7 +455,8 @@ namespace dice
                 }
                 else 
                 {
-                    error("Invalid function parameter " + std::to_string(number));
+                    error("Invalid function parameter " + 
+                        std::to_string(number));
                 }
         
                 if (lookahead_.type != symbol_type::param_delim)
@@ -470,7 +478,8 @@ namespace dice
         {
             if (lookahead_.type != type)
             {
-                // report the error and "insert" the token (i.e. assume it's there) 
+                // report the error and "insert" the token 
+                // (i.e. assume it's there) 
                 error("Expected " + 
                     to_string(type) + ", got " + 
                     to_string(lookahead_) + ".");
