@@ -107,6 +107,20 @@ namespace dice
             });
         }
 
+        /** Multiply this random variable with -1.
+         * @return negated random variable
+         */
+        auto operator-() const 
+        {
+            random_variable_decomposition result;
+            result.deps_ = deps_;
+            for (auto&& var : vars_)
+            {
+                result.vars_.push_back(-var);
+            }
+            return result;
+        }
+
         /** Compute indicator: X < Y (where X is this random variale).
          * Variables does not need to be indepedent.
          * @param other random variable Y

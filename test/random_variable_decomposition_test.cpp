@@ -189,3 +189,23 @@ TEST_CASE("Compute probability of multiple depedent variables", "[random_variabl
     REQUIRE(prob.find(324)->second == Approx(1 / 24.0));
     REQUIRE(prob.find(576)->second == Approx(1 / 24.0));
 }
+
+TEST_CASE("Compute negation of a random variable", "[random_variable_decomposition]")
+{
+    dice::random_variable<int, double> var_a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 2),
+        std::make_pair(3, 3),
+        std::make_pair(4, 4),
+    };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+
+    auto result = -a;
+    auto var = result.to_random_variable();
+    auto&& prob = var.probability();
+
+    REQUIRE(prob.find(-1)->second == Approx(1 / 10.0));
+    REQUIRE(prob.find(-2)->second == Approx(2 / 10.0));
+    REQUIRE(prob.find(-3)->second == Approx(3 / 10.0));
+    REQUIRE(prob.find(-4)->second == Approx(4 / 10.0));
+}
