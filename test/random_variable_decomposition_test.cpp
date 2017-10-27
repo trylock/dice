@@ -150,3 +150,42 @@ TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]
     REQUIRE(prob.find(0)->second == Approx(1 / 2.0));
 }
 
+TEST_CASE("Compute probability of multiple depedent variables", "[random_variable_decomposition][multiple_vars]")
+{
+    dice::random_variable<int, double> var_a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    };
+    dice::random_variable<int, double> var_b{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+    };
+    dice::random_variable<int, double> var_c{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+    };
+
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> b{ dice::dependent_tag{}, &var_b };
+    dice::random_variable_decomposition<int, double> c{ dice::dependent_tag{}, &var_c };
+
+    // notice: A, B and B, C and A, C and A, B, C are still indepednet
+    auto result = a * a * b * b * c * c;
+    auto var = result.to_random_variable();
+    auto&& prob = var.probability();
+
+    REQUIRE(prob.find(1)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(4)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(9)->second == Approx(2 / 24.0));
+    REQUIRE(prob.find(16)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(36)->second == Approx(4 / 24.0));
+    REQUIRE(prob.find(64)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(81)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(144)->second == Approx(3 / 24.0));
+    REQUIRE(prob.find(256)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(324)->second == Approx(1 / 24.0));
+    REQUIRE(prob.find(576)->second == Approx(1 / 24.0));
+}

@@ -262,21 +262,21 @@ namespace dice
                 std::size_t index_b = 0;
 
                 std::size_t hash = i;
-                std::size_t old_size = 1;
+                std::size_t size_a = 1;
+                std::size_t size_b = 1;
                 for (auto&& var : result.deps_)
                 {
                     if (in_a.find(var) != in_a.end())
                     {
-                        index_a *= old_size;
-                        index_a += hash % var->probability().size();
+                        index_a += (hash % var->probability().size()) * size_a;
+                        size_a *= var->probability().size();
                     }
                     if (in_b.find(var) != in_b.end())
                     {
-                        index_b *= old_size;
-                        index_b += hash % var->probability().size();
+                        index_b += (hash % var->probability().size()) * size_b;
+                        size_b *= var->probability().size();
                     }
                     hash /= var->probability().size();
-                    old_size = var->probability().size();
                 }
 
                 result.vars_.push_back(
