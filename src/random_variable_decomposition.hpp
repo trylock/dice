@@ -193,6 +193,25 @@ namespace dice
             });
         }
         
+        /** Compute indicator: X in [A, B] (where X is this random variable).
+         * The interval is closed.
+         * @param lower bound of the interval A
+         * @param upper bound of the interval B
+         * @return indicator of X in [A, B]
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        template<typename T>
+        auto in(T&& lower_bound, T&& upper_bound) const 
+        {
+            random_variable_decomposition result;
+            result.deps_ = deps_;
+            for (auto&& var : vars_)
+            {
+                result.vars_.push_back(var.in(lower_bound, upper_bound));
+            }
+            return result;
+        }
+        
         /** Roll num_rolls times with a dice of num_sides.
          * Random variables have to be independent.
          * @param number of rolls

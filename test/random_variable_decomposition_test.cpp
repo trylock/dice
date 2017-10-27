@@ -126,3 +126,27 @@ TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomp
     REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(0)->second == Approx(3 / 4.0));
 }
+
+TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]")
+{
+    dice::random_variable<int, double> var_a{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+        std::make_pair(5, 1),
+        std::make_pair(6, 1),
+    };
+    dice::random_variable<int, double> var_six(dice::constant_tag{}, 6);
+
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> six{ dice::independent_tag{}, &var_six };
+
+    auto result = a.in(4, 5) + a.equal(six);
+    auto var = result.to_random_variable();
+    auto&& prob = var.probability();
+
+    REQUIRE(prob.find(1)->second == Approx(1 / 2.0));
+    REQUIRE(prob.find(0)->second == Approx(1 / 2.0));
+}
+
