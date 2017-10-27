@@ -82,7 +82,7 @@ static dice::user_function::return_type dice_roll_op(
 {
     using fn = dice::function_traits;
     using namespace dice;
-    fn::arg<type_rand_var>(first)->data() = type_rand_var::value_type::roll(
+    fn::arg<type_rand_var>(first)->data() = roll(
         fn::arg<type_rand_var>(first)->data(),
         fn::arg<type_rand_var>(first + 1)->data()
     );

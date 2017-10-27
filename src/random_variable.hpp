@@ -271,7 +271,7 @@ namespace dice
          *        Each value has to be a positive integer
          * @return distribution of XdY
          */
-        static random_variable roll(
+        friend random_variable roll(
             const random_variable& num_dice, 
             const random_variable& num_sides)
         {
@@ -329,7 +329,8 @@ namespace dice
                     for (value_type i = sides_value * dice; i > 0; --i)
                     {
                         // compute the probability of the sum of i
-                        auto base_prob = 1 / static_cast<probability_type>(sides_value);
+                        auto base_prob = 1 / static_cast<probability_type>(
+                            sides_value);
                         auto prob_i = dice == 1 ? base_prob : 0;
                         value_type j = std::max(i - sides_value, 1);
                         for (; j < i; ++j)
@@ -343,16 +344,16 @@ namespace dice
                         if (num_rolls != num_dice.probability_.end())
                         {
                             auto rolls_prob = num_rolls->second;
-                            auto result_prob = prob_i * sides_prob * rolls_prob;
+                            auto prob = prob_i * sides_prob * rolls_prob;
                             // don't save impossible events
-                            if (result_prob == 0) 
+                            if (prob == 0) 
                                 continue;
     
                             auto result = dist.probability_.insert(
-                                std::make_pair(i, result_prob));
+                                std::make_pair(i, prob));
                             if (!result.second)
                             {
-                                result.first->second += result_prob;
+                                result.first->second += prob;
                             }
                         }
                     }
