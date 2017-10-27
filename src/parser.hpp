@@ -18,16 +18,16 @@
 namespace dice
 {
     // dice expression parser
-    template<typename Lexer, typename Logger, typename Environment>
+    template<typename Lexer, typename Logger, typename Interpreter>
     class parser
     {
     public:
-        using value_type = std::unique_ptr<base_value>;
+        using value_type = typename Interpreter::value_type;
 
-        parser(Lexer* reader, Logger* log, Environment* env) : 
+        parser(Lexer* reader, Logger* log, Interpreter* inter) : 
             lexer_(reader), 
             log_(log),
-            env_(env) {}
+            int_(inter) {}
 
         /** Parse expression provided by the lexer.
          * Operators are left associative unless stated otherwise.
@@ -52,7 +52,7 @@ namespace dice
     private:
         Lexer* lexer_;
         Logger* log_;
-        Environment* env_;
+        Interpreter* int_;
         symbol lookahead_;
         bool is_definition_ = false;
 
@@ -131,8 +131,7 @@ namespace dice
                 auto value = expr();
                 is_definition_ = false;
 
-                env_->set_var(id.lexeme, std::move(value));
-                return nullptr;
+                return int_->assign(id.lexeme, std::move(value));
             }
             return expr();
         }
@@ -192,7 +191,7 @@ namespace dice
         
                 eat(symbol_type::right_square_bracket);
         
-                return env_->call("in", 
+                return int_->rel_in(
                     std::move(left), 
                     std::move(lower_bound), 
                     std::move(upper_bound));
@@ -203,9 +202,7 @@ namespace dice
                 eat(symbol_type::rel_op);
                 if (check_add())
                 {
-                    auto right = add();
-                    return env_->call(op.lexeme, std::move(left), 
-                        std::move(right));
+                   return int_->rel_op(op.lexeme, std::move(left), add());
                 }
                 else 
                 {
@@ -269,7 +266,10 @@ namespace dice
                 // compute the operator if there won't be any parse error
                 if (check_mult())
                 {
-                    result = env_->call(op, std::move(result), mult());
+                    if (op == "+")
+                        result = int_->add(std::move(result), mult());
+                    else 
+                        result = int_->sub(std::move(result), mult());
                 }
                 else // otherwise, ignore the operator
                 {
@@ -329,7 +329,10 @@ namespace dice
                 // compute the operation if there won't be any parse error
                 if (check_dice_roll())
                 {
-                    result = env_->call(op, std::move(result), dice_roll());
+                    if (op == "*")
+                        result = int_->mult(std::move(result), dice_roll());
+                    else
+                        result = int_->div(std::move(result), dice_roll());
                 }
                 else // otherwise, ignore the operator
                 {
@@ -393,8 +396,7 @@ namespace dice
                     // parse error
                     if (check_factor())
                     {
-                        result = env_->call("__roll_op", std::move(result), 
-                            factor());
+                        result = int_->roll(std::move(result), factor());
                     }
                     else // otherwise, ignore the operator 
                     {
@@ -409,8 +411,9 @@ namespace dice
             }
         
             // add sign
+            // TODO: should we call the unary minus multiple times?
             if (count % 2 != 0)
-                result = env_->call("unary-", std::move(result));
+                result = int_->unary_minus(std::move(result));
             return result; 
         }
 
@@ -452,14 +455,7 @@ namespace dice
             {
                 auto lexeme = lookahead_.lexeme;
                 eat(lookahead_.type);
-                if (lexeme.find('.') != std::string::npos)
-                {
-                    return make<type_double>(std::atof(lexeme.c_str()));
-                }
-                else 
-                {
-                    return make<type_int>(std::atoi(lexeme.c_str()));
-                }
+                return int_->number(lexeme);
             }
             else if (lookahead_.type == symbol_type::id)
             {
@@ -472,37 +468,24 @@ namespace dice
                     eat(symbol_type::left_paren);
                     auto args = param_list();
                     eat(symbol_type::right_paren);
-                    
-                    return env_->call_var(id.lexeme, args.begin(), args.end());
+
+                    return int_->call(id.lexeme, std::move(args));
                 }
                 else // variable 
                 {
-                    auto value = env_->get_var(id.lexeme);
-                    if (value == nullptr)
+                    if (is_definition_)
                     {
-                        error("Unknown variable '" + id.lexeme + "'.");
+                        error("Using names of random variables in name "
+                            "definition is supported only partially and " 
+                            "may lead to incorrect results.");
+                    }
+                    auto result = int_->variable(id.lexeme);
+                    if (result == nullptr)
+                    {
+                        error("Unknown variable name '" + id.lexeme + "'.");
                         return make<type_int>(0);
                     }
-
-                    // if the name represents a random variable, it can
-                    // depend on other subexpressions
-                    auto var = dynamic_cast<type_rand_var*>(value);
-                    if (var != nullptr)
-                    {
-                        if (is_definition_)
-                        {
-                            error("Using names of random variables in name "
-                                "definition is supported only partially and " 
-                                "may lead to incorrect results.");
-                        }
-
-                        return make<type_rand_var>(
-                            dependent_tag{},
-                            &var->data().rand_var()
-                        );
-                    }
-
-                    return value->clone();
+                    return result;
                 }
             }
             
@@ -599,6 +582,18 @@ namespace dice
                 message);
         }
     };
+
+    /** Create a parser without specifying template parameter.
+     * @param lexer
+     * @param logger
+     * @param interpreter
+     * @return parser with those parameters
+     */
+    template<typename Lexer, typename Logger, typename Interpreter>
+    auto make_parser(Lexer* lex, Logger* log, Interpreter* interpret)
+    {
+        return parser<Lexer, Logger, Interpreter>{ lex, log, interpret };
+    }
 }
 
 #endif // DICE_PARSER_HPP_

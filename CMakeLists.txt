@@ -15,6 +15,7 @@ set(dice_headers
     ${SRC_DIR}/functions.hpp
     ${SRC_DIR}/conversions.hpp
     ${SRC_DIR}/environment.hpp
+    ${SRC_DIR}/interpreter.hpp
     ${SRC_DIR}/random_variable.hpp
     ${SRC_DIR}/random_variable_decomposition.hpp
 )

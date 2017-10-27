@@ -5,7 +5,10 @@
 #include <iomanip>
 
 #include "logger.hpp"
+#include "lexer.hpp"
 #include "parser.hpp"
+#include "environment.hpp"
+#include "interpreter.hpp"
 
 // value formatting functions
 
@@ -77,10 +80,8 @@ int main(int argc, char** argv)
         dice::logger log;
         dice::lexer lexer{ &input, &log };
         dice::environment env;
-        dice::parser<
-            dice::lexer, 
-            dice::logger, 
-            dice::environment> parser{ &lexer, &log, &env };
+        dice::interpreter<dice::environment> interpret{ &env };
+        auto parser = dice::make_parser(&lexer, &log, &interpret);
 
         auto result = parser.parse(); 
         for (auto&& value : result)
