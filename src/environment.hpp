@@ -18,7 +18,8 @@ namespace dice
     class compiler_error : public std::runtime_error
     {
     public:
-        explicit compiler_error(const std::string& message) : std::runtime_error(message) {}
+        explicit compiler_error(const std::string& message) : 
+            std::runtime_error(message) {}
     };
 
     // simple symbol table 

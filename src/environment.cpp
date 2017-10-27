@@ -32,7 +32,8 @@ dice::user_function::return_type dice_add(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() + fn::arg<T>(first + 1)->data();
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() + 
+        fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
@@ -42,7 +43,8 @@ dice::user_function::return_type dice_sub(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() - fn::arg<T>(first + 1)->data();
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() - 
+        fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
@@ -52,7 +54,8 @@ dice::user_function::return_type dice_mult(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() * fn::arg<T>(first + 1)->data();
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() * 
+        fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
@@ -62,7 +65,8 @@ dice::user_function::return_type dice_div(
     dice::user_function::args_iterator)
 {
     using fn = dice::function_traits;
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() / fn::arg<T>(first + 1)->data();
+    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() / 
+        fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
@@ -95,10 +99,11 @@ static dice::user_function::return_type dice_rand_var_in(
 {
     using namespace dice;
     using fn = function_traits;
-    fn::arg<type_rand_var>(first)->data() = fn::arg<type_rand_var>(first)->data().in(
-        fn::arg<type_double>(first + 1)->data(),
-        fn::arg<type_double>(first + 2)->data()
-    );
+    auto&& var = fn::arg<type_rand_var>(first)->data();
+    auto&& lower_bound = fn::arg<type_double>(first + 1)->data();
+    auto&& upper_bound = fn::arg<type_double>(first + 2)->data();
+    
+    var = var.in(lower_bound, upper_bound);
     return std::move(*first);
 }
 
@@ -269,7 +274,10 @@ dice::environment::environment()
         dice_variance, { type_rand_var::id() }
     });
     add_function("in", {
-        dice_rand_var_in, { type_rand_var::id(), type_double::id(), type_double::id() }
+        dice_rand_var_in, { 
+            type_rand_var::id(), 
+            type_double::id(), 
+            type_double::id() }
     });
     add_function("<", {
         dice_less_than, { type_rand_var::id(), type_rand_var::id() }
@@ -284,7 +292,9 @@ dice::environment::environment()
         dice_not_equal, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function(">=", {
-        dice_greater_than_or_equal, { type_rand_var::id(), type_rand_var::id() }
+        dice_greater_than_or_equal, { 
+            type_rand_var::id(), 
+            type_rand_var::id() }
     });
     add_function(">", {
         dice_greater_than, { type_rand_var::id(), type_rand_var::id() }
@@ -294,20 +304,24 @@ dice::environment::environment()
     });
 
     // type conversions
-    conversions_.add_conversion(type_int::id(), type_double::id(), [](auto&& value)
+    conversions_.add_conversion(type_int::id(), type_double::id(), 
+    [](auto&& value)
     {
         auto&& int_value = dynamic_cast<type_int&>(*value);
         return make<type_double>(static_cast<double>(int_value.data()));
     }, 1);
 
-    conversions_.add_conversion(type_int::id(), type_rand_var::id(), [](auto&& value)
+    conversions_.add_conversion(type_int::id(), type_rand_var::id(), 
+    [](auto&& value)
     {
         auto&& int_value = dynamic_cast<type_int&>(*value);
         return make<type_rand_var>(constant_tag{}, int_value.data());
     }, 1);
 }
 
-void dice::environment::add_function(const std::string& name, user_function&& func)
+void dice::environment::add_function(
+    const std::string& name, 
+    user_function&& func)
 {
     auto result = functions_.insert(std::make_pair(
         name, 
