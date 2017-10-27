@@ -40,13 +40,18 @@ namespace dice
 
         random_variable_decomposition() {}
 
-        random_variable_decomposition(independent_tag, var_type* variable)
+        random_variable_decomposition(independent_tag, const var_type* variable)
         {
             assert(variable != nullptr);
             vars_.push_back(*variable);
         }
 
-        random_variable_decomposition(dependent_tag, var_type* variable)
+        random_variable_decomposition(independent_tag, const var_type& variable)
+        {
+            vars_.push_back(variable);
+        }
+
+        random_variable_decomposition(dependent_tag, const var_type* variable)
         {
             assert(variable != nullptr);
             deps_.push_back(variable);
@@ -56,6 +61,39 @@ namespace dice
                 vars_.emplace_back(constant_tag{}, pair.first);
             }
         }
+        
+        // Random variable constructors
+
+        random_variable_decomposition(
+            std::vector<std::pair<value_type, std::size_t>>&& list)
+            : random_variable_decomposition(independent_tag{}, 
+                var_type(std::move(list)))
+        {
+        }
+
+        random_variable_decomposition(bernoulli_tag, ProbabilityType success)
+            : random_variable_decomposition(independent_tag{}, 
+                var_type(bernoulli_tag{}, success))
+        {
+        }
+        
+        random_variable_decomposition(constant_tag, value_type value)
+            : random_variable_decomposition(independent_tag{}, 
+                var_type(constant_tag{}, value))
+        {
+        }
+        
+        // allow copy
+        random_variable_decomposition(
+            const random_variable_decomposition&) = default;
+        random_variable_decomposition& operator=(
+            const random_variable_decomposition&) = default;
+
+        // allow move
+        random_variable_decomposition(
+            random_variable_decomposition&&) = default;
+        random_variable_decomposition& operator=(
+            random_variable_decomposition&&) = default;
 
         /** Compute sum of 2 random variables.
          * Random variables don't need to be indendent.
@@ -241,7 +279,26 @@ namespace dice
             if (num_rolls.vars_.size() > 1 || num_sides.vars_.size()  > 1)
                 throw std::runtime_error(
                     "Variable names are not supported in roll operator");
-            return roll(num_rolls.vars_.front(), num_sides.vars_.front());
+            auto var = roll(num_rolls.vars_.front(), num_sides.vars_.front());
+            return random_variable_decomposition(independent_tag{}, &var);
+        }
+
+        /** Compute expected value of this random variable.
+         * @return expected value of this variable
+         */
+        auto expected_value() const 
+        {
+            auto var = to_random_variable();
+            return var.expected_value();
+        }
+
+        /** Compute variance of this random variable.
+         * @return variance of this variable
+         */
+        auto variance() const 
+        {
+            auto var = to_random_variable();
+            return var.variance();
         }
 
         /** Compute function of 2 random variables: A and B.
@@ -267,8 +324,8 @@ namespace dice
                 num_values *= var->probability().size();
             }
 
-            std::unordered_set<var_type*> in_a{ deps_.begin(), deps_.end() };
-            std::unordered_set<var_type*> in_b{ 
+            std::unordered_set<const var_type*> in_a{ deps_.begin(), deps_.end() };
+            std::unordered_set<const var_type*> in_b{ 
                 other.deps_.begin(), other.deps_.end() };
 
             // compute the conditional random variables
@@ -363,6 +420,15 @@ namespace dice
             return result;
         }
 
+        /** Map value -> probability of this random variable.
+         * @return probability map
+         */
+        auto probability() const 
+        {
+            auto var = to_random_variable();
+            return var.probability();
+        }
+
     private:
         /** Set of variables on which this random variable depends.
          * It is kept sorted by the pointer value. This simplifies the
@@ -372,7 +438,7 @@ namespace dice
          * Note we store a pointer to each variable. Therefore, they have to
          * outlive this object.
          */
-        std::vector<var_type*> deps_;
+        std::vector<const var_type*> deps_;
 
         /** List of conditional random variables.
          * 

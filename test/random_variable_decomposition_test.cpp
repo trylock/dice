@@ -1,14 +1,16 @@
 #include "catch.hpp"
 #include "random_variable_decomposition.hpp"
 
+using freq_list = dice::random_variable<int, double>::freq_list;
+
 TEST_CASE("Compute probability of indepedent random variables", "[random_variable_decomposition]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
-    };
+    } };
     dice::random_variable<int, double> var_b(dice::constant_tag{}, 2);
     dice::random_variable_decomposition<int, double> a{ dice::independent_tag{}, &var_a };
     dice::random_variable_decomposition<int, double> b{ dice::independent_tag{}, &var_b };
@@ -28,12 +30,12 @@ TEST_CASE("Compute probability of indepedent random variables", "[random_variabl
 
 TEST_CASE("Compute probability of independent random variables", "[random_variable_decomposition]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
-    };
+    } };
     dice::random_variable<int, double> var_b(dice::constant_tag{}, 2);
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
     dice::random_variable_decomposition<int, double> b{ dice::independent_tag{}, &var_b };
@@ -53,12 +55,12 @@ TEST_CASE("Compute probability of independent random variables", "[random_variab
 
 TEST_CASE("Compute probability of dependent random variables", "[random_variable_decomposition]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
-    };
+    } };
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
     dice::random_variable_decomposition<int, double> b{ dice::dependent_tag{}, &var_a };
 
@@ -79,16 +81,16 @@ TEST_CASE("Compute probability of mix of random variables", "[random_variable_de
 {
 
     dice::random_variable<int, double> var_a(dice::bernoulli_tag{}, 0.7);
-    dice::random_variable<int, double> var_b{
+    dice::random_variable<int, double> var_b{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
-    };
-    dice::random_variable<int, double> var_c{
+    } };
+    dice::random_variable<int, double> var_c{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
-    };
+    } };
     dice::random_variable<int, double> var_one(dice::constant_tag{}, 1);
     
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
@@ -108,12 +110,12 @@ TEST_CASE("Compute probability of mix of random variables", "[random_variable_de
 
 TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomposition]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
-    };
+    } };
     dice::random_variable<int, double> var_two(dice::constant_tag{}, 2);
     dice::random_variable<int, double> var_three(dice::constant_tag{}, 3);
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
@@ -129,14 +131,14 @@ TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomp
 
 TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
         std::make_pair(5, 1),
         std::make_pair(6, 1),
-    };
+    } };
     dice::random_variable<int, double> var_six(dice::constant_tag{}, 6);
 
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
@@ -152,21 +154,21 @@ TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]
 
 TEST_CASE("Compute probability of multiple depedent variables", "[random_variable_decomposition][multiple_vars]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
-    };
-    dice::random_variable<int, double> var_b{
+    } };
+    dice::random_variable<int, double> var_b{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
-    };
-    dice::random_variable<int, double> var_c{
+    } };
+    dice::random_variable<int, double> var_c{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
-    };
+    } };
 
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
     dice::random_variable_decomposition<int, double> b{ dice::dependent_tag{}, &var_b };
@@ -192,12 +194,12 @@ TEST_CASE("Compute probability of multiple depedent variables", "[random_variabl
 
 TEST_CASE("Compute negation of a random variable", "[random_variable_decomposition]")
 {
-    dice::random_variable<int, double> var_a{
+    dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 2),
         std::make_pair(3, 3),
         std::make_pair(4, 4),
-    };
+    } };
     dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
 
     auto result = -a;
