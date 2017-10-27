@@ -13,19 +13,22 @@ namespace dice
         using arg_type = std::unique_ptr<base_value>;
         using return_type = std::unique_ptr<base_value>;
         using args_iterator = typename std::vector<arg_type>::iterator;
-        using callable_type = std::function<return_type(args_iterator, args_iterator)>;
+        using callable_type = std::function<
+            return_type(args_iterator, args_iterator)>;
 
         user_function() {}
         user_function(callable_type callable) : callable_(callable) {}
-        user_function(callable_type callable, std::vector<type_id>&& arg_types) : 
-            callable_(callable), args_(std::move(arg_types)) {}
+        user_function(callable_type callable, std::vector<type_id>&& arg_types) 
+            : callable_(callable), args_(std::move(arg_types)) {}
 
         /** Call this user function with given arguments 
          * @param argument iterator pointing at the first argument
          * @param argument iterator pointing at the last argument
          * @return result of the call 
          */
-        inline return_type operator()(args_iterator first, args_iterator last) const
+        inline return_type operator()(
+            args_iterator first, 
+            args_iterator last) const
         {
             return callable_(first, last);
         }
@@ -60,7 +63,8 @@ namespace dice
             auto result = dynamic_cast<ExpectedType*>(it->get());
             if (result == nullptr)
                 throw std::runtime_error(
-                    std::string("Invalid argument type. Expected ") + typeid(ExpectedType).name());
+                    std::string("Invalid argument type. Expected ") + 
+                    typeid(ExpectedType).name());
             return result;
         }
 
