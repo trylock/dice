@@ -94,6 +94,19 @@ namespace dice
             });
         }
 
+        /** Divide this variable by other variable.
+         * Random variables don't need to be indendent.
+         * @param right hand side of the operator
+         * @return result of the division
+         */
+        auto operator/(const random_variable_decomposition& other) const
+        {
+            return combine(other, [](auto&& value_a, auto&& value_b) 
+            {
+                return value_a / value_b;
+            });
+        }
+
         template<typename CombinationFunc>
         auto combine(
             const random_variable_decomposition& other, 
