@@ -30,6 +30,26 @@ namespace dice
 
         environment();
 
+        /** Set value of a variable.
+         * @param name of a variable
+         * @param value of the variable
+         */
+        void set_var(const std::string& name, value_type&& value);
+
+        /** Get value of a variable.
+         * @param name of a variable
+         * @return pointer to the value of this variable or 
+         *         nullptr if it does not exist
+         */
+        base_value* get_var(const std::string& name);
+
+        /** Get value of a variable.
+         * @param name of a variable
+         * @return constant pointer to the value of this variable or 
+         *         nullptr if it does not exist
+         */
+        const base_value* get_var(const std::string& name) const;
+
         /** Add a function to the environment.
          * Added function will be available in dice expressions.
          * @param function name
@@ -79,9 +99,10 @@ namespace dice
     private:
         // type conversions
         conversions conversions_;
-
         // available functions    
         std::unordered_map<std::string, std::vector<user_function>> functions_;
+        // available variables
+        std::unordered_map<std::string, value_type> variables_;
 
         // argument value storage
         std::vector<value_type> args_;

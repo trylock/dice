@@ -185,3 +185,34 @@ TEST_CASE("Generate a random number from given distribution", "[environment]")
         REQUIRE((value >= 1 && value <= 6));
     }
 }
+
+TEST_CASE("Set value of unknown variable", "[environment]")
+{
+    dice::environment env;
+
+    env.set_var("test", dice::make<dice::type_int>(14));
+
+    auto value = env.get_var("test");
+    REQUIRE(dynamic_cast<dice::type_int*>(value)->data() == 14);
+}
+
+TEST_CASE("Overwrite value of set variable", "[environment]")
+{
+    dice::environment env;
+
+    env.set_var("test", dice::make<dice::type_int>(14));
+    env.set_var("test", dice::make<dice::type_int>(41));
+
+    auto value = env.get_var("test");
+    REQUIRE(dynamic_cast<dice::type_int*>(value)->data() == 41);
+}
+
+TEST_CASE("Get unknown variable", "[environment]")
+{
+    dice::environment env;
+
+    env.set_var("test", dice::make<dice::type_int>(1));
+
+    REQUIRE(env.get_var("tesT") == nullptr);
+    REQUIRE(env.get_var("unknown") == nullptr);
+}

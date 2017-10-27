@@ -330,6 +330,38 @@ void dice::environment::add_function(
     result.first->second.push_back(std::move(func));
 }
 
+void dice::environment::set_var(const std::string& name, value_type&& value)
+{
+    auto it = variables_.find(name);
+    if (it != variables_.end())
+    {
+        it->second = std::move(value);
+    }
+    else 
+    {
+        variables_.insert(std::make_pair(
+            name,
+            std::move(value)
+        ));
+    }
+}
+
+dice::base_value* dice::environment::get_var(const std::string& name)
+{
+    auto it = variables_.find(name);
+    if (it == variables_.end())
+        return nullptr;
+    return it->second.get();
+}
+
+const dice::base_value* dice::environment::get_var(const std::string& name) const
+{
+    auto it = variables_.find(name);
+    if (it == variables_.end())
+        return nullptr;
+    return it->second.get();
+}
+
 dice::user_function::return_type dice::environment::call_var(
     const std::string& name,
     dice::user_function::args_iterator first,
