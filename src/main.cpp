@@ -7,80 +7,60 @@
 #include "logger.hpp"
 #include "parser.hpp"
 
-// Formatting functions
-std::string format_probability(double value)
+// value formatting functions
+
+void view(int value)
 {
-    if (value > 0 && value < 0.0001)
-        return "< 0.01 %";
-    return std::to_string(value * 100) + " %";
+    std::cout << value << std::endl;
 }
 
-std::ostream& bold(std::ostream& output)
+void view(double value)
 {
-    return output << "\e[1m";
+    std::cout << value << std::endl;
 }
 
-std::ostream& red(std::ostream& output)
+template<typename ValueType, typename ProbabilityType>
+void view(
+    const dice::random_variable_decomposition<ValueType, ProbabilityType>& var)
 {
-    return output << "\e[1;31m";
-}
-
-std::ostream& blue(std::ostream& output)
-{
-    return output << "\e[1;34m";
-}
-
-std::ostream& reset(std::ostream& output)
-{
-    return output << "\e[0m";
-}
-
-void print_result(const dice::random_variable<int, double>& value)
-{
-    // print constant values as constants
-    if (value.is_constant())
-    {
-        std::cout << value.value() << std::endl;
-        return;
-    }
-
-    // print the distribution sorted by value
-    std::vector<std::pair<int, double>> dist{ 
-        value.probability().begin(), 
-        value.probability().end() 
-    };
-    std::sort(dist.begin(), dist.end(), [](auto&& a, auto&& b) 
-    {
-        return a.first < b.first;
-    });
-
-    std::cout << bold << std::setw(10) << std::right << "Value" << reset;
-    std::cout << bold << std::setw(15) << std::right << "Probability" << reset << std::endl;
-
-    for (auto&& pair : dist)
+    std::cout 
+        << std::setw(13) << "Value" 
+        << std::setw(20) << "Probability" << std::endl;
+    for (auto&& pair : var.probability())
     {
         std::cout 
-            << bold << std::setw(10) << std::right << pair.first << reset << ": " 
-            << std::setw(12) << format_probability(pair.second) << std::endl;
+            << std::setw(13) << pair.first 
+            << std::setw(20) << pair.second << std::endl;
     }
 }
 
-void print_result(std::unique_ptr<dice::base_value>&& value)
+void print_value(const dice::base_value* value)
 {
-    auto scalar_int = dynamic_cast<dice::type_int*>(value.get());
-    if (scalar_int != nullptr)
+    if (value == nullptr)
+        return;
+
+    auto int_value = dynamic_cast<const dice::type_int*>(value);
+    if (int_value != nullptr)
     {
-        std::cout << scalar_int->data() << std::endl;
+        view(int_value->data());
         return;
     }
-    auto scalar_double = dynamic_cast<dice::type_double*>(value.get());
-    if (scalar_double != nullptr)
+    
+    auto double_value = dynamic_cast<const dice::type_double*>(value);
+    if (double_value != nullptr)
     {
-        std::cout << scalar_double->data() << std::endl;
+        view(double_value->data());
         return;
     }
-    auto rv = dynamic_cast<dice::type_rand_var*>(value.get());
-    print_result(rv->data().to_random_variable());
+
+    auto var_value = dynamic_cast<const dice::type_rand_var*>(value);
+    if (var_value != nullptr)
+    {
+        view(var_value->data());
+        return;
+    }
+
+    throw std::runtime_error("Unknown value.");
 }
 
 int main(int argc, char** argv)
@@ -101,8 +81,12 @@ int main(int argc, char** argv)
             dice::lexer, 
             dice::logger, 
             dice::environment> parser{ &lexer, &log, &env };
+
         auto result = parser.parse(); 
-        print_result(std::move(result));
+        for (auto&& value : result)
+        {
+            print_value(value.get());
+        }
     }
     else 
     {
