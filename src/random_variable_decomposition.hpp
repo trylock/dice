@@ -316,10 +316,11 @@ namespace dice
                     std::pair<value_type, ProbabilityType>>> vars;
             for (auto&& var : deps_)
             {
-                vars.push_back(std::vector<std::pair<value_type, ProbabilityType>>(
-                    var->probability().begin(),
-                    var->probability().end()
-                ));
+                vars.push_back(
+                    std::vector<std::pair<value_type, ProbabilityType>>(
+                        var->probability().begin(),
+                        var->probability().end()
+                    ));
             }
  
             for (std::size_t i = 0; i < vars_.size(); ++i)
