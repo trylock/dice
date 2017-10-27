@@ -1,6 +1,8 @@
 #include "catch.hpp"
 #include "parser.hpp"
 
+using freq_list = dice::random_variable<int, double>::freq_list;
+
 class lexer_mock 
 {
 public:
@@ -83,14 +85,14 @@ public:
         else if (name == "/")
             a->data() = a->data() / b->data();
         else if (name == "__roll_op")
-            first = dice::make<dice::type_rand_var>(
+            first = dice::make<dice::type_rand_var>(freq_list{
                 std::make_pair(1, 1),
                 std::make_pair(2, 1),
                 std::make_pair(3, 1),
                 std::make_pair(4, 1),
                 std::make_pair(5, 1),
                 std::make_pair(6, 1)
-            );
+            });
         return std::move(first);
     }
 

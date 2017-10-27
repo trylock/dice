@@ -24,6 +24,7 @@ namespace dice
     public:
         using value_type = ValueType;
         using probability_type = ProbabilityType;
+        using freq_list = std::vector<std::pair<value_type, std::size_t>>;
 
         // create an impossible event
         random_variable() {}
@@ -50,8 +51,7 @@ namespace dice
             }
         }
 
-        // create distribution from a list of values and their frequency
-        random_variable(std::initializer_list<std::pair<value_type, std::uint64_t>> list)
+        random_variable(freq_list&& list)
         {
             probability_type sum = 0;
             for (auto&& item : list)
@@ -90,8 +90,10 @@ namespace dice
             return probability_.begin()->first;
         }
 
-        // expected value of the variable
-        probability_type expected_value() const 
+        /** Compute expected value of this random variable.
+         * @return expected value of this variable
+         */
+        auto expected_value() const 
         {
             probability_type exp = 0;
             for (auto&& pair : probability_)
@@ -101,8 +103,10 @@ namespace dice
             return exp;
         }
 
-        // variance of the variable
-        probability_type variance() const 
+        /** Compute variance of this random variable.
+         * @return variance of this variable
+         */
+        auto variance() const 
         {
             probability_type sum_sq = 0;
             probability_type sum = 0;

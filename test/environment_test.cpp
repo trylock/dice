@@ -1,6 +1,8 @@
 #include "catch.hpp"
 #include "environment.hpp"
 
+using freq_list = dice::random_variable<int, double>::freq_list;
+
 TEST_CASE("Call operator + on integers", "[environment]")
 {
     dice::environment env;
@@ -16,14 +18,14 @@ TEST_CASE("Call operator + on integers", "[environment]")
 TEST_CASE("Call operator + on random variables", "[environment]")
 {
     dice::environment env;
-    auto a = dice::make<dice::type_rand_var>(
+    auto a = dice::make<dice::type_rand_var>(freq_list{
         std::make_pair(1, 2),
         std::make_pair(2, 3)
-    );
-    auto b = dice::make<dice::type_rand_var>(
+    });
+    auto b = dice::make<dice::type_rand_var>(freq_list{
         std::make_pair(2, 1),
         std::make_pair(3, 1)
-    );
+    });
 
     auto result = env.call("+", std::move(a), std::move(b));
     REQUIRE(result->type() == dice::type_rand_var::id());
@@ -39,16 +41,16 @@ TEST_CASE("Operator + converts an int to a random variable if one argument is a 
 {
     dice::environment env;
     auto a = dice::make<dice::type_int>(1);
-    auto b = dice::make<dice::type_rand_var>(
+    auto b = dice::make<dice::type_rand_var>(freq_list{
         std::make_pair(2, 1),
         std::make_pair(3, 1)
-    );
+    });
 
     auto result = env.call("+", std::move(a), std::move(b));
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto&& prob = rand_var_result->data().probability();
+    auto prob = rand_var_result->data().probability();
     REQUIRE(prob.find(3)->second == Approx(1 / 2.0));
     REQUIRE(prob.find(4)->second == Approx(1 / 2.0));
 }
@@ -63,7 +65,7 @@ TEST_CASE("Roll operator converts int arguments to a random variable", "[environ
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto&& prob = rand_var_result->data().probability();
+    auto prob = rand_var_result->data().probability();
     REQUIRE(prob.find(1)->second == Approx(1 / 6.0));
     REQUIRE(prob.find(2)->second == Approx(1 / 6.0));
     REQUIRE(prob.find(3)->second == Approx(1 / 6.0));
@@ -114,7 +116,7 @@ TEST_CASE("Call unary - function on random variable", "[environment]")
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto drv = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto&& prob = drv->data().probability();
+    auto prob = drv->data().probability();
     REQUIRE(prob.find(-1)->second == 0.4);
     REQUIRE(prob.find(0)->second == 0.6);
 }
@@ -144,20 +146,20 @@ TEST_CASE("Compute expectation of a random variable", "[environment]")
 TEST_CASE("Call in operator on a random variable and int interval", "[environment]")
 {
     dice::environment env;
-    auto var = dice::make<dice::type_rand_var>(
+    auto var = dice::make<dice::type_rand_var>(freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
         std::make_pair(4, 1),
         std::make_pair(5, 1)
-    );
+    });
     auto lower = dice::make<dice::type_int>(2);
     auto upper = dice::make<dice::type_int>(4);
 
     auto result = env.call("in", std::move(var), std::move(lower), std::move(upper));
     REQUIRE(result->type() == dice::type_rand_var::id());
 
-    auto&& prob = dynamic_cast<dice::type_rand_var*>(result.get())->data().probability();
+    auto prob = dynamic_cast<dice::type_rand_var*>(result.get())->data().probability();
     REQUIRE(prob.find(1)->second == Approx(3 / 5.0));
     REQUIRE(prob.find(0)->second == Approx(2 / 5.0));
 }
@@ -169,14 +171,14 @@ TEST_CASE("Generate a random number from given distribution", "[environment]")
     // 15 (14.7 exactly) is the expected number of iterations to generate all numbers
     for (int i = 0; i < 15; i++) 
     {
-        auto var = dice::make<dice::type_rand_var>(
+        auto var = dice::make<dice::type_rand_var>(freq_list{
             std::make_pair(1, 1),
             std::make_pair(2, 1),
             std::make_pair(3, 1),
             std::make_pair(4, 1),
             std::make_pair(5, 1),
             std::make_pair(6, 1)
-        );
+        });
         auto result = env.call("roll", std::move(var));
         REQUIRE(result->type() == dice::type_int::id());
         auto&& value = dynamic_cast<dice::type_int&>(*result).data();
