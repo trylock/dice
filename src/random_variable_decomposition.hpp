@@ -13,8 +13,8 @@ namespace dice
     // Decomposition should treat given variable as always independent.
     class independent_tag{};
 
-    /** Decomposition should expect that given variable might depend
-     * on some other variable when computing a combination of 2 variables.
+    /** Decomposition should expect that given variable might appear in some
+     * other variable.
      */
     class dependent_tag{};
 
