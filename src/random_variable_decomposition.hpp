@@ -106,6 +106,92 @@ namespace dice
                 return value_a / value_b;
             });
         }
+
+        /** Compute indicator: X < Y (where X is this random variale).
+         * Variables does not need to be indepedent.
+         * @param other random variable Y
+         * @return indicator of X < Y 
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        auto less_than(const random_variable_decomposition& other) const 
+        {
+            return combine(other, [](auto&& a, auto&& b) 
+            {
+                return static_cast<value_type>(a < b);
+            });
+        }
+
+        /** Compute indicator: X <= Y (where X is this random variale).
+         * Variables does not need to be indepedent.
+         * @param other random variable Y
+         * @return indicator of X <= Y 
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        auto less_than_or_equal(
+            const random_variable_decomposition& other) const 
+        {
+            return combine(other, [](auto&& a, auto&& b) 
+            {
+                return static_cast<value_type>(a <= b);
+            });
+        }
+
+        /** Compute indicator: X = Y (where X is this random variale).
+         * Variables does not need to be indepedent.
+         * @param other random variable Y
+         * @return indicator of X = Y 
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        auto equal(const random_variable_decomposition& other) const 
+        {
+            return combine(other, [](auto&& a, auto&& b) 
+            {
+                return static_cast<value_type>(a == b);
+            });
+        }
+
+        /** Compute indicator: X != Y (where X is this random variale).
+         * Variables does not need to be indepedent.
+         * @param other random variable Y
+         * @return indicator of X != Y 
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        auto not_equal(const random_variable_decomposition& other) const 
+        {
+            return combine(other, [](auto&& a, auto&& b) 
+            {
+                return static_cast<value_type>(a != b);
+            });
+        }
+
+        /** Compute indicator: X > Y (where X is this random variale).
+         * Variables does not need to be indepedent.
+         * @param other random variable Y
+         * @return indicator of X > Y 
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        auto greater_than(const random_variable_decomposition& other) const 
+        {
+            return combine(other, [](auto&& a, auto&& b) 
+            {
+                return static_cast<value_type>(a > b);
+            });
+        }
+        
+        /** Compute indicator: X >= Y (where X is this random variale).
+         * Variables does not need to be indepedent.
+         * @param other random variable Y
+         * @return indicator of X >= Y 
+         * (i.e. a random variable with a bernoulli distribution)
+         */
+        auto greater_than_or_equal(
+            const random_variable_decomposition& other) const 
+        {
+            return combine(other, [](auto&& a, auto&& b) 
+            {
+                return static_cast<value_type>(a >= b);
+            });
+        }
         
         /** Roll num_rolls times with a dice of num_sides.
          * Random variables have to be independent.
