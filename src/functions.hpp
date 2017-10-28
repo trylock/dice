@@ -6,8 +6,8 @@
 
 namespace dice 
 {
-    // object representing a function callable from a dice expression
-    class user_function
+    // helper checks that are used in user function's code
+    class function_traits
     {
     public:
         using arg_type = std::unique_ptr<base_value>;
@@ -16,41 +16,6 @@ namespace dice
         using callable_type = std::function<
             return_type(args_iterator, args_iterator)>;
 
-        user_function() {}
-        user_function(callable_type callable) : callable_(callable) {}
-        user_function(callable_type callable, std::vector<type_id>&& arg_types) 
-            : callable_(callable), args_(std::move(arg_types)) {}
-
-        /** Call this user function with given arguments 
-         * @param argument iterator pointing at the first argument
-         * @param argument iterator pointing at the last argument
-         * @return result of the call 
-         */
-        inline return_type operator()(
-            args_iterator first, 
-            args_iterator last) const
-        {
-            return callable_(first, last);
-        }
-
-        inline const std::vector<type_id>& args() const 
-        {
-            return args_; 
-        }
-
-        inline std::size_t argc() const { return args_.size(); }
-        
-    private:
-        // code of the function
-        callable_type callable_;
-        // argument types for type checking
-        std::vector<type_id> args_;
-    };
-
-    // helper checks that are used in user function's code
-    class function_traits
-    {
-    public:
         static const std::size_t max_argc = 4;
 
         /** Check that an argument is of given type and convert it.
@@ -58,7 +23,7 @@ namespace dice
          * @return converted type
          */
         template<typename ExpectedType>
-        static ExpectedType* arg(user_function::args_iterator it) 
+        static ExpectedType* arg(args_iterator it) 
         {
             auto result = dynamic_cast<ExpectedType*>(it->get());
             if (result == nullptr)
@@ -74,10 +39,49 @@ namespace dice
          * @return number of function arguments
          */
         inline static std::size_t argc(
-            user_function::args_iterator first, 
-            user_function::args_iterator last)
+            args_iterator first, 
+            args_iterator last)
         {
             return std::distance(first, last);
         }
+    };
+
+    // object representing a function callable from a dice expression
+    class user_function
+    {
+    public:
+        using fn = function_traits;
+
+        user_function() {}
+        user_function(fn::callable_type callable) : callable_(callable) {}
+        user_function(
+            fn::callable_type callable, 
+            std::vector<type_id>&& arg_types) : 
+            callable_(callable), args_(std::move(arg_types)) {}
+
+        /** Call this user function with given arguments 
+         * @param argument iterator pointing at the first argument
+         * @param argument iterator pointing at the last argument
+         * @return result of the call 
+         */
+        inline fn::return_type operator()(
+            fn::args_iterator first, 
+            fn::args_iterator last) const
+        {
+            return callable_(first, last);
+        }
+
+        inline const std::vector<type_id>& args() const 
+        {
+            return args_; 
+        }
+
+        inline std::size_t argc() const { return args_.size(); }
+        
+    private:
+        // code of the function
+        fn::callable_type callable_;
+        // argument types for type checking
+        std::vector<type_id> args_;
     };
 }

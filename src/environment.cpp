@@ -1,24 +1,24 @@
 #include "environment.hpp"
 
+using fn = dice::function_traits;
+
 // functions implementation
 
-static dice::user_function::return_type dice_expectation(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_expectation(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     return make<type_double>(
         fn::arg<type_rand_var>(first)->data().expected_value()
     );
 }
 
-static dice::user_function::return_type dice_variance(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_variance(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     return make<type_double>(
         fn::arg<type_rand_var>(first)->data().variance()
     );
@@ -27,64 +27,58 @@ static dice::user_function::return_type dice_variance(
 // operator functions
 
 template<typename T>
-dice::user_function::return_type dice_add(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+fn::return_type dice_add(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
-    using fn = dice::function_traits;
     fn::arg<T>(first)->data() = fn::arg<T>(first)->data() + 
         fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
 template<typename T>
-dice::user_function::return_type dice_sub(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+fn::return_type dice_sub(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
-    using fn = dice::function_traits;
     fn::arg<T>(first)->data() = fn::arg<T>(first)->data() - 
         fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
 template<typename T>
-dice::user_function::return_type dice_mult(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+fn::return_type dice_mult(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
-    using fn = dice::function_traits;
     fn::arg<T>(first)->data() = fn::arg<T>(first)->data() * 
         fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
 template<typename T>
-dice::user_function::return_type dice_div(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+fn::return_type dice_div(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
-    using fn = dice::function_traits;
     fn::arg<T>(first)->data() = fn::arg<T>(first)->data() / 
         fn::arg<T>(first + 1)->data();
     return std::move(*first);
 }
 
 template<typename T>
-dice::user_function::return_type dice_unary_minus(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+fn::return_type dice_unary_minus(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
-    using fn = dice::function_traits;
     fn::arg<T>(first)->data() = -fn::arg<T>(first)->data();
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_roll_op(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_roll_op(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
-    using fn = dice::function_traits;
     using namespace dice;
     fn::arg<type_rand_var>(first)->data() = roll(
         fn::arg<type_rand_var>(first)->data(),
@@ -93,9 +87,9 @@ static dice::user_function::return_type dice_roll_op(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_rand_var_in(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_rand_var_in(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -107,9 +101,9 @@ static dice::user_function::return_type dice_rand_var_in(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_less_than(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_less_than(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -119,9 +113,9 @@ static dice::user_function::return_type dice_less_than(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_less_than_or_equal(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_less_than_or_equal(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -131,9 +125,9 @@ static dice::user_function::return_type dice_less_than_or_equal(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_equal(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_equal(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -143,9 +137,9 @@ static dice::user_function::return_type dice_equal(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_not_equal(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_not_equal(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -155,9 +149,9 @@ static dice::user_function::return_type dice_not_equal(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_greater_than(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_greater_than(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -167,9 +161,9 @@ static dice::user_function::return_type dice_greater_than(
     return std::move(*first);
 }
 
-static dice::user_function::return_type dice_greater_than_or_equal(
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator)
+static fn::return_type dice_greater_than_or_equal(
+    fn::args_iterator first,
+    fn::args_iterator)
 {
     using namespace dice;
     using fn = function_traits;
@@ -190,9 +184,9 @@ struct dice_roll
 
     dice_roll() : engine(dev()), dist(0, 1) {}
 
-    dice::user_function::return_type operator()(
-        dice::user_function::args_iterator first,
-        dice::user_function::args_iterator)
+    fn::return_type operator()(
+        fn::args_iterator first,
+        fn::args_iterator)
     {
         using namespace dice;
         using fn = function_traits;
@@ -362,10 +356,10 @@ const dice::base_value* dice::environment::get_var(const std::string& name) cons
     return it->second.get();
 }
 
-dice::user_function::return_type dice::environment::call_var(
+fn::return_type dice::environment::call_var(
     const std::string& name,
-    dice::user_function::args_iterator first,
-    dice::user_function::args_iterator last)
+    fn::args_iterator first,
+    fn::args_iterator last)
 {
     auto expected_argc = function_traits::argc(first, last);
 

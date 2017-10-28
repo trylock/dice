@@ -27,6 +27,7 @@ namespace dice
     {
     public:
         using value_type = std::unique_ptr<base_value>;
+        using fn = function_traits;
 
         environment();
 
@@ -62,10 +63,10 @@ namespace dice
          * @param iterator pointing to the last argument
          * @return computed value
          */
-        user_function::return_type call_var(
+        fn::return_type call_var(
             const std::string& name, 
-            user_function::args_iterator first, 
-            user_function::args_iterator last);
+            fn::args_iterator first, 
+            fn::args_iterator last);
 
         /** Call a function with the same arguments
          * @param function name
