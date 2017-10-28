@@ -17,6 +17,16 @@ namespace dice
 
         explicit interpreter(Environment* env) : env_(env) {}
 
+        void enter_assign()
+        {
+            is_definition_ = true;
+        }
+
+        void leave_assign()
+        {
+            is_definition_ = false;
+        }
+
         /** Create a new default value.
          * This is used when there is a parsing error.
          * @return default value
@@ -54,23 +64,6 @@ namespace dice
                 throw compiler_error("Unknown variable '" + name + "'");
             }
 
-            /** If this name represents a random variable that does not depend
-             * on other names, create its decomposition.
-             */
-            auto var = dynamic_cast<type_rand_var*>(value);
-            if (var != nullptr && !var->data().has_dependencies())
-            {
-                return make<type_rand_var>(
-                    dependent_tag{},
-                    &var->data().rand_var()
-                );
-            }
-
-            /** Otherwise, if it is a value, just copy it.
-             * If it's a random variable, replace it with its expression.
-             * The expression is precomputed in form of a its decomposition.
-             * Therefore we can just copy this decomposition.
-             */
             return value->clone();
         }
 
@@ -181,28 +174,95 @@ namespace dice
             return env_->call_var(name, args.begin(), args.end());
         }
 
+        // Process result(s)) of a whole production
+
         /** Process the whole result.
-         * Replace random variable decomposition with plain random variables.
-         * This needs to be done because decompositions store plain pointers.
          * @param list of computed values
          * @return list of results
          */
-        value_list process(value_list&& values)
+        value_list process_stmts(value_list&& values)
         {
-            for (auto&& value : values)
-            {
-                if (value != nullptr && value->type() == type_rand_var::id())
-                {
-                    auto var = dynamic_cast<type_rand_var*>(value.get());
-                    value = make<type_rand_var>(
-                        var->data().to_random_variable());
-                }
-            }
             return std::move(values);
+        }
+
+        /** Process the result of a statement production.
+         * @param computed value
+         * @return pass the value unchanged
+         */
+        value_type process_stmt(value_type&& value)
+        {
+            return std::move(value);
+        }
+        
+        /** Process the result of an expression production.
+         * @param computed value
+         * @return pass the value unchanged
+         */
+        value_type process_expr(value_type&& value)
+        {
+            return std::move(value);
+        }
+        
+        /** Process the result of an addition production.
+         * @param computed value
+         * @return pass the value unchanged
+         */
+        value_type process_add(value_type&& value)
+        {
+            return std::move(value);
+        }
+        
+        /** Process the result of a multiplication production.
+         * @param computed value
+         * @return pass the value unchanged
+         */
+        value_type process_mult(value_type&& value)
+        {
+            return std::move(value);
+        }
+
+        /** Process the result of the dice_roll production.
+         * @param computed value
+         * @return postprocessed value
+         */
+        value_type process_roll(value_type&& value)
+        {
+            if (is_definition_)
+                return conv_var(std::move(value));
+            return std::move(value);
+        }
+        
+        /** Process the result of a factor production.
+         * @param computed value
+         * @return pass the value unchanged
+         */
+        value_type process_factor(value_type&& value)
+        {
+            return std::move(value);
+        }
+        
+        /** Process the result of a param list production.
+         * @param computed value
+         * @return pass the value unchanged
+         */
+        value_list process_param_list(value_list&& value)
+        {
+            return std::move(value);
         }
 
     private:
         Environment* env_;
+        bool is_definition_;
+
+        value_type conv_var(value_type&& value)
+        {
+            auto var = dynamic_cast<type_rand_var*>(value.get());
+            if (var != nullptr && !var->data().has_dependencies())
+            {
+                var->data().make_dependent();
+            }
+            return std::move(value);
+        }
     };
 }
 

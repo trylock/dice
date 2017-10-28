@@ -1,6 +1,7 @@
 #ifndef DICE_RANDOM_VARIABLE_DECOMPOSITION_HPP_
 #define DICE_RANDOM_VARIABLE_DECOMPOSITION_HPP_
 
+#include <memory>
 #include <vector>
 #include <cassert>
 #include <algorithm>
@@ -49,12 +50,11 @@ namespace dice
             vars_.push_back(std::move(variable));
         }
 
-        random_variable_decomposition(dependent_tag, const var_type* variable)
+        random_variable_decomposition(dependent_tag, const var_type& variable)
         {
-            assert(variable != nullptr);
-            deps_.push_back(variable);
+            deps_.emplace_back(std::make_shared<var_type>(variable));
 
-            for (auto&& pair : variable->probability())
+            for (auto&& pair : variable.probability())
             {
                 vars_.emplace_back(constant_tag{}, pair.first);
             }
@@ -317,10 +317,12 @@ namespace dice
                 num_values *= var->probability().size();
             }
 
-            std::unordered_set<const var_type*> in_a{ 
-                deps_.begin(), deps_.end() };
-            std::unordered_set<const var_type*> in_b{ 
-                other.deps_.begin(), other.deps_.end() };
+            std::unordered_set<const var_type*> in_a;
+            std::unordered_set<const var_type*> in_b;
+            for (auto&& var : deps_)
+                in_a.insert(var.get());
+            for (auto&& var : other.deps_)
+                in_b.insert(var.get());
 
             // compute the conditional random variables
             for (std::size_t i = 0; i < num_values; ++i)
@@ -333,12 +335,12 @@ namespace dice
                 std::size_t size_b = 1;
                 for (auto&& var : result.deps_)
                 {
-                    if (in_a.find(var) != in_a.end())
+                    if (in_a.find(var.get()) != in_a.end())
                     {
                         index_a += (hash % var->probability().size()) * size_a;
                         size_a *= var->probability().size();
                     }
-                    if (in_b.find(var) != in_b.end())
+                    if (in_b.find(var.get()) != in_b.end())
                     {
                         index_b += (hash % var->probability().size()) * size_b;
                         size_b *= var->probability().size();
@@ -445,6 +447,19 @@ namespace dice
             return !deps_.empty();
         }
 
+        void make_dependent()
+        {
+            assert(!has_dependencies());
+            assert(vars_.size() == 1);
+
+            deps_.emplace_back(std::make_shared<var_type>(vars_.front()));
+            vars_.clear();
+            for (auto&& pair : deps_.front()->probability())
+            {
+                vars_.emplace_back(constant_tag{}, pair.first);
+            }
+        }
+
     private:
         /** Resulting random variable.
          * This is cached value of the to_random_variable() call.
@@ -455,11 +470,8 @@ namespace dice
          * It is kept sorted by the pointer value. This simplifies the
          * combination algorithm as we can make some assumptions in the
          * variable index computation.
-         * 
-         * Note we store a pointer to each variable. Therefore, they have to
-         * outlive this object.
          */
-        std::vector<const var_type*> deps_;
+        std::vector<std::shared_ptr<var_type>> deps_;
 
         /** List of conditional random variables.
          * 

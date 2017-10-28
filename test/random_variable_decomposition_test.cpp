@@ -61,10 +61,9 @@ TEST_CASE("Compute probability of dependent random variables", "[random_variable
         std::make_pair(3, 1),
         std::make_pair(4, 1),
     } };
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
-    dice::random_variable_decomposition<int, double> b{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
 
-    auto result = a.combine(b, [](auto&& value_a, auto&& value_b) 
+    auto result = a.combine(a, [](auto&& value_a, auto&& value_b) 
     {
         return value_a + value_b;
     });
@@ -79,7 +78,6 @@ TEST_CASE("Compute probability of dependent random variables", "[random_variable
 
 TEST_CASE("Compute probability of mix of random variables", "[random_variable_decomposition]")
 {
-
     dice::random_variable<int, double> var_a(dice::bernoulli_tag{}, 0.7);
     dice::random_variable<int, double> var_b{ freq_list{
         std::make_pair(1, 1),
@@ -93,7 +91,7 @@ TEST_CASE("Compute probability of mix of random variables", "[random_variable_de
     } };
     dice::random_variable<int, double> var_one(dice::constant_tag{}, 1);
     
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
     dice::random_variable_decomposition<int, double> b{ var_b };
     dice::random_variable_decomposition<int, double> c{ var_c };
     dice::random_variable_decomposition<int, double> one{ var_one };
@@ -118,7 +116,7 @@ TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomp
     } };
     dice::random_variable<int, double> var_two(dice::constant_tag{}, 2);
     dice::random_variable<int, double> var_three(dice::constant_tag{}, 3);
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
     dice::random_variable_decomposition<int, double> two{ var_two };
     dice::random_variable_decomposition<int, double> three{ var_three };
     auto result = a.less_than_or_equal(three) * a.equal(two);
@@ -141,7 +139,7 @@ TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]
     } };
     dice::random_variable<int, double> var_six(dice::constant_tag{}, 6);
 
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
     dice::random_variable_decomposition<int, double> six{ var_six };
 
     auto result = a.in(4, 5) + a.equal(six);
@@ -170,9 +168,9 @@ TEST_CASE("Compute probability of multiple depedent variables", "[random_variabl
         std::make_pair(3, 1),
     } };
 
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
-    dice::random_variable_decomposition<int, double> b{ dice::dependent_tag{}, &var_b };
-    dice::random_variable_decomposition<int, double> c{ dice::dependent_tag{}, &var_c };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
+    dice::random_variable_decomposition<int, double> b{ dice::dependent_tag{}, var_b };
+    dice::random_variable_decomposition<int, double> c{ dice::dependent_tag{}, var_c };
 
     // notice: A, B and B, C and A, C and A, B, C are still indepednet
     auto result = a * a * b * b * c * c;
@@ -200,7 +198,7 @@ TEST_CASE("Compute negation of a random variable", "[random_variable_decompositi
         std::make_pair(3, 3),
         std::make_pair(4, 4),
     } };
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
 
     auto result = -a;
     auto var = result.to_random_variable();
@@ -221,7 +219,7 @@ TEST_CASE("Compute maximum of dependent random variables", "[random_variable_dec
         std::make_pair(4, 1),
     } };
     dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
     dice::random_variable_decomposition<int, double> one{ var_one };
 
     auto result = max(a, a + one);
@@ -242,7 +240,7 @@ TEST_CASE("Compute minimum of dependent random variables", "[random_variable_dec
         std::make_pair(4, 1),
     } };
     dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
-    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, var_a };
     dice::random_variable_decomposition<int, double> one{ var_one };
 
     auto result = min(a, a + one);

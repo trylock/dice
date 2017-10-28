@@ -240,7 +240,7 @@ namespace dice
             auto result = stmts();
             // make sure we've processed the whole expression
             eat(symbol_type::end);
-            return int_->process(std::move(result));
+            return result;
         }
 
     private:
@@ -283,7 +283,7 @@ namespace dice
                     break;
                 }
             }
-            return values;
+            return int_->process_stmts(std::move(values));
         }
 
         value_type stmt()
@@ -296,6 +296,7 @@ namespace dice
                 eat(symbol_type::assign);
                 
                 // parse value of the name
+                int_->enter_assign();
                 value_type value;
                 if (check<nonterminal_type::expr>())
                 {
@@ -308,10 +309,12 @@ namespace dice
                         "Using the default value instead.");
                     value = int_->make_default();
                 }
+                int_->leave_assign();
 
-                return int_->assign(id.lexeme, std::move(value));
+                return int_->process_stmt(
+                    int_->assign(id.lexeme, std::move(value)));
             }
-            return expr();
+            return int_->process_stmt(expr());
         }
 
         value_type expr()
@@ -353,10 +356,10 @@ namespace dice
         
                 eat(symbol_type::right_square_bracket); 
         
-                return int_->rel_in(
+                return int_->process_expr(int_->rel_in(
                     std::move(left), 
                     std::move(lower_bound), 
-                    std::move(upper_bound));
+                    std::move(upper_bound)));
             }
             else if (lookahead_.type == symbol_type::rel_op)
             {
@@ -364,14 +367,15 @@ namespace dice
                 eat(symbol_type::rel_op);
                 if (check<nonterminal_type::add>())
                 {
-                   return int_->rel_op(op.lexeme, std::move(left), add());
+                   return int_->process_expr(
+                       int_->rel_op(op.lexeme, std::move(left), add()));
                 }
                 else 
                 {
                     error("Invalid operand for " + to_string(op));
                 }
             }
-            return left;
+            return int_->process_expr(std::move(left));
         }
 
         value_type add()
@@ -409,7 +413,7 @@ namespace dice
                     error("Invalid operand for binary operator " + op);
                 }
             }
-            return result;
+            return int_->process_add(std::move(result));
         }
 
         value_type mult()
@@ -447,7 +451,7 @@ namespace dice
                     error("Invalid operand for binary operator " + op);
                 }
             }
-            return result;
+            return int_->process_mult(std::move(result));
         }
 
         value_type dice_roll()
@@ -496,7 +500,8 @@ namespace dice
             // add sign
             if (count % 2 != 0)
                 result = int_->unary_minus(std::move(result));
-            return result; 
+
+            return int_->process_roll(std::move(result)); 
         }
 
         value_type factor()
@@ -519,13 +524,13 @@ namespace dice
                 }
                 
                 eat(symbol_type::right_paren);
-                return result;
+                return int_->process_factor(std::move(result));
             }
             else if (lookahead_.type == symbol_type::number)
             {
                 auto lexeme = lookahead_.lexeme;
                 eat(lookahead_.type);
-                return int_->number(lexeme);
+                return int_->process_factor(int_->number(lexeme));
             }
             else if (lookahead_.type == symbol_type::id)
             {
@@ -541,24 +546,28 @@ namespace dice
 
                     try
                     {
-                        return int_->call(id.lexeme, std::move(args));
+                        return int_->process_factor(
+                            int_->call(id.lexeme, std::move(args)));
                     }
                     catch (compiler_error& err)
                     {
                         error(err.what());
-                        return int_->make_default();
+                        return int_->process_factor(
+                            int_->make_default());
                     }
                 }
                 else // variable 
                 {
                     try 
                     {
-                        return int_->variable(id.lexeme);
+                        return int_->process_factor(
+                            int_->variable(id.lexeme));
                     }
                     catch (compiler_error& err)
                     {
                         error(err.what());
-                        return int_->make_default();
+                        return int_->process_factor(
+                            int_->make_default());
                     }
                 }
             }
@@ -567,7 +576,7 @@ namespace dice
                 to_string(symbol_type::number) + " or " + 
                 to_string(symbol_type::id) +  ", got " + 
                 to_string(lookahead_) + "."); 
-            return int_->make_default();
+            return int_->process_factor(int_->make_default());
         }
 
         std::vector<value_type> param_list()
@@ -575,7 +584,8 @@ namespace dice
             std::vector<value_type> args;
             if (lookahead_.type == symbol_type::right_paren)
             {
-                return args; // no arguments
+                // no arguments
+                return int_->process_param_list(std::move(args)); 
             }
         
             std::size_t number = 0;
@@ -600,7 +610,7 @@ namespace dice
                 eat(symbol_type::param_delim);
                 ++number;
             }
-            return args;
+            return int_->process_param_list(std::move(args));
         }
 
         /** Check whether the lookahead type is in the first set of 

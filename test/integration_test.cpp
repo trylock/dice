@@ -687,3 +687,24 @@ TEST_CASE("Call to a function with incompatible arguments", "[dice]")
     auto data = dynamic_cast<dice::type_int&>(*value).data();
     REQUIRE(data == 0); // use default value
 }
+
+TEST_CASE("Compute result of expression with complex dependencies", "[dice]")
+{
+    auto result = interpret("var X = 1d2; var Y = X + 1d2; X * Y * Y");
+    
+    REQUIRE(result.values.size() == 3);
+    result.assert_no_error();
+
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+
+    auto value = std::move(result.values[2]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+    
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.probability();
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(9)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(18)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(32)->second == Approx(1 / 4.0));
+}
