@@ -1,6 +1,7 @@
 #ifndef DICE_PARSER_HPP_
 #define DICE_PARSER_HPP_
 
+#include <array>
 #include <memory>
 #include <string>
 #include <vector>
@@ -16,6 +17,199 @@
 
 namespace dice
 {
+    enum nonterminal_type
+    {
+        stmts,
+        stmt,
+        expr,
+        add,
+        mult,
+        dice_roll,
+        factor,
+        param_list
+    };
+
+    // FIRST and FOLLOW sets of nonterminals
+    template<nonterminal_type type>
+    class nonterminal 
+    {
+    };
+
+    template<>
+    class nonterminal<nonterminal_type::stmts>
+    {
+    public:
+        static constexpr char name[] = "statements";
+        static constexpr std::array<symbol_type, 6> first{{
+            symbol_type::end,
+            symbol_type::var,
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 1> follow{{
+            symbol_type::end,
+        }};
+    };
+
+    template<>
+    class nonterminal<nonterminal_type::stmt>
+    {
+    public:
+        static constexpr char name[] = "statement";
+        static constexpr std::array<symbol_type, 5> first{{
+            symbol_type::var,
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 2> follow{{
+            symbol_type::end,
+            symbol_type::semicolon,
+        }};
+    };
+    
+    template<>
+    class nonterminal<nonterminal_type::expr>
+    {
+    public:
+        static constexpr char name[] = "expression";
+        static constexpr std::array<symbol_type, 4> first{{
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 3> follow{{
+            symbol_type::end,
+            symbol_type::semicolon,
+            symbol_type::right_paren,
+        }};
+    };
+    
+    template<>
+    class nonterminal<nonterminal_type::add>
+    {
+    public:
+        static constexpr char name[] = "addition";
+        static constexpr std::array<symbol_type, 4> first{{
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 9> follow{{
+            symbol_type::in,
+            symbol_type::rel_op,
+            symbol_type::param_delim,
+            symbol_type::right_square_bracket,
+            symbol_type::end,
+            symbol_type::semicolon,
+            symbol_type::right_paren,
+            symbol_type::plus,
+            symbol_type::minus,
+        }};
+    };
+    
+    template<>
+    class nonterminal<nonterminal_type::mult>
+    {
+    public:
+        static constexpr char name[] = "multiplication";
+        static constexpr std::array<symbol_type, 4> first{{
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 11> follow{{
+            symbol_type::in,
+            symbol_type::rel_op,
+            symbol_type::param_delim,
+            symbol_type::right_square_bracket,
+            symbol_type::end,
+            symbol_type::semicolon,
+            symbol_type::right_paren,
+            symbol_type::plus,
+            symbol_type::minus,
+            symbol_type::times,
+            symbol_type::divide,
+        }};
+    };
+    
+    template<>
+    class nonterminal<nonterminal_type::dice_roll>
+    {
+    public:
+        static constexpr char name[] = "dice roll";
+        static constexpr std::array<symbol_type, 4> first{{
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 12> follow{{
+            symbol_type::in,
+            symbol_type::rel_op,
+            symbol_type::param_delim,
+            symbol_type::right_square_bracket,
+            symbol_type::end,
+            symbol_type::semicolon,
+            symbol_type::right_paren,
+            symbol_type::plus,
+            symbol_type::minus,
+            symbol_type::times,
+            symbol_type::divide,
+            symbol_type::roll_op,
+        }};
+    };
+    
+    template<>
+    class nonterminal<nonterminal_type::factor>
+    {
+    public:
+        static constexpr char name[] = "factor";
+        static constexpr std::array<symbol_type, 3> first{{
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id
+        }};
+        static constexpr std::array<symbol_type, 12> follow{{
+            symbol_type::in,
+            symbol_type::rel_op,
+            symbol_type::param_delim,
+            symbol_type::right_square_bracket,
+            symbol_type::end,
+            symbol_type::semicolon,
+            symbol_type::right_paren,
+            symbol_type::plus,
+            symbol_type::minus,
+            symbol_type::times,
+            symbol_type::divide,
+            symbol_type::roll_op,
+        }};
+    };
+    
+    template<>
+    class nonterminal<nonterminal_type::param_list>
+    {
+    public:
+        static constexpr char name[] = "parameter list";
+        static constexpr std::array<symbol_type, 5> first{{
+            symbol_type::minus,
+            symbol_type::left_paren,
+            symbol_type::number,
+            symbol_type::id,
+            symbol_type::right_paren,
+        }};
+        static constexpr std::array<symbol_type, 2> follow{{
+            symbol_type::param_delim,
+            symbol_type::right_paren,
+        }};
+    };
+
     // dice expression parser
     template<typename Lexer, typename Logger, typename Interpreter>
     class parser
@@ -57,15 +251,9 @@ namespace dice
 
         std::vector<value_type> stmts()
         {
-            while (lookahead_.type != symbol_type::end && !in_first_stmt())
-            {
-                error("Invalid token at the beginning of an expression: " +
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-
             std::vector<value_type> values;
-            if (lookahead_.type == symbol_type::end)
+            if (!check<nonterminal_type::stmt>() || 
+                lookahead_.type == symbol_type::end)
             {
                 return values;
             }
@@ -76,7 +264,7 @@ namespace dice
                 if (lookahead_.type == symbol_type::semicolon)
                 {
                     eat(lookahead_.type);
-                    if (check_stmt())
+                    if (check<nonterminal_type::stmt>())
                     {
                         values.push_back(stmt());
                     }
@@ -93,30 +281,6 @@ namespace dice
             return values;
         }
 
-        bool in_first_stmt() const
-        {
-            return lookahead_.type == symbol_type::var ||
-                in_first_expr();
-        }
-
-        bool in_follow_stmt() const
-        {
-            return lookahead_.type == symbol_type::semicolon ||
-                // FOLLOW(stmts):
-                lookahead_.type == symbol_type::end;
-        }
-
-        bool check_stmt() 
-        {
-            while (!in_follow_stmt() && !in_first_stmt())
-            {
-                error("Invalid token at the beginning of a statement: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_stmt();
-        }
-
         value_type stmt()
         {
             if (lookahead_.type == symbol_type::var)
@@ -126,39 +290,23 @@ namespace dice
                 eat(symbol_type::id);
                 eat(symbol_type::assign);
                 
+                // parse value of the name
                 is_definition_ = true;
-                auto value = expr();
+                value_type value;
+                if (check<nonterminal_type::expr>())
+                {
+                    value = expr();
+                }
+                else 
+                {
+                    error("Invalid expression.");
+                    value = int_->make_default();
+                }
                 is_definition_ = false;
 
                 return int_->assign(id.lexeme, std::move(value));
             }
             return expr();
-        }
-
-        bool check_expr()
-        {
-            while (!in_follow_expr() && !in_first_expr())
-            {
-                error("Invalid token at the beginning of an expression: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_expr();
-        }
-
-        // true <=> next token is in FIRST(expr)
-        bool in_first_expr() const 
-        {
-            return in_first_add();
-        }
-
-        // true <=> next token is in FOLLOW(expr)
-        bool in_follow_expr() const
-        {
-            return lookahead_.type == symbol_type::end ||
-                lookahead_.type == symbol_type::right_paren ||
-                in_follow_stmt() ||
-                in_follow_param_list();
         }
 
         value_type expr()
@@ -170,7 +318,7 @@ namespace dice
                 eat(symbol_type::left_square_bracket);
         
                 // parse lower bound of the interval
-                if (!check_add())
+                if (!check<nonterminal_type::add>())
                 {
                     error(
                         "Invalid operand for the lower bound of operator in");
@@ -181,7 +329,7 @@ namespace dice
                 eat(symbol_type::param_delim);
         
                 // parse upper bound of the interval
-                if (!check_add())
+                if (!check<nonterminal_type::add>())
                 {
                     error(
                         "Invalid operand for the upper bound of operator in");
@@ -200,7 +348,7 @@ namespace dice
             {
                 auto op = lookahead_;
                 eat(symbol_type::rel_op);
-                if (check_add())
+                if (check<nonterminal_type::add>())
                 {
                    return int_->rel_op(op.lexeme, std::move(left), add());
                 }
@@ -210,35 +358,6 @@ namespace dice
                 }
             }
             return left;
-        }
-        
-        // true <=> next token is in FIRST(add)
-        bool in_first_add() const
-        {
-            return in_first_mult();
-        }
-        
-        // true <=> next token is in FOLLOW(add)
-        bool in_follow_add() const
-        {
-            return lookahead_.type == symbol_type::plus ||
-                lookahead_.type == symbol_type::minus ||
-                lookahead_.type == symbol_type::in ||
-                lookahead_.type == symbol_type::rel_op ||
-                lookahead_.type == symbol_type::param_delim ||
-                lookahead_.type == symbol_type::right_square_bracket ||
-                in_follow_expr();
-        }
-        
-        bool check_add()
-        {
-            while (!in_first_add() && !in_follow_add())
-            {
-                error("Invalid token at the beginning of an addition: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_add();
         }
 
         value_type add()
@@ -264,7 +383,7 @@ namespace dice
                 }
         
                 // compute the operator if there won't be any parse error
-                if (check_mult())
+                if (check<nonterminal_type::mult>())
                 {
                     if (op == "+")
                         result = int_->add(std::move(result), mult());
@@ -277,31 +396,6 @@ namespace dice
                 }
             }
             return result;
-        }
-
-        // true <=> next token is in FIRST(mult)
-        bool in_first_mult() const
-        {
-            return in_first_dice_roll(); 
-        }
-
-        // true <=> next token is in FOLLOW(mult)
-        bool in_follow_mult() const
-        {
-            return lookahead_.type == symbol_type::times ||
-                lookahead_.type == symbol_type::divide ||
-                in_follow_add();
-        }
-        
-        bool check_mult()
-        {
-            while (!in_first_mult() && !in_follow_mult())
-            {
-                error("Invalid token at the beginning of a multiplication: " +
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_mult();
         }
 
         value_type mult()
@@ -327,7 +421,7 @@ namespace dice
                 }
 
                 // compute the operation if there won't be any parse error
-                if (check_dice_roll())
+                if (check<nonterminal_type::dice_roll>())
                 {
                     if (op == "*")
                         result = int_->mult(std::move(result), dice_roll());
@@ -340,31 +434,6 @@ namespace dice
                 }
             }
             return result;
-        }
-
-        // true <=> next token is in FIRST(dice_roll)
-        bool in_first_dice_roll() const
-        {
-            return lookahead_.type == symbol_type::minus || 
-                in_first_factor();
-        }
-        
-        // true <=> next token is in FOLLOW(dice_roll)
-        bool in_follow_dice_roll() const
-        {
-            return lookahead_.type == symbol_type::roll_op ||
-               in_follow_mult();
-        }
-        
-        bool check_dice_roll()
-        {
-            while (!in_first_dice_roll() && !in_follow_dice_roll())
-            {
-                error("Invalid token at the beginning of a dice roll: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_dice_roll();
         }
 
         value_type dice_roll()
@@ -394,7 +463,7 @@ namespace dice
 
                     // only use the factor production if there won't be any 
                     // parse error
-                    if (check_factor())
+                    if (check<nonterminal_type::factor>())
                     {
                         result = int_->roll(std::move(result), factor());
                     }
@@ -417,37 +486,23 @@ namespace dice
             return result; 
         }
 
-        // true <=> next token is in FIRST(factor)
-        bool in_first_factor() const
-        {
-            return lookahead_.type == symbol_type::left_paren ||
-                lookahead_.type == symbol_type::number ||
-                lookahead_.type == symbol_type::id;
-        }
-        
-        // true <=> next token is in FOLLOW(factor)
-        bool in_follow_factor() const
-        {
-            return in_follow_dice_roll();
-        }
-        
-        bool check_factor()
-        {
-            while (!in_first_factor() && !in_follow_factor())
-            {
-                error("Invalid token at the beginning of a factor: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_factor();
-        }
-
         value_type factor()
         {
             if (lookahead_.type == symbol_type::left_paren)
             {
                 eat(symbol_type::left_paren);
-                auto result = expr();
+                
+                value_type result;
+                if (check<nonterminal_type::expr>())
+                {
+                    result = expr();
+                }
+                else 
+                {
+                    error("Invalid expression.");
+                    result = int_->make_default();
+                }
+                
                 eat(symbol_type::right_paren);
                 return result;
             }
@@ -490,32 +545,6 @@ namespace dice
             return int_->make_default();
         }
 
-        // true <=> next token is in FIRST(param_list)
-        bool in_first_param_list() const
-        {
-            return lookahead_.type == symbol_type::right_paren || 
-                in_first_expr();
-        }
-
-        // true <=> next token is in FOLLOW(param_list)
-        bool in_follow_param_list() const
-        {
-            return lookahead_.type == symbol_type::param_delim ||
-                // FOLLOW(opt_params):
-                lookahead_.type == symbol_type::right_paren; 
-        }
-
-        bool check_param_list()
-        {
-            while (!in_first_param_list() && !in_follow_param_list())
-            {
-                error("Invalid token at the beginning of parameter list: " + 
-                    to_string(lookahead_));
-                eat(lookahead_.type);
-            }
-            return in_first_param_list();
-        }
-
         std::vector<value_type> param_list()
         {
             std::vector<value_type> args;
@@ -527,7 +556,7 @@ namespace dice
             std::size_t number = 0;
             for (;;)
             {
-                if (check_expr())
+                if (check<nonterminal_type::expr>())
                 {
                     args.emplace_back(expr());
                 }
@@ -545,6 +574,58 @@ namespace dice
                 ++number;
             }
             return args;
+        }
+
+        /** Check whether the lookahead type is in the first set of 
+         * nonterminal type.
+         * @return true iff current lookahead is in the first set
+         */
+        template<nonterminal_type type>
+        bool in_first() const 
+        {
+            for (auto&& value : nonterminal<type>::first)
+            {
+                if (value == lookahead_.type)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** Check whether the lookahead type is in the follow set of
+         * nonterminal type.
+         * @return true iff current lookahead is in the follow set
+         */
+        template<nonterminal_type type>
+        bool in_follow() const 
+        {
+            for (auto&& value : nonterminal<type>::follow)
+            {
+                if (value == lookahead_.type)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** Skip terminals until we find something in the synch set.
+         * Synchronizing set is union of the FIRST and FOLLOW sets.
+         * @return true iff current lookahead is in the FIRST set
+         *         (i.e. we can continue parsing)
+         */
+        template<nonterminal_type type>
+        bool check()
+        {
+            while (!in_first<type>() && !in_follow<type>())
+            {
+                error("Invalid token at the beginning of " + 
+                    std::string(nonterminal<type>::name) + ": " + 
+                    to_string(lookahead_));
+                eat(lookahead_.type);
+            }
+            return in_first<type>();
         }
 
         /** Read token of given type from the input.

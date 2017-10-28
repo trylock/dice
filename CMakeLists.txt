@@ -23,6 +23,7 @@ set(dice_headers
 set(dice_sources
     ${SRC_DIR}/logger.cpp
     ${SRC_DIR}/lexer.cpp
+    ${SRC_DIR}/parser.cpp
     ${SRC_DIR}/symbols.cpp
     ${SRC_DIR}/conversions.cpp
     ${SRC_DIR}/environment.cpp

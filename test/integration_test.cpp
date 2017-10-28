@@ -197,8 +197,8 @@ TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[di
     auto result = interpret("* ) 1 + 2 * 3");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid token at the beginning of an expression: *");
-    result.assert_error( "Invalid token at the beginning of an expression: )");
+    result.assert_error( "Invalid token at the beginning of statement: *");
+    result.assert_error( "Invalid token at the beginning of statement: )");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
@@ -382,7 +382,7 @@ TEST_CASE("Resume interpreting relational operator after finding a sync symbol",
     auto result = interpret("1 < * 2");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error("Invalid token at the beginning of an addition: *");
+    result.assert_error("Invalid token at the beginning of addition: *");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
@@ -414,7 +414,7 @@ TEST_CASE("Resume interpreting the + operator if we find a sync symbol", "[dice]
     auto result = interpret("2 + [ 3");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid token at the beginning of a multiplication: [");
+    result.assert_error( "Invalid token at the beginning of multiplication: [");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
@@ -445,7 +445,7 @@ TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]
     auto result = interpret("2 * [ 4");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid token at the beginning of a dice roll: [");
+    result.assert_error( "Invalid token at the beginning of dice roll: [");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
@@ -487,14 +487,14 @@ TEST_CASE("Interpret a function with invalid first argument", "[dice]")
     auto result = interpret("add(,1,2)");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid function parameter 0");
+    result.assert_error( "Invalid token at the beginning of expression: ,");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 3);
+    REQUIRE(data == 3); 
 }
 
 TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[dice]")
@@ -518,7 +518,7 @@ TEST_CASE("Resume interpreting the dice roll operator if we find a sync symbol",
     auto result = interpret("1d[4");
     
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid token at the beginning of a factor: [");
+    result.assert_error( "Invalid token at the beginning of factor: [");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
@@ -537,7 +537,7 @@ TEST_CASE("Resume interpreting an expression in function arguments after finding
     auto result = interpret("expectation(+1d4)");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid token at the beginning of an expression: +");
+    result.assert_error( "Invalid token at the beginning of expression: +");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);

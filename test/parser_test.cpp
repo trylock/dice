@@ -358,7 +358,7 @@ TEST_CASE("Parse erroneous second operand for a relational operator", "[parser]"
     REQUIRE(result.values[0] == "(1<2)");
 
     REQUIRE(result.errors.size() == 1);
-    REQUIRE(result.errors[0].message == "Invalid token at the beginning of an addition: =");
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of addition: =");
 }
 
 TEST_CASE("Parse invalid tokens at the beginning of an expression", "[parser]")
@@ -377,8 +377,8 @@ TEST_CASE("Parse invalid tokens at the beginning of an expression", "[parser]")
     REQUIRE(result.values[0] == "(1+2)");
 
     REQUIRE(result.errors.size() == 2);
-    REQUIRE(result.errors[0].message == "Invalid token at the beginning of an expression: [");
-    REQUIRE(result.errors[1].message == "Invalid token at the beginning of an expression: +");
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of statement: [");
+    REQUIRE(result.errors[1].message == "Invalid token at the beginning of statement: +");
 }
 
 TEST_CASE("Parse an empty statement in statements list", "[parser]")
@@ -398,6 +398,6 @@ TEST_CASE("Parse an empty statement in statements list", "[parser]")
     REQUIRE(result.values[1] == "2");
 
     REQUIRE(result.errors.size() == 2);
-    REQUIRE(result.errors[0].message == "Invalid token at the beginning of a statement: )");
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of statement: )");
     REQUIRE(result.errors[1].message == "Invalid statement.");
 }
