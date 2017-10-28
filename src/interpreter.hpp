@@ -189,23 +189,16 @@ namespace dice
          */
         value_list process(value_list&& values)
         {
-            value_list processed;
             for (auto&& value : values)
             {
                 if (value != nullptr && value->type() == type_rand_var::id())
                 {
                     auto var = dynamic_cast<type_rand_var*>(value.get());
-                    processed.push_back(make<type_rand_var>(
-                        independent_tag{},
-                        var->data().to_random_variable()
-                    ));
-                }
-                else 
-                {
-                    processed.push_back(std::move(value));
+                    value = make<type_rand_var>(
+                        var->data().to_random_variable());
                 }
             }
-            return processed;
+            return std::move(values);
         }
 
     private:

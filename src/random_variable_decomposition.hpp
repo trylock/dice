@@ -12,9 +12,6 @@
 
 namespace dice
 {
-    // Decomposition should treat given variable as always independent.
-    class independent_tag{};
-
     /** Decomposition should expect that given variable might appear in some
      * other variable.
      */
@@ -42,15 +39,14 @@ namespace dice
 
         random_variable_decomposition() {}
 
-        random_variable_decomposition(independent_tag, const var_type* variable)
-        {
-            assert(variable != nullptr);
-            vars_.push_back(*variable);
-        }
-
-        random_variable_decomposition(independent_tag, const var_type& variable)
+        explicit random_variable_decomposition(const var_type& variable)
         {
             vars_.push_back(variable);
+        }
+
+        explicit random_variable_decomposition(var_type&& variable)
+        {
+            vars_.push_back(std::move(variable));
         }
 
         random_variable_decomposition(dependent_tag, const var_type* variable)
@@ -68,20 +64,17 @@ namespace dice
 
         random_variable_decomposition(
             std::vector<std::pair<value_type, std::size_t>>&& list)
-            : random_variable_decomposition(independent_tag{}, 
-                var_type(std::move(list)))
+            : random_variable_decomposition(var_type(std::move(list)))
         {
         }
 
         random_variable_decomposition(bernoulli_tag, ProbabilityType success)
-            : random_variable_decomposition(independent_tag{}, 
-                var_type(bernoulli_tag{}, success))
+            : random_variable_decomposition(var_type(bernoulli_tag{}, success))
         {
         }
         
         random_variable_decomposition(constant_tag, value_type value)
-            : random_variable_decomposition(independent_tag{}, 
-                var_type(constant_tag{}, value))
+            : random_variable_decomposition(var_type(constant_tag{}, value))
         {
         }
         
@@ -281,8 +274,8 @@ namespace dice
             if (num_rolls.vars_.size() > 1 || num_sides.vars_.size()  > 1)
                 throw std::runtime_error(
                     "Variable names are not supported in roll operator");
-            auto var = roll(num_rolls.vars_.front(), num_sides.vars_.front());
-            return random_variable_decomposition(independent_tag{}, &var);
+            return random_variable_decomposition(
+                roll(num_rolls.vars_.front(), num_sides.vars_.front()));
         }
 
         /** Compute expected value of this random variable.
