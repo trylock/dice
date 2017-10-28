@@ -92,7 +92,6 @@ static fn::return_type dice_rand_var_in(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto&& var = fn::arg<type_rand_var>(first)->data();
     auto&& lower_bound = fn::arg<type_double>(first + 1)->data();
     auto&& upper_bound = fn::arg<type_double>(first + 2)->data();
@@ -106,7 +105,6 @@ static fn::return_type dice_less_than(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto a = fn::arg<type_rand_var>(first);
     auto b = fn::arg<type_rand_var>(first + 1);
     a->data() = a->data().less_than(b->data());
@@ -118,7 +116,6 @@ static fn::return_type dice_less_than_or_equal(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto a = fn::arg<type_rand_var>(first);
     auto b = fn::arg<type_rand_var>(first + 1);
     a->data() = a->data().less_than_or_equal(b->data());
@@ -130,7 +127,6 @@ static fn::return_type dice_equal(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto a = fn::arg<type_rand_var>(first);
     auto b = fn::arg<type_rand_var>(first + 1);
     a->data() = a->data().equal(b->data());
@@ -142,7 +138,6 @@ static fn::return_type dice_not_equal(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto a = fn::arg<type_rand_var>(first);
     auto b = fn::arg<type_rand_var>(first + 1);
     a->data() = a->data().not_equal(b->data());
@@ -154,7 +149,6 @@ static fn::return_type dice_greater_than(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto a = fn::arg<type_rand_var>(first);
     auto b = fn::arg<type_rand_var>(first + 1);
     a->data() = a->data().greater_than(b->data());
@@ -166,16 +160,17 @@ static fn::return_type dice_greater_than_or_equal(
     fn::args_iterator)
 {
     using namespace dice;
-    using fn = function_traits;
     auto a = fn::arg<type_rand_var>(first);
     auto b = fn::arg<type_rand_var>(first + 1);
     a->data() = a->data().greater_than_or_equal(b->data());
     return std::move(*first);
 }
 
+// generate a random number
+#ifndef DISABLE_RNG
+
 static std::random_device dev;
 
-// generate a random
 template<typename ProbType = double>
 struct dice_roll 
 {
@@ -189,7 +184,6 @@ struct dice_roll
         fn::args_iterator)
     {
         using namespace dice;
-        using fn = function_traits;
 
         ProbType sum = 0;
         auto value = dist(engine);
@@ -205,6 +199,8 @@ struct dice_roll
         return make<type_int>(var.probability().end()->first);
     } 
 };
+
+#endif // DISABLE_RNG
 
 // environment code
 
@@ -293,9 +289,12 @@ dice::environment::environment()
     add_function(">", {
         dice_greater_than, { type_rand_var::id(), type_rand_var::id() }
     });
+
+#ifndef DISABLE_RNG
     add_function("roll", {
         dice_roll<double>{}, { type_rand_var::id() }
     });
+#endif // DISABLE_RNG
 
     // type conversions
     conversions_.add_conversion(type_int::id(), type_double::id(), 

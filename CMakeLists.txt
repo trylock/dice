@@ -55,6 +55,12 @@ add_executable(tests ${all_tests})
 target_link_libraries(dice_cli dice)
 target_link_libraries(tests dice)
 
+# Uncomment this to disable random number generater
+# This will remove the "roll()" user function
+# It is necessary to use this in order to run Valgrind
+
+# add_definitions(-DDISABLE_RNG) 
+
 # Generate documentation
 add_custom_target(doc COMMAND doxygen ${PROJECT_SOURCE_DIR}/doxygen.conf)
 

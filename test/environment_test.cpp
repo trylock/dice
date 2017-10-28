@@ -164,6 +164,8 @@ TEST_CASE("Call in operator on a random variable and int interval", "[environmen
     REQUIRE(prob.find(0)->second == Approx(2 / 5.0));
 }
 
+#ifndef DISABLE_RNG
+
 TEST_CASE("Generate a random number from given distribution", "[environment]")
 {
     dice::environment env;
@@ -185,6 +187,8 @@ TEST_CASE("Generate a random number from given distribution", "[environment]")
         REQUIRE((value >= 1 && value <= 6));
     }
 }
+
+#endif // DISABLE_RNG
 
 TEST_CASE("Set value of unknown variable", "[environment]")
 {
