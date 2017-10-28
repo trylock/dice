@@ -529,7 +529,15 @@ namespace dice
                     auto args = param_list();
                     eat(symbol_type::right_paren);
 
-                    return int_->call(id.lexeme, std::move(args));
+                    try
+                    {
+                        return int_->call(id.lexeme, std::move(args));
+                    }
+                    catch (compiler_error& err)
+                    {
+                        error(err.what());
+                        return int_->make_default();
+                    }
                 }
                 else // variable 
                 {

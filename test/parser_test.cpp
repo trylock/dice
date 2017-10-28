@@ -102,6 +102,11 @@ public:
 
     value_type call(const std::string& name, value_list&& args)
     {
+        if (name == "E")
+        {
+            throw dice::compiler_error("Unknown function 'E'");
+        }
+
         std::string trans = name + "(";
         if (args.size() == 0)
         {
@@ -439,4 +444,21 @@ TEST_CASE("Use default value instead of an invalid expression in name definition
 
     REQUIRE(result.errors.size() == 1);
     REQUIRE(result.errors[0].message == "Invalid expression.");
+}
+
+TEST_CASE("If error occurs during a function call, use default value and provide an error message", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::id, "E" },
+        { symbol_type::left_paren },
+        { symbol_type::right_paren },
+    });
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+    
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].message == "Unknown function 'E'");
 }
