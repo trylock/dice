@@ -211,3 +211,45 @@ TEST_CASE("Compute negation of a random variable", "[random_variable_decompositi
     REQUIRE(prob.find(-3)->second == Approx(3 / 10.0));
     REQUIRE(prob.find(-4)->second == Approx(4 / 10.0));
 }
+
+TEST_CASE("Compute maximum of dependent random variables", "[random_variable_decomposition]")
+{
+    dice::random_variable<int, double> var_a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    } };
+    dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> one{ dice::independent_tag{}, &var_one };
+
+    auto result = max(a, a + one);
+    auto var = result.to_random_variable();
+    auto prob = var.probability();
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(5)->second == Approx(1 / 4.0));
+}
+
+TEST_CASE("Compute minimum of dependent random variables", "[random_variable_decomposition]")
+{
+    dice::random_variable<int, double> var_a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    } };
+    dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
+    dice::random_variable_decomposition<int, double> a{ dice::dependent_tag{}, &var_a };
+    dice::random_variable_decomposition<int, double> one{ dice::independent_tag{}, &var_one };
+
+    auto result = min(a, a + one);
+    auto var = result.to_random_variable();
+    auto prob = var.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+}

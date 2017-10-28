@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cassert>
+#include <algorithm>
 #include <unordered_set>
 #include <unordered_map>
 
@@ -482,6 +483,40 @@ namespace dice
          */
         std::vector<var_type> vars_;
     };
+
+    /** Compute maximum of 2 random variables.
+     * Variables does not need to be independent.
+     * @param first random variable
+     * @param second random variable
+     * @return maximum of the 2 random variables
+     */
+    template<typename ValueType, typename ProbabilityType>
+    auto max(
+        const random_variable_decomposition<ValueType, ProbabilityType>& a,
+        const random_variable_decomposition<ValueType, ProbabilityType>& b)
+    {
+        return a.combine(b, [](auto&& value_a, auto&& value_b) 
+        {
+            return std::max(value_a, value_b);
+        });
+    }
+    
+    /** Compute minimum of 2 random variables.
+     * Variables does not need to be independent.
+     * @param first random variable
+     * @param second random variable
+     * @return minimum of the 2 random variables
+     */
+    template<typename ValueType, typename ProbabilityType>
+    auto min(
+        const random_variable_decomposition<ValueType, ProbabilityType>& a,
+        const random_variable_decomposition<ValueType, ProbabilityType>& b)
+    {
+        return a.combine(b, [](auto&& value_a, auto&& value_b) 
+        {
+            return std::min(value_a, value_b);
+        });
+    }
 }
 
 #endif // DICE_RANDOM_VARIABLE_DECOMPOSITION_HPP_
