@@ -166,9 +166,8 @@ int main(int argc, char** argv)
     }
     else 
     {
-        std::cerr << "Usage: dice_cli <expr>" << std::endl
-            << "   <expr> is an arbitrary expression" << std::endl
-            << "          multiple arguments will be concatenated" << std::endl;
+        std::cerr << "Usage: ./dice_cli [options] <expr>" << std::endl
+            << "   -f <file> load expression from file" << std::endl;
         return 1;
     }
     return 0;
