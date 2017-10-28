@@ -10,7 +10,7 @@
 
 using value_list = std::vector<std::unique_ptr<dice::base_value>>;
 
-struct parse_result 
+struct interpreter_result 
 {
     // computed values
     value_list values;
@@ -42,9 +42,9 @@ struct parse_result
 };
 
 // Helper function to setup a parser and parse given expression
-static parse_result parse(const std::string& expr)
+static interpreter_result interpret(const std::string& expr)
 {
-    parse_result result;
+    interpreter_result result;
 
     std::stringstream input{ expr };
 
@@ -79,13 +79,13 @@ static parse_result parse(const std::string& expr)
 
 TEST_CASE("Interpret an empty expression", "[dice]")
 {
-    auto result = parse("");
+    auto result = interpret("");
     REQUIRE(result.values.size() == 0);
 }
 
 TEST_CASE("Interpret a single integer value", "[dice]")
 {
-    auto result = parse("42");
+    auto result = interpret("42");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -99,7 +99,7 @@ TEST_CASE("Interpret a single integer value", "[dice]")
 
 TEST_CASE("Interpret a single double value", "[dice]")
 {
-    auto result = parse("3.1415");
+    auto result = interpret("3.1415");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -113,7 +113,7 @@ TEST_CASE("Interpret a single double value", "[dice]")
 
 TEST_CASE("Interpret an invalid double value", "[dice]")
 {
-    auto result = parse("3.");
+    auto result = interpret("3.");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid floating point number. Decimal part must not be empty: 3.");
@@ -128,7 +128,7 @@ TEST_CASE("Interpret an invalid double value", "[dice]")
 
 TEST_CASE("Skip unknown characters", "[dice]")
 {
-    auto result = parse("?!4");
+    auto result = interpret("?!4");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Unexpected character: '?' (0x3F).");
@@ -144,7 +144,7 @@ TEST_CASE("Skip unknown characters", "[dice]")
 
 TEST_CASE("Interpret an arithmetic expression", "[dice]")
 {
-    auto result = parse("1 + 2 * 3 / 4 - 5");
+    auto result = interpret("1 + 2 * 3 / 4 - 5");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -158,7 +158,7 @@ TEST_CASE("Interpret an arithmetic expression", "[dice]")
 
 TEST_CASE("Interpret a dice roll expression", "[dice]")
 {
-    auto result = parse("1d2d4");
+    auto result = interpret("1d2d4");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -180,7 +180,7 @@ TEST_CASE("Interpret a dice roll expression", "[dice]")
 
 TEST_CASE("Interpret a function call", "[dice]")
 {
-    auto result = parse("expectation(1d6)");
+    auto result = interpret("expectation(1d6)");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -194,7 +194,7 @@ TEST_CASE("Interpret a function call", "[dice]")
 
 TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[dice]")
 {
-    auto result = parse("* ) 1 + 2 * 3");
+    auto result = interpret("* ) 1 + 2 * 3");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid token at the beginning of an expression: *");
@@ -211,7 +211,7 @@ TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[di
 
 TEST_CASE("Interpret a relational operator in", "[dice]")
 {
-    auto result = parse("1d6 in [2, 5]");
+    auto result = interpret("1d6 in [2, 5]");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -227,7 +227,7 @@ TEST_CASE("Interpret a relational operator in", "[dice]")
 
 TEST_CASE("Interpret a relational operator <", "[dice]")
 {
-    auto result = parse("1d6 < 3");
+    auto result = interpret("1d6 < 3");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -243,7 +243,7 @@ TEST_CASE("Interpret a relational operator <", "[dice]")
 
 TEST_CASE("Interpret a relational operator <=", "[dice]")
 {
-    auto result = parse("1d6 <= 3");
+    auto result = interpret("1d6 <= 3");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -259,7 +259,7 @@ TEST_CASE("Interpret a relational operator <=", "[dice]")
 
 TEST_CASE("Interpret a relational operator ==", "[dice]")
 {
-    auto result = parse("1d6 == 6");
+    auto result = interpret("1d6 == 6");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -275,7 +275,7 @@ TEST_CASE("Interpret a relational operator ==", "[dice]")
 
 TEST_CASE("Interpret a relational operator !=", "[dice]")
 {
-    auto result = parse("1d6 != 6");
+    auto result = interpret("1d6 != 6");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -291,7 +291,7 @@ TEST_CASE("Interpret a relational operator !=", "[dice]")
 
 TEST_CASE("Interpret a relational operator >=", "[dice]")
 {
-    auto result = parse("1d6 >= 5");
+    auto result = interpret("1d6 >= 5");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -307,7 +307,7 @@ TEST_CASE("Interpret a relational operator >=", "[dice]")
 
 TEST_CASE("Interpret a relational operator >", "[dice]")
 {
-    auto result = parse("1d6 > 4");
+    auto result = interpret("1d6 > 4");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -323,7 +323,7 @@ TEST_CASE("Interpret a relational operator >", "[dice]")
 
 TEST_CASE("Don't interpret the in operator if the lower bound is invalid expression", "[dice]")
 {
-    auto result = parse("1d4 in [, 3]");
+    auto result = interpret("1d4 in [, 3]");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid operand for the lower bound of operator in");
@@ -343,7 +343,7 @@ TEST_CASE("Don't interpret the in operator if the lower bound is invalid express
 
 TEST_CASE("Don't interpret the in operator if the upper bound is invalid expression", "[dice]")
 {
-    auto result = parse("1d4 in [1, +]");
+    auto result = interpret("1d4 in [1, +]");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid operand for the upper bound of operator in");
@@ -363,7 +363,7 @@ TEST_CASE("Don't interpret the in operator if the upper bound is invalid express
 
 TEST_CASE("Don't interpret relational operator if the second operand is invalid", "[dice]")
 {
-    auto result = parse("1 < +");
+    auto result = interpret("1 < +");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid operand for <relational operator> '<'");
@@ -379,7 +379,7 @@ TEST_CASE("Don't interpret relational operator if the second operand is invalid"
 
 TEST_CASE("Resume interpreting relational operator after finding a sync symbol", "[dice]")
 {
-    auto result = parse("1 < * 2");
+    auto result = interpret("1 < * 2");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid token at the beginning of an addition: *");
@@ -395,7 +395,7 @@ TEST_CASE("Resume interpreting relational operator after finding a sync symbol",
 
 TEST_CASE("Don't interpret the + operator if the second operand is invalid", "[dice]")
 {
-    auto result = parse("2 + *");
+    auto result = interpret("2 + *");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid operand for binary operator +");
@@ -411,7 +411,7 @@ TEST_CASE("Don't interpret the + operator if the second operand is invalid", "[d
 
 TEST_CASE("Resume interpreting the + operator if we find a sync symbol", "[dice]")
 {
-    auto result = parse("2 + [ 3");
+    auto result = interpret("2 + [ 3");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid token at the beginning of a multiplication: [");
@@ -426,7 +426,7 @@ TEST_CASE("Resume interpreting the + operator if we find a sync symbol", "[dice]
 
 TEST_CASE("Don't interpret the * operator if the second operand is invalid", "[dice]")
 {
-    auto result = parse("2 * )");
+    auto result = interpret("2 * )");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid operand for binary operator *");
@@ -442,7 +442,7 @@ TEST_CASE("Don't interpret the * operator if the second operand is invalid", "[d
 
 TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]")
 {
-    auto result = parse("2 * [ 4");
+    auto result = interpret("2 * [ 4");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid token at the beginning of a dice roll: [");
@@ -457,7 +457,7 @@ TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]
 
 TEST_CASE("Interpret arithmetic expressing with doubles and ints", "[dice]")
 {
-    auto result = parse("1.5 * 2 + 3 - 0.5");
+    auto result = interpret("1.5 * 2 + 3 - 0.5");
 
     REQUIRE(result.values.size() == 1);
     result.assert_no_error();
@@ -471,7 +471,7 @@ TEST_CASE("Interpret arithmetic expressing with doubles and ints", "[dice]")
 
 TEST_CASE("Interpret a function with no arguments", "[dice]")
 {
-    auto result = parse("one() * 2");
+    auto result = interpret("one() * 2");
 
     REQUIRE(result.values.size() == 1);
     
@@ -484,7 +484,7 @@ TEST_CASE("Interpret a function with no arguments", "[dice]")
 
 TEST_CASE("Interpret a function with invalid first argument", "[dice]")
 {
-    auto result = parse("add(,1,2)");
+    auto result = interpret("add(,1,2)");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid function parameter 0");
@@ -499,7 +499,7 @@ TEST_CASE("Interpret a function with invalid first argument", "[dice]")
 
 TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[dice]")
 {
-    auto result = parse("1d)");
+    auto result = interpret("1d)");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid operand for binary operator D (dice roll)");
@@ -515,7 +515,7 @@ TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[
 
 TEST_CASE("Resume interpreting the dice roll operator if we find a sync symbol", "[dice]")
 {
-    auto result = parse("1d[4");
+    auto result = interpret("1d[4");
     
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid token at the beginning of a factor: [");
@@ -534,7 +534,7 @@ TEST_CASE("Resume interpreting the dice roll operator if we find a sync symbol",
 
 TEST_CASE("Resume interpreting an expression in function arguments after finding a sync symbol", "[dice]")
 {
-    auto result = parse("expectation(+1d4)");
+    auto result = interpret("expectation(+1d4)");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error( "Invalid token at the beginning of an expression: +");
@@ -549,7 +549,7 @@ TEST_CASE("Resume interpreting an expression in function arguments after finding
 
 TEST_CASE("Interpret expression with variables", "[dice]")
 {
-    auto result = parse("var X = 1d6; (X == 5) * 4 + (1 - (X == 5)) * 2");
+    auto result = interpret("var X = 1d6; (X == 5) * 4 + (1 - (X == 5)) * 2");
 
     REQUIRE(result.values.size() == 2);
     result.assert_no_error();

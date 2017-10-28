@@ -1,7 +1,9 @@
 #include "catch.hpp"
 #include "parser.hpp"
 
-using freq_list = dice::random_variable<int, double>::freq_list;
+#include "logger_mock.hpp"
+
+using symbols = std::vector<dice::symbol>;
 
 class lexer_mock 
 {
@@ -25,259 +27,377 @@ private:
     std::size_t pos_;
 };
 
-struct log_entry 
-{
-    int line;
-    int col;
-    std::string message;
-};
-
-class logger_mock 
+// simple interpreter mock that will translate the expression to more explicit form
+class interpreter_mock
 {
 public:
-    void error(int line, int col, const std::string& message)
+    using value_type = std::string;
+    using value_list = std::vector<value_type>;
+
+    value_type make_default()
     {
-        errors_.push_back(log_entry{
-            line,
-            col,
-            message
-        });
+        return "<DEFAULT>";
     }
 
-    const std::vector<log_entry>& errors() const { return errors_;  }
+    value_type number(const std::string& value)
+    {    
+        return value;
+    }
 
-private:
-    std::vector<log_entry> errors_;
+    value_type variable(const std::string& name)
+    {
+        return name;
+    }
+
+    value_type add(value_type&& lhs, value_type&& rhs)
+    {
+        return "(" + lhs + "+" + rhs + ")";
+    }
+
+    value_type sub(value_type&& lhs, value_type&& rhs)
+    {
+        return "(" + lhs + "-" + rhs + ")";
+    }
+
+    value_type mult(value_type&& lhs, value_type&& rhs)
+    {
+        return "(" + lhs + "*" + rhs + ")";
+    }
+
+    value_type div(value_type&& lhs, value_type&& rhs)
+    {
+        return "(" + lhs + "/" + rhs + ")";
+    }
+
+    value_type unary_minus(value_type&& value)
+    {
+        return "(-" + value + ")";
+    }
+
+    value_type rel_op(const std::string& type, value_type&& lhs, 
+        value_type&& rhs)
+    {
+        return "(" + lhs + type + rhs + ")";
+    }
+
+    value_type rel_in(value_type&& var, value_type&& lower_bound, 
+        value_type&& upper_bound)
+    {
+        return "(" + var + " in[" + lower_bound + "," + upper_bound + "])";
+    }
+
+    value_type roll(value_type&& lhs, value_type&& rhs)
+    {
+        return "(" + lhs + "d" + rhs + ")";
+    }
+
+    value_type assign(const std::string& name, value_type&& value)
+    {
+        return "(" + name + "=" + value + ");";
+    }
+
+    value_type call(const std::string& name, value_list&& args)
+    {
+        std::string trans = name + "(";
+        if (args.size() == 0)
+        {
+            trans += ")";
+            return trans;
+        }
+        trans += args.front();
+        for (auto it = args.begin() + 1; it != args.end(); ++it)
+        {
+            trans += "," + *it;
+        }
+        return trans + ")";
+    }
 };
 
-template<typename Arg>
-class env_mock 
+struct parse_result
 {
-public:
-    using value_type = std::unique_ptr<dice::base_value>;
-    using args_iterator = std::vector<value_type>::iterator;
+    std::vector<log_entry> errors;
+    interpreter_mock::value_list values;
+};
 
-    void set_var(const std::string& name, value_type&& value)
-    {
-        vars_[name] = std::move(value);
-    }
-
-    dice::base_value* get_var(const std::string& name)
-    {
-        auto it = vars_.find(name);
-        if (it == vars_.end())
-            return nullptr;
-        return it->second.get();
-    }
+static auto parse(std::vector<dice::symbol>&& tokens)
+{
+    lexer_mock lexer{ std::move(tokens) };
+    logger_mock logger;
+    interpreter_mock interpret;
+    dice::parser<lexer_mock, logger_mock, interpreter_mock> parser{ 
+        &lexer, &logger, &interpret };
     
-    const dice::base_value* get_var(const std::string& name) const
-    {
-        auto it = vars_.find(name);
-        if (it == vars_.end())
-            return nullptr;
-        return it->second.get();
-    }
+    parse_result result;
+    result.values = parser.parse();
+    result.errors = std::move(logger.errors());
+    return result;
+}
 
-    value_type call_var(const std::string&, args_iterator, args_iterator)
-    {
-        throw std::runtime_error("Not supported.");
-    }
-
-    value_type call(const std::string& name, value_type&& first) 
-    {
-        assert(name == "unary-");
-        auto a = dynamic_cast<Arg*>(first.get());
-        a->data() = -a->data();
-        return std::move(first);
-    }
-
-    value_type call(const std::string& name, value_type&& first, value_type&& second)
-    {
-        assert(first->type() == second->type());
-
-        auto a = dynamic_cast<Arg*>(first.get());
-        auto b = dynamic_cast<Arg*>(second.get());
-        if (name == "+")
-            a->data() = a->data() + b->data();
-        else if (name == "-")
-            a->data() = a->data() - b->data();
-        else if (name == "*")
-            a->data() = a->data() * b->data();
-        else if (name == "/")
-            a->data() = a->data() / b->data();
-        else if (name == "__roll_op")
-            first = dice::make<dice::type_rand_var>(freq_list{
-                std::make_pair(1, 1),
-                std::make_pair(2, 1),
-                std::make_pair(3, 1),
-                std::make_pair(4, 1),
-                std::make_pair(5, 1),
-                std::make_pair(6, 1)
-            });
-        return std::move(first);
-    }
-
-    value_type call(const std::string&, value_type&&, value_type&&, value_type&&) 
-    {
-        throw std::runtime_error("Not supported.");
-    }
-
-private:
-    std::unordered_map<std::string, value_type> vars_;
-};
-
-TEST_CASE("Parse empty expression", "[parser]")
+TEST_CASE("Parse an empty expression", "[parser]")
 {
-    lexer_mock lexer({});
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
+    auto result = parse({});
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 0);
+    REQUIRE(result.values.size() == 0);
 }
 
 TEST_CASE("Parse simple expression", "[parser]")
 {
-    lexer_mock lexer({
-        { dice::symbol_type::left_paren },
-        { dice::symbol_type::number, "1" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::number, "2" },
-        { dice::symbol_type::right_paren },
-        { dice::symbol_type::times },
-        { dice::symbol_type::number, "3" },
-        { dice::symbol_type::divide },
-        { dice::symbol_type::number, "5" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::number, "1" },
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "14" }
     });
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 1);
-    auto result = std::move(results[0]);
-
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 2);
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "14");
 }
 
-TEST_CASE("+ and - operators are left associative", "[parser]")
+TEST_CASE("Operators + and - are left associative", "[parser]")
 {
-    lexer_mock lexer({
-        { dice::symbol_type::number, "1" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::number, "2" },
-        { dice::symbol_type::minus },
-        { dice::symbol_type::number, "3" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::number, "4" },
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::plus },
+        { symbol_type::number, "2" },
+        { symbol_type::minus },
+        { symbol_type::number, "3" },
+        { symbol_type::plus },
+        { symbol_type::number, "4" },
+        { symbol_type::minus },
+        { symbol_type::number, "5" },
     });
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 1);
-    auto result = std::move(results[0]);
-
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 4);
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((((1+2)-3)+4)-5)");
 }
 
-TEST_CASE("* and / operators are left associative", "[parser]")
+TEST_CASE("Operators * and / are left associative", "[parser]")
 {
-    lexer_mock lexer({
-        { dice::symbol_type::number, "2" },
-        { dice::symbol_type::times },
-        { dice::symbol_type::number, "3" },
-        { dice::symbol_type::divide },
-        { dice::symbol_type::number, "4" },
-        { dice::symbol_type::times },
-        { dice::symbol_type::number, "5" },
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::times },
+        { symbol_type::number, "2" },
+        { symbol_type::divide },
+        { symbol_type::number, "3" },
+        { symbol_type::times },
+        { symbol_type::number, "4" },
+        { symbol_type::divide },
+        { symbol_type::number, "5" },
     });
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 1);
-    auto result = std::move(results[0]);
-
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 5);
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((((1*2)/3)*4)/5)");
 }
 
-TEST_CASE("* and / operators have higher precedence than + and -", "[parser]")
+TEST_CASE("Operator D (dice roll) is left associative", "[parser]")
 {
-    lexer_mock lexer({
-        { dice::symbol_type::number, "1" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::number, "2" },
-        { dice::symbol_type::times },
-        { dice::symbol_type::number, "3" },
-        { dice::symbol_type::minus },
-        { dice::symbol_type::number, "4" },
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "2" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "3" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "4" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "5" },
     });
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 1);
-    auto result = std::move(results[0]);
-
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == 3);
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((((1d2)d3)d4)d5)");
 }
 
-TEST_CASE("Unary - has higher precedence than +, -, * and /", "[parser]")
+TEST_CASE("Operators * and / have lower precedence than + and -", "[parser]")
 {
-    lexer_mock lexer({
-        { dice::symbol_type::number, "1" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::number, "2" },
-        { dice::symbol_type::times },
-        { dice::symbol_type::minus },
-        { dice::symbol_type::number, "3" },
-        { dice::symbol_type::plus },
-        { dice::symbol_type::minus },
-        { dice::symbol_type::number, "4" },
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::plus },
+        { symbol_type::number, "2" },
+        { symbol_type::times },
+        { symbol_type::number, "3" },
+        { symbol_type::minus },
+        { symbol_type::number, "4" },
+        { symbol_type::divide },
+        { symbol_type::number, "5" },
     });
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 1);
-    auto result = std::move(results[0]);
-
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_int::id());
-    REQUIRE(dynamic_cast<dice::type_int*>(result.get())->data() == -9);
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((1+(2*3))-(4/5))");
 }
 
-TEST_CASE("Parse dice roll operator", "[parser]")
+TEST_CASE("Operator D has lower precedence than +, -, * and /", "[parser]")
 {
-    lexer_mock lexer({
-        { dice::symbol_type::number, "1" },
-        { dice::symbol_type::roll_op },
-        { dice::symbol_type::number, "6" },
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::minus },
+        { symbol_type::number, "1" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "2" },
     });
-    logger_mock log;
-    env_mock<dice::type_int> env;
-    dice::parser<lexer_mock, logger_mock, env_mock<dice::type_int>> parser{ &lexer, &log, &env };
 
-    auto results = parser.parse();
-    REQUIRE(results.size() == 1);
-    auto result = std::move(results[0]);
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "(-(1d2))");
+}
 
-    REQUIRE(log.errors().empty());
-    REQUIRE(result->type() == dice::type_rand_var::id());
+TEST_CASE("Operator D has lower precedence than unary -", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::plus },
+        { symbol_type::number, "2" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "3" },
+        { symbol_type::times },
+        { symbol_type::number, "4" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "5" },
+        { symbol_type::minus },
+        { symbol_type::number, "6" },
+    });
+
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((1+((2d3)*(4d5)))-6)");
+}
+
+TEST_CASE("Operator D has lower precedence than a relational operator", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "2" },
+        { symbol_type::rel_op, "<" },
+        { symbol_type::number, "3" },
+    });
+
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((1d2)<3)");
+}
+
+TEST_CASE("Operator D has lower precedence than in operator", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "2" },
+        { symbol_type::in },
+        { symbol_type::left_square_bracket },
+        { symbol_type::number, "3" },
+        { symbol_type::param_delim },
+        { symbol_type::number, "4" },
+        { symbol_type::right_square_bracket },
+    });
+
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "((1d2) in[3,4])");
+}
+
+TEST_CASE("Assign operator has the highest precedence", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::var },
+        { symbol_type::id, "X" },
+        { symbol_type::assign },
+        { symbol_type::number, "1" },
+        { symbol_type::rel_op, "<" },
+        { symbol_type::number, "2" },
+        { symbol_type::plus },
+        { symbol_type::number, "3" },
+        { symbol_type::minus },
+        { symbol_type::number, "4" },
+        { symbol_type::times },
+        { symbol_type::number, "5" },
+        { symbol_type::divide },
+        { symbol_type::minus },
+        { symbol_type::number, "6" },
+        { symbol_type::roll_op },
+        { symbol_type::number, "7" },
+    });
+
+    REQUIRE(result.errors.empty());
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "(X=(1<((2+3)-((4*5)/(-(6d7))))));");
+}
+
+TEST_CASE("Parse erroneous second operand for a relational operator", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::rel_op, "<" },
+        { symbol_type::assign },
+        { symbol_type::number, "2" }
+    });
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "(1<2)");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of an addition: =");
+}
+
+TEST_CASE("Parse invalid tokens at the beginning of an expression", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::left_square_bracket },
+        { symbol_type::plus },
+        { symbol_type::number, "1" },
+        { symbol_type::plus },
+        { symbol_type::number, "2" }
+    });
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "(1+2)");
+
+    REQUIRE(result.errors.size() == 2);
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of an expression: [");
+    REQUIRE(result.errors[1].message == "Invalid token at the beginning of an expression: +");
+}
+
+TEST_CASE("Parse an empty statement in statements list", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::number, "1" },
+        { symbol_type::semicolon },
+        { symbol_type::right_paren },
+        { symbol_type::semicolon },
+        { symbol_type::number, "2" },
+    });
+    
+    REQUIRE(result.values.size() == 2);
+    REQUIRE(result.values[0] == "1");
+    REQUIRE(result.values[1] == "2");
+
+    REQUIRE(result.errors.size() == 2);
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of a statement: )");
+    REQUIRE(result.errors[1].message == "Invalid statement.");
 }
