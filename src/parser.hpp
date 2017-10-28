@@ -321,26 +321,35 @@ namespace dice
             {
                 eat(symbol_type::in);
                 eat(symbol_type::left_square_bracket);
+
+                value_type lower_bound;
+                value_type upper_bound;
         
                 // parse lower bound of the interval
-                if (!check<nonterminal_type::add>())
+                if (check<nonterminal_type::add>())
+                {
+                    lower_bound = add();
+                }
+                else 
                 {
                     error(
                         "Invalid operand for the lower bound of operator in");
-                    return left;
+                    lower_bound = int_->make_default();
                 }
-                auto lower_bound = add();
-        
+
                 eat(symbol_type::param_delim);
         
                 // parse upper bound of the interval
-                if (!check<nonterminal_type::add>())
+                if (check<nonterminal_type::add>())
+                {
+                    upper_bound = add();
+                }
+                else 
                 {
                     error(
                         "Invalid operand for the upper bound of operator in");
-                    return left;
+                    upper_bound = int_->make_default();
                 }
-                auto upper_bound = add();
         
                 eat(symbol_type::right_square_bracket); 
         

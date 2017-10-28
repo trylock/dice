@@ -321,13 +321,12 @@ TEST_CASE("Interpret a relational operator >", "[dice]")
     REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
 }
 
-TEST_CASE("Don't interpret the in operator if the lower bound is invalid expression", "[dice]")
+TEST_CASE("Use default value for the lower bound of interval", "[dice]")
 {
     auto result = interpret("1d4 in [, 3]");
 
     REQUIRE(result.values.size() == 1);
     result.assert_error("Invalid operand for the lower bound of operator in");
-    result.assert_error("Expected <end of input>, got ,.");
     result.assert_no_error();
     
     auto value = std::move(result.values[0]);
@@ -335,18 +334,19 @@ TEST_CASE("Don't interpret the in operator if the lower bound is invalid express
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
     auto prob = data.probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    // 0 (default value) will be used for the lower bound
+    REQUIRE(prob.find(1)->second == Approx(3 / 4.0));
+    REQUIRE(prob.find(0)->second == Approx(1 / 4.0));
 }
 
-TEST_CASE("Don't interpret the in operator if the upper bound is invalid expression", "[dice]")
+TEST_CASE("Use default value for the upper bound of interval", "[dice]")
 {
     auto result = interpret("1d4 in [1, +]");
 
     REQUIRE(result.values.size() == 1);
+    auto msg = result.errors.str();
     result.assert_error("Invalid operand for the upper bound of operator in");
+    result.assert_error("Expected ], got +.");
     result.assert_error("Expected <end of input>, got +.");
     result.assert_no_error();
 
@@ -355,10 +355,9 @@ TEST_CASE("Don't interpret the in operator if the upper bound is invalid express
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
     auto prob = data.probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    // 0 (default value) will be used for the uppder bound
+    REQUIRE(prob.find(1)->second == Approx(0 / 4.0));
+    REQUIRE(prob.find(0)->second == Approx(4 / 4.0));
 }
 
 TEST_CASE("Don't interpret relational operator if the second operand is invalid", "[dice]")
