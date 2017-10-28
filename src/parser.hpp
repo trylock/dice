@@ -568,7 +568,10 @@ namespace dice
                     to_string(type) + ", got " + 
                     to_string(lookahead_) + ".");
             }
+            else 
+            {
             lookahead_ = lexer_->read_token();
+        }
         }
 
         /** Report a parsing error.
