@@ -13,7 +13,7 @@ void dice::logger::error(int line, int col, const std::string& message)
         << "[line: " << line << "]" 
         << "[col: " << col << "] "
         << "\e[0m"; // reset formatting
-    *output_ << "\e[1;31m" // bold read text
+    *output_ << "\e[1;31m" // bold red text
         << "error:"
         << "\e[0m "; // reset formatting
     *output_ << message << std::endl;
