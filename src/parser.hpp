@@ -264,6 +264,11 @@ namespace dice
                 if (lookahead_.type == symbol_type::semicolon)
                 {
                     eat(lookahead_.type);
+                    if (lookahead_.type == symbol_type::end)
+                    {
+                        break; // last statement can be followed by a ;
+                    }
+
                     if (check<nonterminal_type::stmt>())
                     {
                         values.push_back(stmt());

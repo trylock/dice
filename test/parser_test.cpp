@@ -422,3 +422,21 @@ TEST_CASE("Use default value instead of a nonexistent variable name", "[parser]"
     REQUIRE(result.errors.size() == 1);
     REQUIRE(result.errors[0].message == "Unknown variable 'E'");
 }
+
+TEST_CASE("Use default value instead of an invalid expression in name definition", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::var },
+        { symbol_type::id, "X" },
+        { symbol_type::assign },
+        { symbol_type::semicolon },
+    });
+    
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "(X=<DEFAULT>);");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].message == "Invalid expression.");
+}
