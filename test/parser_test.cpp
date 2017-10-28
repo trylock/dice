@@ -443,7 +443,7 @@ TEST_CASE("Use default value instead of an invalid expression in name definition
     REQUIRE(result.values[0] == "(X=<DEFAULT>);");
 
     REQUIRE(result.errors.size() == 1);
-    REQUIRE(result.errors[0].message == "Invalid expression.");
+    REQUIRE(result.errors[0].message == "Invalid expression. Using the default value instead.");
 }
 
 TEST_CASE("If an error occurs during a function call, use default value and provide an error message", "[parser]")
@@ -482,4 +482,24 @@ TEST_CASE("Replace invalid function arguments with the default value", "[parser]
     REQUIRE(result.errors.size() == 2);
     REQUIRE(result.errors[0].message == "Invalid token at the beginning of expression: =");
     REQUIRE(result.errors[1].message == "Invalid function parameter 0. Using the default value instead.");
+}
+
+TEST_CASE("Replace invalid parenthesised expression with the default value", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::left_paren },
+        { symbol_type::left_square_bracket },
+        { symbol_type::right_square_bracket },
+        { symbol_type::right_paren },
+    });
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+
+    REQUIRE(result.errors.size() == 3);
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of expression: [");
+    REQUIRE(result.errors[1].message == "Invalid token at the beginning of expression: ]");
+    REQUIRE(result.errors[2].message == "Invalid expression. Using the default value instead.");
 }

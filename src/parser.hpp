@@ -305,7 +305,9 @@ namespace dice
                 }
                 else 
                 {
-                    error("Invalid expression.");
+                    error(
+                        "Invalid expression. "
+                        "Using the default value instead.");
                     value = int_->make_default();
                 }
                 is_definition_ = false;
@@ -486,7 +488,6 @@ namespace dice
             }
         
             // add sign
-            // TODO: should we call the unary minus multiple times?
             if (count % 2 != 0)
                 result = int_->unary_minus(std::move(result));
             return result; 
@@ -505,7 +506,9 @@ namespace dice
                 }
                 else 
                 {
-                    error("Invalid expression.");
+                    error(
+                        "Invalid expression. "
+                        "Using the default value instead.");
                     result = int_->make_default();
                 }
                 
@@ -685,7 +688,7 @@ namespace dice
         }
     };
 
-    /** Create a parser without specifying template parameter.
+    /** Create a parser without specifying template parameters.
      * @param lexer
      * @param logger
      * @param interpreter
