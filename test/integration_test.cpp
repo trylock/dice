@@ -676,10 +676,10 @@ TEST_CASE("Call to an unknown function will provide a readable error message", "
 
 TEST_CASE("Call to a function with incompatible arguments", "[dice]")
 {
-    auto result = interpret("variance(2.5)");
+    auto result = interpret("variance(2, 1d4, 2.5)");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error("No matching function for: variance(double)");
+    result.assert_error("No matching function for: variance(int, random_variable, double)");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
