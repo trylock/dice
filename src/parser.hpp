@@ -82,10 +82,11 @@ namespace dice
             symbol_type::number,
             symbol_type::id
         }};
-        static constexpr std::array<symbol_type, 3> follow{{
+        static constexpr std::array<symbol_type, 4> follow{{
             symbol_type::end,
             symbol_type::semicolon,
             symbol_type::right_paren,
+            symbol_type::param_delim,
         }};
     };
     
@@ -584,7 +585,9 @@ namespace dice
                 else 
                 {
                     error("Invalid function parameter " + 
-                        std::to_string(number));
+                        std::to_string(number) + ". " +
+                        "Using the default value instead.");
+                    args.emplace_back(int_->make_default());
                 }
         
                 if (lookahead_.type != symbol_type::param_delim)

@@ -10,7 +10,7 @@ constexpr std::array<dice::symbol_type, 2> dice::nonterminal<dice::nonterminal_t
 
 constexpr char dice::nonterminal<dice::nonterminal_type::expr>::name[];
 constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::expr>::first;
-constexpr std::array<dice::symbol_type, 3> dice::nonterminal<dice::nonterminal_type::expr>::follow;
+constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::expr>::follow;
 
 constexpr char dice::nonterminal<dice::nonterminal_type::add>::name[];
 constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::add>::first;

@@ -446,7 +446,7 @@ TEST_CASE("Use default value instead of an invalid expression in name definition
     REQUIRE(result.errors[0].message == "Invalid expression.");
 }
 
-TEST_CASE("If error occurs during a function call, use default value and provide an error message", "[parser]")
+TEST_CASE("If an error occurs during a function call, use default value and provide an error message", "[parser]")
 {
     using namespace dice;
 
@@ -461,4 +461,25 @@ TEST_CASE("If error occurs during a function call, use default value and provide
     
     REQUIRE(result.errors.size() == 1);
     REQUIRE(result.errors[0].message == "Unknown function 'E'");
+}
+
+TEST_CASE("Replace invalid function arguments with the default value", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::id, "func" },
+        { symbol_type::left_paren },
+        { symbol_type::assign },
+        { symbol_type::param_delim },
+        { symbol_type::number, "1" },
+        { symbol_type::right_paren },
+    });
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "func(<DEFAULT>,1)");
+    
+    REQUIRE(result.errors.size() == 2);
+    REQUIRE(result.errors[0].message == "Invalid token at the beginning of expression: =");
+    REQUIRE(result.errors[1].message == "Invalid function parameter 0. Using the default value instead.");
 }

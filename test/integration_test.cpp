@@ -484,17 +484,17 @@ TEST_CASE("Interpret a function with no arguments", "[dice]")
 
 TEST_CASE("Interpret a function with invalid first argument", "[dice]")
 {
-    auto result = interpret("add(,1,2)");
+    auto result = interpret("add(,1)");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error( "Invalid token at the beginning of expression: ,");
+    result.assert_error( "Invalid function parameter 0. Using the default value instead.");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 3); 
+    REQUIRE(data == 1); // 0 + 1 
 }
 
 TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[dice]")
