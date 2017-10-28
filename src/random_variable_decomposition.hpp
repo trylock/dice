@@ -13,11 +13,6 @@
 
 namespace dice
 {
-    /** Decomposition should expect that given variable might appear in some
-     * other variable.
-     */
-    class dependent_tag{};
-
     /** Object representing a decomposition of a function of random variables.
      * 
      * Denote A a random variable. Let us assume that A depends on random 
@@ -48,16 +43,6 @@ namespace dice
         explicit random_variable_decomposition(var_type&& variable)
         {
             vars_.push_back(std::move(variable));
-        }
-
-        random_variable_decomposition(dependent_tag, const var_type& variable)
-        {
-            deps_.emplace_back(std::make_shared<var_type>(variable));
-
-            for (auto&& pair : variable.probability())
-            {
-                vars_.emplace_back(constant_tag{}, pair.first);
-            }
         }
         
         // Random variable constructors
@@ -447,7 +432,10 @@ namespace dice
             return !deps_.empty();
         }
 
-        void make_dependent()
+        /** Compute the decomposition of this random variable.
+         *  It is only valid if there are no dependencies.
+         */
+        void compute_decomposition()
         {
             assert(!has_dependencies());
             assert(vars_.size() == 1);

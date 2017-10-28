@@ -259,7 +259,7 @@ namespace dice
             auto var = dynamic_cast<type_rand_var*>(value.get());
             if (var != nullptr && !var->data().has_dependencies())
             {
-                var->data().make_dependent();
+                var->data().compute_decomposition();
             }
             return std::move(value);
         }
