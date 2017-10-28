@@ -266,17 +266,19 @@ namespace dice
         /** Compute expected value of this random variable.
          * @return expected value of this variable
          */
-        auto expected_value()  
+        auto expected_value() const
         {
-            return rand_var().expected_value();
+            auto var = to_random_variable();
+            return var.expected_value();
         }
 
         /** Compute variance of this random variable.
          * @return variance of this variable
          */
-        auto variance() 
+        auto variance() const
         {
-            return rand_var().variance();
+            auto var = to_random_variable();
+            return var.variance();
         }
 
         /** Compute function of 2 random variables: A and B.
@@ -410,19 +412,6 @@ namespace dice
             return var.probability();
         }
 
-        /** Return a reference to a basic random variable with the same 
-         * distribution. This object is converted in the first call.
-         * Subsequent calls just retrieve the cached value.
-         */
-        const var_type& rand_var() 
-        {
-            if (dist_.probability_.empty())
-            {
-                dist_ = to_random_variable();
-            }
-            return dist_;
-        }
-
         /** Check whether this decomposition has dependencies on other random 
          * variables.
          * @return true iff it has at least 1 dependency
@@ -449,11 +438,6 @@ namespace dice
         }
 
     private:
-        /** Resulting random variable.
-         * This is cached value of the to_random_variable() call.
-         */
-        var_type dist_;
-
         /** Set of variables on which this random variable depends.
          * It is kept sorted by the pointer value. This simplifies the
          * combination algorithm as we can make some assumptions in the
