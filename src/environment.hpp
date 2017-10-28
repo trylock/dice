@@ -7,6 +7,7 @@
 #include <functional>
 #include <cassert>
 #include <random>
+#include <algorithm>
 
 #include "value.hpp"
 #include "functions.hpp"

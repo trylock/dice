@@ -166,6 +166,28 @@ static fn::return_type dice_greater_than_or_equal(
     return std::move(*first);
 }
 
+template<typename T>
+static fn::return_type dice_min(fn::args_iterator first, fn::args_iterator)
+{
+    using namespace dice;
+    using namespace std;
+    auto a = fn::arg<T>(first);
+    auto b = fn::arg<T>(first + 1);
+    a->data() = min(a->data(), b->data());
+    return std::move(*first);
+}
+
+template<typename T>
+static fn::return_type dice_max(fn::args_iterator first, fn::args_iterator)
+{
+    using namespace dice;
+    using namespace std;
+    auto a = fn::arg<T>(first);
+    auto b = fn::arg<T>(first + 1);
+    a->data() = max(a->data(), b->data());
+    return std::move(*first);
+}
+
 // generate a random number
 #ifndef DISABLE_RNG
 
@@ -295,6 +317,28 @@ dice::environment::environment()
         dice_roll<double>{}, { type_rand_var::id() }
     });
 #endif // DISABLE_RNG
+
+    // Compute minimum of 2 values
+    add_function("min", {
+        dice_min<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("min", {
+        dice_min<type_int>, { type_int::id(), type_int::id() }
+    });
+    add_function("min", {
+        dice_min<type_double>, { type_double::id(), type_double::id() }
+    });
+    
+    // Compute maximum of 2 values
+    add_function("max", {
+        dice_max<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
+    });
+    add_function("max", {
+        dice_max<type_int>, { type_int::id(), type_int::id() }
+    });
+    add_function("max", {
+        dice_max<type_double>, { type_double::id(), type_double::id() }
+    });
 
     // type conversions
     conversions_.add_conversion(type_int::id(), type_double::id(), 

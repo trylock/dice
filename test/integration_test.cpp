@@ -616,3 +616,45 @@ TEST_CASE("Interpret expression with 2 variables that depend on each other", "[d
     REQUIRE(prob.find(12)->second == Approx(1 / 16.0));
     REQUIRE(prob.find(13)->second == Approx(1 / 16.0));
 }
+
+TEST_CASE("Compute minimum of 2 random variables", "[dice]")
+{
+    auto result = interpret("var X = 1d4; var Y = X + 1; min(X, Y)");
+
+    REQUIRE(result.values.size() == 3);
+    result.assert_no_error();
+
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+    
+    auto value = std::move(result.values[2]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+    
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+}
+
+TEST_CASE("Compute maximum of 2 random variables", "[dice]")
+{
+    auto result = interpret("var X = 1d4; var Y = X + 1; max(X, Y)");
+
+    REQUIRE(result.values.size() == 3);
+    result.assert_no_error();
+
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+    
+    auto value = std::move(result.values[2]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+    
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.probability();
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(5)->second == Approx(1 / 4.0));
+}
