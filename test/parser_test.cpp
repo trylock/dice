@@ -46,6 +46,10 @@ public:
 
     value_type variable(const std::string& name)
     {
+        if (name == "E")
+        {
+            throw dice::compiler_error("Unknown variable 'E'");
+        }
         return name;
     }
 
@@ -400,4 +404,21 @@ TEST_CASE("Parse an empty statement in statements list", "[parser]")
     REQUIRE(result.errors.size() == 2);
     REQUIRE(result.errors[0].message == "Invalid token at the beginning of statement: )");
     REQUIRE(result.errors[1].message == "Invalid statement.");
+}
+
+TEST_CASE("Use default value instead of a nonexistent variable name", "[parser]")
+{
+    using namespace dice;
+
+    // E is a special variable name for which the interpreter mock throws
+    // a compiler error simulating nonexitent variable
+    auto result = parse(symbols{
+        { symbol_type::id, "E" }, 
+    });
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].message == "Unknown variable 'E'");
 }

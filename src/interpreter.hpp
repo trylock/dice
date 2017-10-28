@@ -51,7 +51,7 @@ namespace dice
             auto value = env_->get_var(name);
             if (value == nullptr)
             {
-                return nullptr;
+                throw compiler_error("Unknown variable '" + name + "'");
             }
 
             // if the name represents a random variable, it can

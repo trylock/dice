@@ -534,7 +534,15 @@ namespace dice
                             "definition is supported only partially and " 
                             "may lead to incorrect results.");
                     }
-                    return int_->variable(id.lexeme);
+                    try 
+                    {
+                        return int_->variable(id.lexeme);
+                    }
+                    catch (compiler_error& err)
+                    {
+                        error(err.what());
+                        return int_->make_default();
+                    }
                 }
             }
             
