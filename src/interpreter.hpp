@@ -54,10 +54,11 @@ namespace dice
                 throw compiler_error("Unknown variable '" + name + "'");
             }
 
-            // if the name represents a random variable, it can
-            // depend on other subexpressions
+            /** If this name represents a random variable that does not depend
+             * on other names, create its decomposition.
+             */
             auto var = dynamic_cast<type_rand_var*>(value);
-            if (var != nullptr)
+            if (var != nullptr && !var->data().has_dependencies())
             {
                 return make<type_rand_var>(
                     dependent_tag{},
@@ -65,6 +66,11 @@ namespace dice
                 );
             }
 
+            /** Otherwise, if it is a value, just copy it.
+             * If it's a random variable, replace it with its expression.
+             * The expression is precomputed in form of a its decomposition.
+             * Therefore we can just copy this decomposition.
+             */
             return value->clone();
         }
 
@@ -173,6 +179,33 @@ namespace dice
         value_type call(const std::string& name, value_list&& args)
         {
             return env_->call_var(name, args.begin(), args.end());
+        }
+
+        /** Process the whole result.
+         * Replace random variable decomposition with plain random variables.
+         * This needs to be done because decompositions store plain pointers.
+         * @param list of computed values
+         * @return list of results
+         */
+        value_list process(value_list&& values)
+        {
+            value_list processed;
+            for (auto&& value : values)
+            {
+                if (value != nullptr && value->type() == type_rand_var::id())
+                {
+                    auto var = dynamic_cast<type_rand_var*>(value.get());
+                    processed.push_back(make<type_rand_var>(
+                        independent_tag{},
+                        var->data().to_random_variable()
+                    ));
+                }
+                else 
+                {
+                    processed.push_back(std::move(value));
+                }
+            }
+            return processed;
         }
 
     private:

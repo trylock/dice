@@ -564,3 +564,55 @@ TEST_CASE("Interpret expression with variables", "[dice]")
     REQUIRE(prob.find(4)->second == Approx(1 / 6.0));
     REQUIRE(prob.find(2)->second == Approx(5 / 6.0));
 }
+
+TEST_CASE("Interpret expression with variables that depend on each other", "[dice]")
+{
+    auto result = interpret("var X = 1; var Y = 1d4 + X; var Z = Y + X; var W = Z * Y; W");
+
+    REQUIRE(result.values.size() == 5);
+    result.assert_no_error();
+
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+    REQUIRE(result.values[2] == nullptr);
+    REQUIRE(result.values[3] == nullptr);
+    
+    auto value = std::move(result.values[4]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+    
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.probability();
+    REQUIRE(prob.find(6)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(12)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(20)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(30)->second == Approx(1 / 4.0));
+}
+
+TEST_CASE("Interpret expression with 2 variables that depend on each other", "[dice]")
+{
+    auto result = interpret("var X = 1d4; var Y = 1d4; var Z = X + Y; var W = X + 1; W + Z");
+    
+    REQUIRE(result.values.size() == 5);
+    result.assert_no_error();
+
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+    REQUIRE(result.values[2] == nullptr);
+    REQUIRE(result.values[3] == nullptr);
+    
+    auto value = std::move(result.values[4]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+    
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.probability();
+    REQUIRE(prob.find(4)->second == Approx(1 / 16.0));
+    REQUIRE(prob.find(5)->second == Approx(1 / 16.0));
+    REQUIRE(prob.find(6)->second == Approx(2 / 16.0));
+    REQUIRE(prob.find(7)->second == Approx(2 / 16.0));
+    REQUIRE(prob.find(8)->second == Approx(2 / 16.0));
+    REQUIRE(prob.find(9)->second == Approx(2 / 16.0));
+    REQUIRE(prob.find(10)->second == Approx(2 / 16.0));
+    REQUIRE(prob.find(11)->second == Approx(2 / 16.0));
+    REQUIRE(prob.find(12)->second == Approx(1 / 16.0));
+    REQUIRE(prob.find(13)->second == Approx(1 / 16.0));
+}

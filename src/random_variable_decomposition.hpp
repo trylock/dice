@@ -442,6 +442,15 @@ namespace dice
             return dist_;
         }
 
+        /** Check whether this decomposition has dependencies on other random 
+         * variables.
+         * @return true iff it has at least 1 dependency
+         */
+        bool has_dependencies() const 
+        {
+            return !deps_.empty();
+        }
+
     private:
         /** Resulting random variable.
          * This is cached value of the to_random_variable() call.

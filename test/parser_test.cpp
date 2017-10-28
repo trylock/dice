@@ -120,6 +120,11 @@ public:
         }
         return trans + ")";
     }
+
+    value_list process(value_list&& results)
+    {
+        return std::move(results);
+    }
 };
 
 struct parse_result

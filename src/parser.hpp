@@ -232,15 +232,15 @@ namespace dice
          * -#  * (multiply), / (divide) 
          * -#  - (unary minus)
          * -#  D|d (roll dice)
-         * @return vector of computed values
+         * @return computed values
          */
-        std::vector<value_type> parse()
+        auto parse()
         {
             lookahead_ = lexer_->read_token();
             auto result = stmts();
             // make sure we've processed the whole expression
-            eat(symbol_type::end); 
-            return result;
+            eat(symbol_type::end);
+            return int_->process(std::move(result));
         }
 
     private:
@@ -248,7 +248,6 @@ namespace dice
         Logger* log_;
         Interpreter* int_;
         symbol lookahead_;
-        bool is_definition_ = false;
 
         std::vector<value_type> stmts()
         {
@@ -297,7 +296,6 @@ namespace dice
                 eat(symbol_type::assign);
                 
                 // parse value of the name
-                is_definition_ = true;
                 value_type value;
                 if (check<nonterminal_type::expr>())
                 {
@@ -310,7 +308,6 @@ namespace dice
                         "Using the default value instead.");
                     value = int_->make_default();
                 }
-                is_definition_ = false;
 
                 return int_->assign(id.lexeme, std::move(value));
             }
@@ -486,7 +483,7 @@ namespace dice
                     break;
                 }
             }
-        
+
             // add sign
             if (count % 2 != 0)
                 result = int_->unary_minus(std::move(result));
@@ -545,12 +542,6 @@ namespace dice
                 }
                 else // variable 
                 {
-                    if (is_definition_)
-                    {
-                        error("Using names of random variables in name "
-                            "definition is supported only partially and " 
-                            "may lead to incorrect results.");
-                    }
                     try 
                     {
                         return int_->variable(id.lexeme);
