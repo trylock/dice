@@ -252,7 +252,7 @@ namespace dice
 
     private:
         Environment* env_;
-        bool is_definition_;
+        bool is_definition_ = false;
 
         value_type conv_var(value_type&& value)
         {
