@@ -9,12 +9,11 @@ dice::conversions::cost_type dice::conversions::cost(
         return 0;
     }
 
-    auto it = convert_.find(std::make_pair(from, to));
-    if (it == convert_.end())
+    if (from == dice::type_int::id())
     {
-        return max_cost;
+        return 1;
     }
-    return it->second.cost;
+    return max_cost;
 }
 
 dice::conversions::value_ptr dice::conversions::convert(
@@ -27,7 +26,19 @@ dice::conversions::value_ptr dice::conversions::convert(
         return std::move(value);
     }
 
-    auto it = convert_.find(std::make_pair(from, to));
-    assert(it != convert_.end());
-    return it->second.func(std::move(value));    
+    if (from != dice::type_int::id())
+    {
+        return nullptr; // conversion is not possible
+    }
+    
+    auto int_value = dynamic_cast<type_int&>(*value);
+    if (to == dice::type_double::id())
+    {
+        return make<type_double>(static_cast<double>(int_value.data()));
+    }
+    else if (to == dice::type_rand_var::id())
+    {
+        return make<type_rand_var>(constant_tag{}, int_value.data());
+    }
+    return nullptr;
 }

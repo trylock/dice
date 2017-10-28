@@ -339,21 +339,6 @@ dice::environment::environment()
     add_function("max", {
         dice_max<type_double>, { type_double::id(), type_double::id() }
     });
-
-    // type conversions
-    conversions_.add_conversion(type_int::id(), type_double::id(), 
-    [](auto&& value)
-    {
-        auto&& int_value = dynamic_cast<type_int&>(*value);
-        return make<type_double>(static_cast<double>(int_value.data()));
-    }, 1);
-
-    conversions_.add_conversion(type_int::id(), type_rand_var::id(), 
-    [](auto&& value)
-    {
-        auto&& int_value = dynamic_cast<type_int&>(*value);
-        return make<type_rand_var>(constant_tag{}, int_value.data());
-    }, 1);
 }
 
 void dice::environment::add_function(
