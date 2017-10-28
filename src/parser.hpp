@@ -4,7 +4,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <ostream>
 #include <functional>
 #include <unordered_map>
 
@@ -12,7 +11,7 @@
 #include "value.hpp"
 #include "lexer.hpp"
 #include "symbols.hpp"
-#include "environment.hpp"
+#include "interpreter.hpp"
 #include "random_variable.hpp"
 
 namespace dice
@@ -158,7 +157,8 @@ namespace dice
         {
             return lookahead_.type == symbol_type::end ||
                 lookahead_.type == symbol_type::right_paren ||
-                in_follow_param_list();    
+                in_follow_stmt() ||
+                in_follow_param_list();
         }
 
         value_type expr()
@@ -189,7 +189,7 @@ namespace dice
                 }
                 auto upper_bound = add();
         
-                eat(symbol_type::right_square_bracket);
+                eat(symbol_type::right_square_bracket); 
         
                 return int_->rel_in(
                     std::move(left), 
@@ -479,13 +479,7 @@ namespace dice
                             "definition is supported only partially and " 
                             "may lead to incorrect results.");
                     }
-                    auto result = int_->variable(id.lexeme);
-                    if (result == nullptr)
-                    {
-                        error("Unknown variable name '" + id.lexeme + "'.");
-                        return make<type_int>(0);
-                    }
-                    return result;
+                    return int_->variable(id.lexeme);
                 }
             }
             
@@ -493,7 +487,7 @@ namespace dice
                 to_string(symbol_type::number) + " or " + 
                 to_string(symbol_type::id) +  ", got " + 
                 to_string(lookahead_) + "."); 
-            return make<type_int>(0);
+            return int_->make_default();
         }
 
         // true <=> next token is in FIRST(param_list)
@@ -570,8 +564,8 @@ namespace dice
             }
             else 
             {
-            lookahead_ = lexer_->read_token();
-        }
+                lookahead_ = lexer_->read_token();
+            }
         }
 
         /** Report a parsing error.

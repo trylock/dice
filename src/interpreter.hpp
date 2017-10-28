@@ -17,6 +17,15 @@ namespace dice
 
         explicit interpreter(Environment* env) : env_(env) {}
 
+        /** Create a new default value.
+         * This is used when there is a parsing error.
+         * @return default value
+         */
+        value_type make_default()
+        {
+            return make<type_int>(0);
+        }
+
         /** Interpret number as an int or double.
          * @param string representation of the number
          * @return number's value
