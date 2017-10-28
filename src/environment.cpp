@@ -395,7 +395,7 @@ fn::return_type dice::environment::call_var(
     auto it = functions_.find(name);
     if (it == functions_.end())
     {
-        throw compiler_error("Unknown function " + name + "().");
+        throw compiler_error("Function '" + name + "' was not defined.");
     }
     auto&& functions = it->second;
 
@@ -436,7 +436,7 @@ fn::return_type dice::environment::call_var(
     // if there is no suitable conversion, the function call fails
     if (min_func == nullptr)
     {
-        throw compiler_error("No matching function to call: " + name + "()");
+        fail_call(name, first, last);
     }
 
     // convert arguments
@@ -450,4 +450,23 @@ fn::return_type dice::environment::call_var(
 
     // execute it
     return (*min_func)(first, last);
+}
+
+void dice::environment::fail_call(
+    const std::string& name, 
+    fn::args_iterator first,
+    fn::args_iterator last)
+{
+    std::string error_message = "No matching function for: " ;
+    error_message += name + "(";
+    if (first != last)
+    {
+        error_message += to_string((*first)->type());
+    }
+    for (auto it = first + 1; it != last; ++it)
+    {
+        error_message += ", " + to_string((*it)->type());
+    }
+    error_message += ")";
+    throw compiler_error(error_message);
 }

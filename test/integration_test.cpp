@@ -658,3 +658,33 @@ TEST_CASE("Compute maximum of 2 random variables", "[dice]")
     REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(5)->second == Approx(1 / 4.0));
 }
+
+TEST_CASE("Call to an unknown function will provide a readable error message", "[dice]")
+{
+    auto result = interpret("unknown(1, 1d4, 2.5)");
+
+    REQUIRE(result.values.size() == 1);
+    result.assert_error("Function 'unknown' was not defined.");
+    result.assert_no_error();
+
+    auto value = std::move(result.values[0]);
+    REQUIRE(value->type() == dice::type_int::id());
+
+    auto data = dynamic_cast<dice::type_int&>(*value).data();
+    REQUIRE(data == 0); // use default value
+}
+
+TEST_CASE("Call to a function with incompatible arguments", "[dice]")
+{
+    auto result = interpret("variance(2.5)");
+
+    REQUIRE(result.values.size() == 1);
+    result.assert_error("No matching function for: variance(double)");
+    result.assert_no_error();
+
+    auto value = std::move(result.values[0]);
+    REQUIRE(value->type() == dice::type_int::id());
+
+    auto data = dynamic_cast<dice::type_int&>(*value).data();
+    REQUIRE(data == 0); // use default value
+}

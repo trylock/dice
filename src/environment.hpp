@@ -110,6 +110,10 @@ namespace dice
         std::vector<value_type> args_;
         std::size_t argc_ = 0;
 
+        void fail_call(
+            const std::string& name, 
+            fn::args_iterator first,
+            fn::args_iterator last);
     };
 }
 

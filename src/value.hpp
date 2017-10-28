@@ -11,7 +11,28 @@
 namespace dice 
 {
     // Type of the type identifier of a value in a dice expression
-    using type_id = std::string;
+    enum class type_id
+    {
+        integer,
+        floating_point,
+        random_variable
+    };
+
+    // Translate C++ types to type_id
+    template<typename ValueType>
+    type_id get_type_id();
+
+    template<>
+    inline type_id get_type_id<int>() { return type_id::integer; }
+    
+    template<>
+    inline type_id get_type_id<double>() { return type_id::floating_point; }
+
+    template<>
+    inline type_id get_type_id<random_variable_decomposition<int, double>>()
+    {
+        return type_id::random_variable;
+    } 
 
     // Parent of all value types that are used in a dice expressions
     class base_value 
@@ -41,7 +62,7 @@ namespace dice
 
         static type_id id() 
         {
-            return typeid(typed_value<value_type>).name();
+            return get_type_id<T>();
         }
 
         typed_value() {}
@@ -77,6 +98,26 @@ namespace dice
             "Dice value has to be derived from dice::base_value.");
         using value_type = typename T::value_type;
         return std::make_unique<T>(value_type{ std::forward<Value>(data)... });
+    }
+
+    /** Convert type id to human readable string.
+     * @param type id
+     * @return name of the type
+     */
+    inline std::string to_string(type_id tid)
+    {
+        switch (tid)
+        {
+        case type_id::integer:
+            return "int";
+        case type_id::floating_point:
+            return "double";
+        case type_id::random_variable:
+            return "random_variable";
+        default:
+            throw std::runtime_error(
+                "Unknown type id: " + static_cast<int>(tid));
+        }
     }
 }
 
