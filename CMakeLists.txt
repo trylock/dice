@@ -36,6 +36,7 @@ set(all_tests
     ${TESTS_DIR}/main.cpp
     ${TESTS_DIR}/lexer_test.cpp
     ${TESTS_DIR}/parser_test.cpp
+    ${TESTS_DIR}/conversions_test.cpp
     ${TESTS_DIR}/environment_test.cpp
     ${TESTS_DIR}/integration_test.cpp
     ${TESTS_DIR}/random_variable_test.cpp

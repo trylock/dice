@@ -15,8 +15,7 @@ namespace dice
         using cost_type = std::size_t;
 
         // cost of an impossible conversion
-        static const cost_type max_cost = 
-            std::numeric_limits<cost_type>::max();
+        static const cost_type max_cost;
 
         /** Find conversion cost from type <from> to type <to>
          * @param id of the <from> type
@@ -27,12 +26,11 @@ namespace dice
          */
         cost_type cost(type_id from, type_id to) const;
 
-        /** Convert value from type <from> to type <to>
-         * @param id of the <from> type
+        /** Convert value to type <to>
          * @param id of the <to> type
          * @param value to convert
          * @return converted value
          */ 
-        value_ptr convert(type_id from, type_id to, value_ptr&& value) const;
+        value_ptr convert(type_id to, value_ptr&& value) const;
     };
 }

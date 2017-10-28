@@ -1,5 +1,8 @@
 #include "conversions.hpp"
 
+const dice::conversions::cost_type dice::conversions::max_cost = 
+    std::numeric_limits<dice::conversions::cost_type>::max();
+
 dice::conversions::cost_type dice::conversions::cost(
     type_id from, 
     type_id to) const
@@ -17,10 +20,10 @@ dice::conversions::cost_type dice::conversions::cost(
 }
 
 dice::conversions::value_ptr dice::conversions::convert(
-    type_id from, 
     type_id to, 
     value_ptr&& value) const 
 {
+    auto from = value->type();
     if (from == to)
     {
         return std::move(value);

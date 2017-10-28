@@ -401,7 +401,7 @@ fn::return_type dice::environment::call_var(
 
     // choose function with the lowest conversion cost
     user_function* min_func = nullptr;
-    conversions::cost_type min_cost = conversions::max_cost;
+    auto min_cost = conversions::max_cost;
     for (auto&& function : functions)
     {
         if (function.argc() != expected_argc)
@@ -443,9 +443,8 @@ fn::return_type dice::environment::call_var(
     std::size_t i = 0;
     for (auto it = first; it != last; ++it, ++i)
     {
-        type_id from = (*it)->type();
         type_id to = min_func->args()[i];
-        *it = conversions_.convert(from, to, std::move(*it));
+        *it = conversions_.convert(to, std::move(*it));
     }
 
     // execute it
