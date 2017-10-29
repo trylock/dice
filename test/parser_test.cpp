@@ -123,48 +123,6 @@ public:
         }
         return trans + ")";
     }
-
-    // Just pass the results from each production
-
-    value_list process_stmts(value_list&& results)
-    {
-        return std::move(results);
-    }
-
-    value_type process_stmt(value_type&& value)
-    {
-        return std::move(value);
-    }
-    
-    value_type process_expr(value_type&& value)
-    {
-        return std::move(value);
-    }
-    
-    value_type process_add(value_type&& value)
-    {
-        return std::move(value);
-    }
-    
-    value_type process_mult(value_type&& value)
-    {
-        return std::move(value);
-    }
-    
-    value_type process_roll(value_type&& value)
-    {
-        return std::move(value);
-    }
-    
-    value_type process_factor(value_type&& value)
-    {
-        return std::move(value);
-    }
-    
-    value_list process_param_list(value_list&& values)
-    {
-        return std::move(values);
-    }
 };
 
 struct parse_result
