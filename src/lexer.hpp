@@ -16,6 +16,9 @@ namespace dice
     {
         int line = 0;
         int col = 0;
+
+		lexer_location() {}
+		lexer_location(int line, int col) : line(line), col(col) {}
     };
 
     class lexer 

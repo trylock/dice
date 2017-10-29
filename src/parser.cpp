@@ -1,33 +1,137 @@
 #include "parser.hpp"
 
-constexpr char dice::nonterminal<dice::nonterminal_type::stmts>::name[];
-constexpr std::array<dice::symbol_type, 6> dice::nonterminal<dice::nonterminal_type::stmts>::first;
-constexpr std::array<dice::symbol_type, 1> dice::nonterminal<dice::nonterminal_type::stmts>::follow;
+const char dice::nonterminal<dice::nonterminal_type::stmts>::name[] = "statements";
+const std::array<dice::symbol_type, 6> dice::nonterminal<dice::nonterminal_type::stmts>::first{ {
+		symbol_type::end,
+		symbol_type::var,
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 1> dice::nonterminal<dice::nonterminal_type::stmts>::follow{ {
+		symbol_type::end,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::stmt>::name[];
-constexpr std::array<dice::symbol_type, 5> dice::nonterminal<dice::nonterminal_type::stmt>::first;
-constexpr std::array<dice::symbol_type, 2> dice::nonterminal<dice::nonterminal_type::stmt>::follow;
+const char dice::nonterminal<dice::nonterminal_type::stmt>::name[] = "statement";
+const std::array<dice::symbol_type, 5> dice::nonterminal<dice::nonterminal_type::stmt>::first{ {
+		symbol_type::var,
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 2> dice::nonterminal<dice::nonterminal_type::stmt>::follow{ {
+		symbol_type::end,
+		symbol_type::semicolon,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::expr>::name[];
-constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::expr>::first;
-constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::expr>::follow;
+const char dice::nonterminal<dice::nonterminal_type::expr>::name[] = "expression";
+const std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::expr>::first{ {
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::expr>::follow{ {
+		symbol_type::end,
+		symbol_type::semicolon,
+		symbol_type::right_paren,
+		symbol_type::param_delim,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::add>::name[];
-constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::add>::first;
-constexpr std::array<dice::symbol_type, 9> dice::nonterminal<dice::nonterminal_type::add>::follow;
+const char dice::nonterminal<dice::nonterminal_type::add>::name[] = "addition";
+const std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::add>::first{ {
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 9> dice::nonterminal<dice::nonterminal_type::add>::follow{ {
+		symbol_type::in,
+		symbol_type::rel_op,
+		symbol_type::param_delim,
+		symbol_type::right_square_bracket,
+		symbol_type::end,
+		symbol_type::semicolon,
+		symbol_type::right_paren,
+		symbol_type::plus,
+		symbol_type::minus,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::mult>::name[];
-constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::mult>::first;
-constexpr std::array<dice::symbol_type, 11> dice::nonterminal<dice::nonterminal_type::mult>::follow;
+const char dice::nonterminal<dice::nonterminal_type::mult>::name[] = "multiplication";
+const std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::mult>::first{ {
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 11> dice::nonterminal<dice::nonterminal_type::mult>::follow{ {
+		symbol_type::in,
+		symbol_type::rel_op,
+		symbol_type::param_delim,
+		symbol_type::right_square_bracket,
+		symbol_type::end,
+		symbol_type::semicolon,
+		symbol_type::right_paren,
+		symbol_type::plus,
+		symbol_type::minus,
+		symbol_type::times,
+		symbol_type::divide,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::dice_roll>::name[];
-constexpr std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::dice_roll>::first;
-constexpr std::array<dice::symbol_type, 12> dice::nonterminal<dice::nonterminal_type::dice_roll>::follow;
+const char dice::nonterminal<dice::nonterminal_type::dice_roll>::name[] = "dice roll";
+const std::array<dice::symbol_type, 4> dice::nonterminal<dice::nonterminal_type::dice_roll>::first{ {
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 12> dice::nonterminal<dice::nonterminal_type::dice_roll>::follow{ {
+		symbol_type::in,
+		symbol_type::rel_op,
+		symbol_type::param_delim,
+		symbol_type::right_square_bracket,
+		symbol_type::end,
+		symbol_type::semicolon,
+		symbol_type::right_paren,
+		symbol_type::plus,
+		symbol_type::minus,
+		symbol_type::times,
+		symbol_type::divide,
+		symbol_type::roll_op,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::factor>::name[];
-constexpr std::array<dice::symbol_type, 3> dice::nonterminal<dice::nonterminal_type::factor>::first;
-constexpr std::array<dice::symbol_type, 12> dice::nonterminal<dice::nonterminal_type::factor>::follow;
+const char dice::nonterminal<dice::nonterminal_type::factor>::name[] = "factor";
+const std::array<dice::symbol_type, 3> dice::nonterminal<dice::nonterminal_type::factor>::first{ {
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id
+	} };
+const std::array<dice::symbol_type, 12> dice::nonterminal<dice::nonterminal_type::factor>::follow{ {
+		symbol_type::in,
+		symbol_type::rel_op,
+		symbol_type::param_delim,
+		symbol_type::right_square_bracket,
+		symbol_type::end,
+		symbol_type::semicolon,
+		symbol_type::right_paren,
+		symbol_type::plus,
+		symbol_type::minus,
+		symbol_type::times,
+		symbol_type::divide,
+		symbol_type::roll_op,
+	} };
 
-constexpr char dice::nonterminal<dice::nonterminal_type::param_list>::name[];
-constexpr std::array<dice::symbol_type, 5> dice::nonterminal<dice::nonterminal_type::param_list>::first;
-constexpr std::array<dice::symbol_type, 2> dice::nonterminal<dice::nonterminal_type::param_list>::follow;
+const char dice::nonterminal<dice::nonterminal_type::param_list>::name[] = "parameter list";
+const std::array<dice::symbol_type, 5> dice::nonterminal<dice::nonterminal_type::param_list>::first{ {
+		symbol_type::minus,
+		symbol_type::left_paren,
+		symbol_type::number,
+		symbol_type::id,
+		symbol_type::right_paren,
+	} };
+const std::array<dice::symbol_type, 2> dice::nonterminal<dice::nonterminal_type::param_list>::follow{ {
+		symbol_type::param_delim,
+		symbol_type::right_paren,
+	} };

@@ -12,7 +12,7 @@ dice::symbol dice::lexer::read_token()
 
         auto current = static_cast<char>(get_char());
         if (input_->fail())
-            return { symbol_type::end };
+            return symbol{ symbol_type::end };
 
         auto next = static_cast<char>(input_->peek());
         if (current == '+')

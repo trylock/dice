@@ -27,6 +27,10 @@ namespace dice
          */
         std::string lexeme = "";
 
+		symbol() {}
+		symbol(symbol_type type, std::string lexeme = "") 
+    		: type(type), lexeme(std::move(lexeme)) {}
+
         inline bool operator==(const symbol& other) const
         {
             return type == other.type && lexeme == other.lexeme;

@@ -39,176 +39,72 @@ namespace dice
     class nonterminal<nonterminal_type::stmts>
     {
     public:
-        static constexpr char name[] = "statements";
-        static constexpr std::array<symbol_type, 6> first{{
-            symbol_type::end,
-            symbol_type::var,
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 1> follow{{
-            symbol_type::end,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 6> first;
+        static const std::array<symbol_type, 1> follow;
     };
 
     template<>
     class nonterminal<nonterminal_type::stmt>
     {
     public:
-        static constexpr char name[] = "statement";
-        static constexpr std::array<symbol_type, 5> first{{
-            symbol_type::var,
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 2> follow{{
-            symbol_type::end,
-            symbol_type::semicolon,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 5> first;
+        static const std::array<symbol_type, 2> follow;
     };
     
     template<>
     class nonterminal<nonterminal_type::expr>
     {
     public:
-        static constexpr char name[] = "expression";
-        static constexpr std::array<symbol_type, 4> first{{
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 4> follow{{
-            symbol_type::end,
-            symbol_type::semicolon,
-            symbol_type::right_paren,
-            symbol_type::param_delim,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 4> follow;
     };
     
     template<>
     class nonterminal<nonterminal_type::add>
     {
     public:
-        static constexpr char name[] = "addition";
-        static constexpr std::array<symbol_type, 4> first{{
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 9> follow{{
-            symbol_type::in,
-            symbol_type::rel_op,
-            symbol_type::param_delim,
-            symbol_type::right_square_bracket,
-            symbol_type::end,
-            symbol_type::semicolon,
-            symbol_type::right_paren,
-            symbol_type::plus,
-            symbol_type::minus,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 9> follow;
     };
     
     template<>
     class nonterminal<nonterminal_type::mult>
     {
     public:
-        static constexpr char name[] = "multiplication";
-        static constexpr std::array<symbol_type, 4> first{{
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 11> follow{{
-            symbol_type::in,
-            symbol_type::rel_op,
-            symbol_type::param_delim,
-            symbol_type::right_square_bracket,
-            symbol_type::end,
-            symbol_type::semicolon,
-            symbol_type::right_paren,
-            symbol_type::plus,
-            symbol_type::minus,
-            symbol_type::times,
-            symbol_type::divide,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 11> follow;
     };
     
     template<>
     class nonterminal<nonterminal_type::dice_roll>
     {
     public:
-        static constexpr char name[] = "dice roll";
-        static constexpr std::array<symbol_type, 4> first{{
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 12> follow{{
-            symbol_type::in,
-            symbol_type::rel_op,
-            symbol_type::param_delim,
-            symbol_type::right_square_bracket,
-            symbol_type::end,
-            symbol_type::semicolon,
-            symbol_type::right_paren,
-            symbol_type::plus,
-            symbol_type::minus,
-            symbol_type::times,
-            symbol_type::divide,
-            symbol_type::roll_op,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 12> follow;
     };
     
     template<>
     class nonterminal<nonterminal_type::factor>
     {
     public:
-        static constexpr char name[] = "factor";
-        static constexpr std::array<symbol_type, 3> first{{
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id
-        }};
-        static constexpr std::array<symbol_type, 12> follow{{
-            symbol_type::in,
-            symbol_type::rel_op,
-            symbol_type::param_delim,
-            symbol_type::right_square_bracket,
-            symbol_type::end,
-            symbol_type::semicolon,
-            symbol_type::right_paren,
-            symbol_type::plus,
-            symbol_type::minus,
-            symbol_type::times,
-            symbol_type::divide,
-            symbol_type::roll_op,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 3> first;
+        static const std::array<symbol_type, 12> follow;
     };
     
     template<>
     class nonterminal<nonterminal_type::param_list>
     {
     public:
-        static constexpr char name[] = "parameter list";
-        static constexpr std::array<symbol_type, 5> first{{
-            symbol_type::minus,
-            symbol_type::left_paren,
-            symbol_type::number,
-            symbol_type::id,
-            symbol_type::right_paren,
-        }};
-        static constexpr std::array<symbol_type, 2> follow{{
-            symbol_type::param_delim,
-            symbol_type::right_paren,
-        }};
+        static const char name[];
+        static const std::array<symbol_type, 5> first;
+        static const std::array<symbol_type, 2> follow;
     };
 
     // dice expression parser

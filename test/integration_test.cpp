@@ -367,7 +367,6 @@ TEST_CASE("Use default value for the upper bound of interval", "[dice]")
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
     auto prob = data.probability();
     // 0 (default value) will be used for the uppder bound
-    REQUIRE(prob.find(1)->second == Approx(0 / 4.0));
     REQUIRE(prob.find(0)->second == Approx(4 / 4.0));
 }
 
