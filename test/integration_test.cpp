@@ -68,6 +68,17 @@ static interpreter_result interpret(const std::string& expr)
             return std::move(*first);
         }, { dice::type_int::id(), dice::type_int::id() }
     ));
+    
+    env.add_function("add", dice::user_function(
+        [](auto&& first, auto&&) 
+        { 
+            using fn = dice::function_traits;
+            auto a = fn::arg<dice::type_rand_var>(first);
+            auto b = fn::arg<dice::type_rand_var>(first + 1);
+            a->data() = a->data() + b->data();
+            return std::move(*first);
+        }, { dice::type_rand_var::id(), dice::type_rand_var::id() }
+    ));
 
     dice::interpreter<dice::environment> interpret{ &env };
 
@@ -707,4 +718,25 @@ TEST_CASE("Compute result of expression with complex dependencies", "[dice]")
     REQUIRE(prob.find(9)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(18)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(32)->second == Approx(1 / 4.0));
+}
+
+TEST_CASE("Name definition that contains a function of other names", "[dice]")
+{
+    auto result = interpret("var X = 1d2; var Y = add(X, 1d2); Y + Y");
+
+    REQUIRE(result.values.size() == 3);
+    auto str = result.errors.str();
+    result.assert_no_error();
+
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+
+    auto value = std::move(result.values[2]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.probability();
+    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(6)->second == Approx(2 / 4.0));
+    REQUIRE(prob.find(8)->second == Approx(1 / 4.0));
 }

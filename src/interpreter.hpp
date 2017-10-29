@@ -74,6 +74,7 @@ namespace dice
          */
         value_type add(value_type&& lhs, value_type&& rhs)
         {
+            process_children(lhs.get(), rhs.get());
             return env_->call("+", std::move(lhs), std::move(rhs));
         }
 
@@ -84,6 +85,7 @@ namespace dice
          */
         value_type sub(value_type&& lhs, value_type&& rhs)
         {
+            process_children(lhs.get(), rhs.get());
             return env_->call("-", std::move(lhs), std::move(rhs));
         }
 
@@ -94,6 +96,7 @@ namespace dice
          */
         value_type mult(value_type&& lhs, value_type&& rhs)
         {
+            process_children(lhs.get(), rhs.get());
             return env_->call("*", std::move(lhs), std::move(rhs));
         }
 
@@ -104,6 +107,7 @@ namespace dice
          */
         value_type div(value_type&& lhs, value_type&& rhs)
         {
+            process_children(lhs.get(), rhs.get());
             return env_->call("/", std::move(lhs), std::move(rhs));
         }
 
@@ -125,6 +129,7 @@ namespace dice
         value_type rel_op(const std::string& type, value_type&& lhs, 
             value_type&& rhs)
         {
+            process_children(lhs.get(), rhs.get());
             return env_->call(type, std::move(lhs), std::move(rhs));
         }
 
@@ -150,6 +155,12 @@ namespace dice
          */
         value_type roll(value_type&& lhs, value_type&& rhs)
         {
+            // check that none of the operands depends on a random variable
+            if (has_dependencies(lhs) || has_dependencies(rhs))
+            {
+                throw compiler_error(
+                    "It is invalid to use names in dice roll operator");
+            }
             return env_->call("__roll_op", std::move(lhs), std::move(rhs));
         }
 
@@ -160,6 +171,7 @@ namespace dice
          */
         value_type assign(const std::string& name, value_type&& value)
         {
+            compute_decomposition(value);
             env_->set_var(name, std::move(value));
             return nullptr;
         }
@@ -171,6 +183,31 @@ namespace dice
          */
         value_type call(const std::string& name, value_list&& args)
         {
+            if (is_definition_)
+            {
+                // check whether there is a parameter that depends on 
+                // a random variable
+                bool convert = false;
+                for (auto&& arg : args)
+                {
+                    if (has_dependencies(arg))
+                    {
+                        convert = true;
+                        break;
+                    }
+                }
+
+                // if there is such a parameter, compute decomposition for
+                // all random variables in the list
+                if (convert)
+                {
+                    for (auto&& arg : args)
+                    {
+                        compute_decomposition(arg);
+                    }
+                }
+            }
+
             return env_->call_var(name, args.begin(), args.end());
         }
 
@@ -227,8 +264,6 @@ namespace dice
          */
         value_type process_roll(value_type&& value)
         {
-            if (is_definition_)
-                return conv_var(std::move(value));
             return std::move(value);
         }
         
@@ -254,14 +289,57 @@ namespace dice
         Environment* env_;
         bool is_definition_ = false;
 
-        value_type conv_var(value_type&& value)
+        /** Process children of a binary node. 
+         * @param left child
+         * @param right child
+         */
+        void process_children(base_value* lhs, base_value* rhs)
         {
-            auto var = dynamic_cast<type_rand_var*>(value.get());
+            // don't convert random variables if we're not in a name definition
+            if (!is_definition_)
+                return;
+
+            auto var_a = dynamic_cast<type_rand_var*>(lhs);
+            if (var_a == nullptr)
+                return;
+            auto var_b = dynamic_cast<type_rand_var*>(rhs);
+            if (var_b == nullptr)
+                return;
+
+            if (!var_a->data().has_dependencies() && 
+                !var_b->data().has_dependencies())
+                return;
+            
+            if (!var_a->data().has_dependencies())
+                var_a->data().compute_decomposition();
+            else if (!var_b->data().has_dependencies())
+                var_b->data().compute_decomposition();
+        }
+
+        /** Check whether a random variable has dependencies.
+         * @param arbitrary value (doesn't have to be a random variable)
+         * @return true iff the value is a random variable and 
+         *         it has dependencies
+         */
+        template<typename ValuePtr>
+        bool has_dependencies(ValuePtr&& value)
+        {
+            auto var = dynamic_cast<type_rand_var*>(&*value);
+            return var != nullptr && var->data().has_dependencies();
+        }
+
+        /** Compute decomposition of a random variable.
+         * Noop if the value is not a random variable.
+         * @param arbitrary value (doesn't have to be a random variable)
+         */
+        template<typename ValuePtr>
+        void compute_decomposition(ValuePtr&& value)
+        {
+            auto var = dynamic_cast<type_rand_var*>(&*value);
             if (var != nullptr && !var->data().has_dependencies())
             {
                 var->data().compute_decomposition();
             }
-            return std::move(value);
         }
     };
 }
