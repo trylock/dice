@@ -316,23 +316,25 @@ namespace dice
             random_variable dist;
             for (auto&& pair : num_sides.probability_)
             {
-                auto sides_value = pair.first;
+                auto sides_count = pair.first;
                 auto sides_prob = pair.second;
-    
-                // probability P(XdY = k | X = dice, Y = sides_value)
+
+                // probability P(XdY = k | X = dice_count, Y = sides_count)
                 std::vector<probability_type> probability(
-                    sides_value * max_dice + 1, 0);
-                for (value_type dice = 1; dice <= max_dice; ++dice)
+                    sides_count * max_dice + 1, 0);
+                for (value_type dice_count = 1; 
+                    dice_count <= max_dice; 
+                    ++dice_count)
                 {
                     // iterate backwards so that we don't override 
-                    // probability values that we'll be needed
-                    for (value_type i = sides_value * dice; i > 0; --i)
+                    // probability values that will be needed
+                    for (value_type i = sides_count * dice_count; i > 0; --i)
                     {
                         // compute the probability of the sum of i
-                        auto base_prob = 1 / static_cast<probability_type>(
-                            sides_value);
-                        auto prob_i = dice == 1 ? base_prob : 0;
-                        value_type j = std::max(i - sides_value, 1);
+                        auto base_prob = 
+                            1 / static_cast<probability_type>(sides_count);
+                        auto prob_i = dice_count == 1 ? base_prob : 0;
+                        value_type j = std::max(i - sides_count, 1);
                         for (; j < i; ++j)
                         {
                             prob_i += probability[j] * base_prob;
@@ -340,7 +342,7 @@ namespace dice
                         probability[i] = prob_i;
     
                         // save the probability
-                        auto num_rolls = num_dice.probability_.find(dice);
+                        auto num_rolls = num_dice.probability_.find(dice_count);
                         if (num_rolls != num_dice.probability_.end())
                         {
                             auto rolls_prob = num_rolls->second;
