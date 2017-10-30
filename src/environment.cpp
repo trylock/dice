@@ -87,14 +87,15 @@ static fn::return_type dice_roll_op(
     return std::move(*first);
 }
 
+template<typename T>
 static fn::return_type dice_rand_var_in(
     fn::args_iterator first,
     fn::args_iterator)
 {
     using namespace dice;
     auto&& var = fn::arg<type_rand_var>(first)->data();
-    auto&& lower_bound = fn::arg<type_double>(first + 1)->data();
-    auto&& upper_bound = fn::arg<type_double>(first + 2)->data();
+    auto&& lower_bound = fn::arg<T>(first + 1)->data();
+    auto&& upper_bound = fn::arg<T>(first + 2)->data();
     
     var = var.in(lower_bound, upper_bound);
     return std::move(*first);
@@ -286,10 +287,16 @@ dice::environment::environment()
         dice_variance, { type_rand_var::id() }
     });
     add_function("in", {
-        dice_rand_var_in, { 
+        dice_rand_var_in<type_double>, { 
             type_rand_var::id(), 
             type_double::id(), 
             type_double::id() }
+    });
+    add_function("in", {
+        dice_rand_var_in<type_int>, { 
+            type_rand_var::id(), 
+            type_int::id(), 
+            type_int::id() }
     });
     add_function("<", {
         dice_less_than, { type_rand_var::id(), type_rand_var::id() }
