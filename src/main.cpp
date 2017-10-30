@@ -179,7 +179,7 @@ int main(int argc, char** argv)
                     std::cout << ": ";
             }
             print_value(value.get());
-            if (value != nullptr)
+            if (value != nullptr || opt.verbose)
             {
                 std::cout << std::endl;
             }
