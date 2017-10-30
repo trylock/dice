@@ -269,6 +269,12 @@ namespace dice
          * Create a random variable Z = XdY.
          * X times roll a Y sided dice.
          * Assumes X, Y are independent random variables.
+         * 
+         * This funciton implements a simple dynamic programming algorithm.
+         * The probability that we roll k with X throws of a Y sided die is
+         * the probability that we roll k - n with X - 1 throws of a Y sided
+         * die and then roll n on the last die for n = 1 to Y.
+         * 
          * @param number of dice X (independent of Y)
          *        Each value has to be a positive integer
          * @param number of sides of each dice Y (independent of X)
