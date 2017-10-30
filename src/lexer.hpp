@@ -46,7 +46,6 @@ namespace dice
         {
             return location_; 
         }
-
     private:
         std::istream* input_;
         logger* log_;

@@ -569,9 +569,12 @@ namespace dice
                 error("Expected " + 
                     to_string(type) + ", got " + 
                     to_string(lookahead_) + ".");
+                symbol s{ type };
+                int_->terminal(s);
             }
             else 
             {
+                int_->terminal(lookahead_);
                 lookahead_ = lexer_->read_token();
             }
         }

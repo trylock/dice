@@ -27,6 +27,7 @@ set(dice_sources
     ${SRC_DIR}/symbols.cpp
     ${SRC_DIR}/conversions.cpp
     ${SRC_DIR}/environment.cpp
+    ${SRC_DIR}/interpreter.cpp
 )
 
 set(dice_cli ${SRC_DIR}/main.cpp)
