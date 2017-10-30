@@ -304,12 +304,47 @@ namespace dice
                 num_values *= var->probability().size();
             }
 
-            std::unordered_set<const var_type*> in_a;
-            std::unordered_set<const var_type*> in_b;
-            for (auto&& var : deps_)
-                in_a.insert(var.get());
-            for (auto&& var : other.deps_)
-                in_b.insert(var.get());
+            // determine which dependencies are in A and which are in B
+            const std::uint8_t A = 1;
+            const std::uint8_t B = 2;
+            std::vector<std::uint8_t> is_in;
+            auto left = deps_.begin();
+            auto right = other.deps_.begin();
+            for (;;)
+            {
+                if (left == deps_.end() && right == other.deps_.end())
+                {
+                    break;
+                }
+                else if (left == deps_.end())
+                {
+                    is_in.push_back(B);
+                    ++right;
+                }
+                else if (right == other.deps_.end())
+                {
+                    is_in.push_back(A);
+                    ++left;
+                }
+                else if (*left < *right)
+                {
+                    is_in.push_back(A);
+                    ++left;
+                }
+                else if (*right < *left)
+                {
+                    is_in.push_back(B);
+                    ++right;
+                }
+                else // *right == *left 
+                {
+                    is_in.push_back(A | B);
+                    ++left;
+                    ++right;
+                }
+            }
+
+            assert(is_in.size() == result.deps_.size());
 
             // compute the conditional random variables
             for (std::size_t i = 0; i < num_values; ++i)
@@ -317,22 +352,24 @@ namespace dice
                 std::size_t index_a = 0;
                 std::size_t index_b = 0;
 
-                std::size_t hash = i;
+                std::size_t index_result = i;
                 std::size_t size_a = 1;
                 std::size_t size_b = 1;
-                for (auto&& var : result.deps_)
+                for (std::size_t j = 0; j < result.deps_.size(); ++j)
                 {
-                    if (in_a.find(var.get()) != in_a.end())
+                    auto&& var = result.deps_[j];
+                    auto var_values_count = var->probability().size();
+                    if ((is_in[j] & A) != 0)
                     {
-                        index_a += (hash % var->probability().size()) * size_a;
-                        size_a *= var->probability().size();
+                        index_a += (index_result % var_values_count) * size_a;
+                        size_a *= var_values_count;
                     }
-                    if (in_b.find(var.get()) != in_b.end())
+                    if ((is_in[j] & B) != 0)
                     {
-                        index_b += (hash % var->probability().size()) * size_b;
-                        size_b *= var->probability().size();
+                        index_b += (index_result % var_values_count) * size_b;
+                        size_b *= var_values_count;
                     }
-                    hash /= var->probability().size();
+                    index_result /= var_values_count;
                 }
 
                 result.vars_.push_back(
