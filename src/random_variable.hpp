@@ -310,11 +310,7 @@ namespace dice
             }
 
             // find maximal number of dice
-            auto max_dice = std::numeric_limits<value_type>::min();
-            for (auto&& pair : num_dice.probability_)
-            {
-                max_dice = std::max(max_dice, pair.first);
-            }
+            auto max_dice = num_dice.probability_.rbegin()->first;
     
             // compute distribution for each possible number of sides
             random_variable dist;
