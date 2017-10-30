@@ -228,7 +228,7 @@ TEST_CASE("Operator D (dice roll) is left associative", "[parser]")
     REQUIRE(result.values[0] == "((((1d2)d3)d4)d5)");
 }
 
-TEST_CASE("Operators * and / have lower precedence than + and -", "[parser]")
+TEST_CASE("Operators * and / have higher precedence than + and -", "[parser]")
 {
     using namespace dice;
 
@@ -249,7 +249,7 @@ TEST_CASE("Operators * and / have lower precedence than + and -", "[parser]")
     REQUIRE(result.values[0] == "((1+(2*3))-(4/5))");
 }
 
-TEST_CASE("Operator D has lower precedence than +, -, * and /", "[parser]")
+TEST_CASE("Operator D has higher precedence than unary -", "[parser]")
 {
     using namespace dice;
 
@@ -265,7 +265,7 @@ TEST_CASE("Operator D has lower precedence than +, -, * and /", "[parser]")
     REQUIRE(result.values[0] == "(-(1d2))");
 }
 
-TEST_CASE("Operator D has lower precedence than unary -", "[parser]")
+TEST_CASE("Operator D has higher precedence than +, -, * and /", "[parser]")
 {
     using namespace dice;
 
@@ -288,7 +288,7 @@ TEST_CASE("Operator D has lower precedence than unary -", "[parser]")
     REQUIRE(result.values[0] == "((1+((2d3)*(4d5)))-6)");
 }
 
-TEST_CASE("Operator D has lower precedence than a relational operator", "[parser]")
+TEST_CASE("Operator D has higher precedence than a relational operator", "[parser]")
 {
     using namespace dice;
 
@@ -305,7 +305,7 @@ TEST_CASE("Operator D has lower precedence than a relational operator", "[parser
     REQUIRE(result.values[0] == "((1d2)<3)");
 }
 
-TEST_CASE("Operator D has lower precedence than in operator", "[parser]")
+TEST_CASE("Operator D has higher precedence than in operator", "[parser]")
 {
     using namespace dice;
 
@@ -326,7 +326,7 @@ TEST_CASE("Operator D has lower precedence than in operator", "[parser]")
     REQUIRE(result.values[0] == "((1d2) in[3,4])");
 }
 
-TEST_CASE("Assign operator has the highest precedence", "[parser]")
+TEST_CASE("Assign operator has the lowest precedence", "[parser]")
 {
     using namespace dice;
 
@@ -419,7 +419,7 @@ TEST_CASE("Use default value instead of a nonexistent variable name", "[parser]"
     using namespace dice;
 
     // E is a special variable name for which the interpreter mock throws
-    // a compiler error simulating nonexitent variable
+    // a compiler error simulating a nonexitent variable
     auto result = parse(symbols{
         { symbol_type::id, "E" }, 
     });
@@ -453,6 +453,8 @@ TEST_CASE("If an error occurs during a function call, use default value and prov
 {
     using namespace dice;
 
+    // E is a special function name for which the interpreter mock throws
+    // a compiler error simulating a nonexistent function
     auto result = parse(symbols{
         { symbol_type::id, "E" },
         { symbol_type::left_paren },
