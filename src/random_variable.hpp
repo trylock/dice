@@ -140,8 +140,12 @@ namespace dice
             return random_variable{ bernoulli_tag{}, success_prob };
         }
 
-        // immutable operations on random variables (assumes independence)
-        random_variable operator+(const random_variable& other) const 
+        /** Compute distribution of X + Y (X is this random variable).
+         * X and Y are assumed to be independent.
+         * @param other random variable Y (independent of X)
+         * @return distribution of X + Y
+         */
+        auto operator+(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -149,7 +153,12 @@ namespace dice
             });
         }
 
-        random_variable operator-(const random_variable& other) const
+        /** Compute distribution of X - Y (X is this random variable).
+         * X and Y are assumed to be independent.
+         * @param other random variable Y (independent of X)
+         * @return distribution of X - Y
+         */
+        auto operator-(const random_variable& other) const
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -157,7 +166,12 @@ namespace dice
             });
         }
 
-        random_variable operator*(const random_variable& other) const 
+        /** Compute distribution of X * Y (X is this random variable).
+         * X and Y are assumed to be independent.
+         * @param other random variable Y (independent of X)
+         * @return distribution of X * Y
+         */
+        auto operator*(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -165,7 +179,13 @@ namespace dice
             });
         }
 
-        random_variable operator/(const random_variable& other) const 
+        /** Compute distribution of integer division X / Y.
+         * X is this random variable.
+         * X and Y are assumed to be independent.
+         * @param other random variable Y (independent of X)
+         * @return distribution of X / Y
+         */
+        auto operator/(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b)
             {
@@ -173,7 +193,13 @@ namespace dice
             });
         }
 
-        random_variable less_than(const random_variable& other) const 
+        /** Compute indicator of X < Y (X is this random variable).
+         * X and Y are assumed to be indepedent.
+         * @param other random variable Y (independent of X)
+         * @return indicator of X < Y 
+         *         (i.e. a random variable with a bernoulli distribution)
+         */
+        auto less_than(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -181,7 +207,13 @@ namespace dice
             });
         }
 
-        random_variable less_than_or_equal(const random_variable& other) const 
+        /** Compute indicator of X <= Y (X is this random variable).
+         * X and Y are assumed to be indepedent.
+         * @param other random variable Y (independent of X)
+         * @return indicator of X <= Y 
+         *         (i.e. a random variable with a bernoulli distribution)
+         */
+        auto less_than_or_equal(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -189,7 +221,13 @@ namespace dice
             });
         }
 
-        random_variable equal(const random_variable& other) const 
+        /** Compute indicator of X = Y (X is this random variable).
+         * X and Y are assumed to be indepedent.
+         * @param other random variable Y (independent of X)
+         * @return indicator of X = Y 
+         *         (i.e. a random variable with a bernoulli distribution)
+         */
+        auto equal(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -197,7 +235,13 @@ namespace dice
             });
         }
         
-        random_variable not_equal(const random_variable& other) const 
+        /** Compute indicator of X != Y (X is this random variable).
+         * X and Y are assumed to be indepedent.
+         * @param other random variable Y (independent of X)
+         * @return indicator of X != Y 
+         *         (i.e. a random variable with a bernoulli distribution)
+         */
+        auto not_equal(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -205,7 +249,13 @@ namespace dice
             });
         }
         
-        random_variable greater_than(const random_variable& other) const 
+        /** Compute indicator of X > Y (X is this random variable).
+         * X and Y are assumed to be indepedent.
+         * @param other random variable Y (independent of X)
+         * @return indicator of X > Y 
+         *         (i.e. a random variable with a bernoulli distribution)
+         */
+        auto greater_than(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -213,7 +263,13 @@ namespace dice
             });
         }
         
-        random_variable greater_than_or_equal(const random_variable& other) const 
+        /** Compute indicator of X >= Y (X is this random variable).
+         * X and Y are assumed to be indepedent.
+         * @param other random variable Y (independent of X)
+         * @return indicator of X >= Y 
+         *         (i.e. a random variable with a bernoulli distribution)
+         */
+        auto greater_than_or_equal(const random_variable& other) const 
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
@@ -221,12 +277,16 @@ namespace dice
             });
         }
 
-        random_variable operator-() const 
+        /** Compute negation of this random variable (-X)
+         * @return a random variable -X (X is this random variable)
+         */
+        auto operator-() const 
         {
             random_variable result;
             for (auto&& pair : probability_)
             {
-                result.probability_.insert(std::make_pair(-pair.first, pair.second));
+                result.probability_.insert(
+                    std::make_pair(-pair.first, pair.second));
             }
             return result;
         }
@@ -239,7 +299,7 @@ namespace dice
          * @return a new random variable with restricted range
          */
         template<typename Predicate>
-        random_variable restrict(Predicate include) const
+        auto restrict(Predicate include) const
         {
             probability_type prob_sum = 0;
             for (auto&& pair : probability_)
@@ -281,7 +341,7 @@ namespace dice
          *        Each value has to be a positive integer
          * @return distribution of XdY
          */
-        friend random_variable roll(
+        friend auto roll(
             const random_variable& num_dice, 
             const random_variable& num_sides)
         {
@@ -377,7 +437,7 @@ namespace dice
          * @return a new random variable that is a function of X and Y
          */
         template<typename Func>
-        random_variable combine(const random_variable& other, Func&& combination) const
+        auto combine(const random_variable& other, Func&& combination) const
         {
             random_variable dist;
             for (auto&& pair_a : probability_)
@@ -386,7 +446,8 @@ namespace dice
                 {
                     auto value = combination(pair_a.first, pair_b.first);
                     auto probability = pair_b.second * pair_a.second;
-                    auto result = dist.probability_.insert(std::make_pair(value, probability));
+                    auto result = dist.probability_.insert(
+                        std::make_pair(value, probability));
                     if (!result.second)
                     {
                         result.first->second += probability;
