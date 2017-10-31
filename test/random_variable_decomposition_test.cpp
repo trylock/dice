@@ -15,10 +15,7 @@ TEST_CASE("Compute probability of indepedent random variables", "[random_variabl
     dice::random_variable_decomposition<int, double> a{ var_a };
     dice::random_variable_decomposition<int, double> b{ var_b };
 
-    auto result = a.combine(b, [](auto&& value_a, auto&& value_b) 
-    {
-        return value_a + value_b;
-    });
+    auto result = a + b;
     auto var = result.to_random_variable();
     auto&& prob = var.probability();
 
@@ -40,10 +37,7 @@ TEST_CASE("Compute probability of independent random variables", "[random_variab
     dice::random_variable_decomposition<int, double> a{ var_a };
     dice::random_variable_decomposition<int, double> b{ var_b };
 
-    auto result = a.combine(b, [](auto&& value_a, auto&& value_b) 
-    {
-        return value_a + value_b;
-    });
+    auto result = a + b;
     auto var = result.to_random_variable();
     auto&& prob = var.probability();
     
@@ -64,10 +58,7 @@ TEST_CASE("Compute probability of dependent random variables", "[random_variable
     dice::random_variable_decomposition<int, double> a{ var_a };
     a.compute_decomposition();
 
-    auto result = a.combine(a, [](auto&& value_a, auto&& value_b) 
-    {
-        return value_a + value_b;
-    });
+    auto result = a + a;
     auto var = result.to_random_variable();
     auto&& prob = var.probability();
     

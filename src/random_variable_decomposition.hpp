@@ -82,9 +82,9 @@ namespace dice
          */
         auto operator+(const random_variable_decomposition& other) const
         {
-            return combine(other, [](auto&& value_a, auto&& value_b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return value_a + value_b;
+                return var_a + var_b;
             });
         }
         
@@ -95,9 +95,9 @@ namespace dice
          */
         auto operator-(const random_variable_decomposition& other) const
         {
-            return combine(other, [](auto&& value_a, auto&& value_b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return value_a - value_b;
+                return var_a - var_b;
             });
         }
         
@@ -108,9 +108,9 @@ namespace dice
          */
         auto operator*(const random_variable_decomposition& other) const
         {
-            return combine(other, [](auto&& value_a, auto&& value_b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return value_a * value_b;
+                return var_a * var_b;
             });
         }
         
@@ -121,9 +121,9 @@ namespace dice
          */
         auto operator/(const random_variable_decomposition& other) const
         {
-            return combine(other, [](auto&& value_a, auto&& value_b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return value_a / value_b;
+                return var_a / var_b;
             });
         }
 
@@ -149,9 +149,9 @@ namespace dice
          */
         auto less_than(const random_variable_decomposition& other) const 
         {
-            return combine(other, [](auto&& a, auto&& b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return static_cast<value_type>(a < b);
+                return var_a.less_than(var_b);
             });
         }
 
@@ -164,9 +164,9 @@ namespace dice
         auto less_than_or_equal(
             const random_variable_decomposition& other) const 
         {
-            return combine(other, [](auto&& a, auto&& b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return static_cast<value_type>(a <= b);
+                return var_a.less_than_or_equal(var_b);
             });
         }
 
@@ -178,9 +178,9 @@ namespace dice
          */
         auto equal(const random_variable_decomposition& other) const 
         {
-            return combine(other, [](auto&& a, auto&& b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return static_cast<value_type>(a == b);
+                return var_a.equal(var_b);
             });
         }
 
@@ -192,9 +192,9 @@ namespace dice
          */
         auto not_equal(const random_variable_decomposition& other) const 
         {
-            return combine(other, [](auto&& a, auto&& b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return static_cast<value_type>(a != b);
+                return var_a.not_equal(var_b);
             });
         }
 
@@ -206,9 +206,9 @@ namespace dice
          */
         auto greater_than(const random_variable_decomposition& other) const 
         {
-            return combine(other, [](auto&& a, auto&& b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return static_cast<value_type>(a > b);
+                return var_a.greater_than(var_b);
             });
         }
         
@@ -221,9 +221,9 @@ namespace dice
         auto greater_than_or_equal(
             const random_variable_decomposition& other) const 
         {
-            return combine(other, [](auto&& a, auto&& b) 
+            return combine(other, [](auto&& var_a, auto&& var_b) 
             {
-                return static_cast<value_type>(a >= b);
+                return var_a.greater_than_or_equal(var_b);
             });
         }
 
@@ -247,7 +247,7 @@ namespace dice
         }
         
         /** Roll num_rolls times with a dice of num_sides.
-         * Random variables have to be independent.
+         * Random variables does not to be independent.
          * @param number of rolls
          * @param number of dice sides
          * @return distribution of the dice roll
@@ -284,13 +284,13 @@ namespace dice
         /** Compute function of 2 random variables: A and B.
          * Variables does not need to be independent. 
          * @param other random variable B
-         * @param combination function
+         * @param combination function of 2 independent random variables
          * @return random variable that is a function of A and B
          */
-        template<typename CombinationFunc>
+        template<typename VarCombFunc>
         auto combine(
             const random_variable_decomposition& other, 
-            CombinationFunc combination) const
+            VarCombFunc combination) const
         {
             random_variable_decomposition result;
 
@@ -373,7 +373,7 @@ namespace dice
                 }
 
                 result.vars_.push_back(
-                    vars_[index_a].combine(other.vars_[index_b], combination));
+                    combination(vars_[index_a], other.vars_[index_b]));
             }
 
             return result;
@@ -509,9 +509,9 @@ namespace dice
         const random_variable_decomposition<ValueType, ProbabilityType>& a,
         const random_variable_decomposition<ValueType, ProbabilityType>& b)
     {
-        return a.combine(b, [](auto&& value_a, auto&& value_b) 
+        return a.combine(b, [](auto&& var_a, auto&& var_b) 
         {
-            return std::max(value_a, value_b);
+            return max(var_a, var_b);
         });
     }
     
@@ -526,9 +526,9 @@ namespace dice
         const random_variable_decomposition<ValueType, ProbabilityType>& a,
         const random_variable_decomposition<ValueType, ProbabilityType>& b)
     {
-        return a.combine(b, [](auto&& value_a, auto&& value_b) 
+        return a.combine(b, [](auto&& var_a, auto&& var_b) 
         {
-            return std::min(value_a, value_b);
+            return min(var_a, var_b);
         });
     }
 }
