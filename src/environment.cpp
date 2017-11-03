@@ -34,6 +34,17 @@ static fn::return_type dice_deviation(
     );
 }
 
+static fn::return_type dice_quantile(
+    fn::args_iterator first,
+    fn::args_iterator)
+{
+    using namespace dice;
+    auto prob = clamp(fn::arg<type_double>(first + 1)->data(), 0.0, 1.0);
+    return make<type_int>(
+        fn::arg<type_rand_var>(first)->data().quantile(prob)
+    );
+}
+
 // operator functions
 
 template<typename T>
@@ -333,6 +344,9 @@ dice::environment::environment()
     });
     add_function("variance", {
         dice_variance, { type_rand_var::id() }
+    });
+    add_function("quantile", {
+        dice_quantile, { type_rand_var::id(), type_double::id() }
     });
 
 #ifndef DISABLE_RNG

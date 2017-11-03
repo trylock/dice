@@ -752,3 +752,17 @@ TEST_CASE("Interpret deviation function call", "[dice]")
     auto data = dynamic_cast<dice::type_double&>(*value).data();
     REQUIRE(data == Approx(std::sqrt(5 / 4.0)));
 }
+
+TEST_CASE("Interpret quantile function call", "[dice]")
+{
+    auto result = interpret("quantile(1d4, 0.3)");
+
+    REQUIRE(result.values.size() == 1);
+    result.assert_no_error();
+
+    auto value = std::move(result.values[0]);
+    REQUIRE(value->type() == dice::type_int::id());
+    
+    auto data = dynamic_cast<dice::type_int&>(*value).data();
+    REQUIRE(data == 2);
+}

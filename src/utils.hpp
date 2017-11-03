@@ -67,6 +67,24 @@ namespace dice
         }
         return result;
     }
+    
+    /** Clamp a value to given range.
+     * @param value
+     * @param lower bound of the range
+     * @param upper bound of the range
+     * @return lower if value < lower
+     *         upper if value > upper
+     *         value otherwise 
+     */
+    template<typename T>
+    T clamp(const T& value, const T& lower, const T& upper)
+    {
+        if (value < lower)
+            return lower;
+        if (value > upper)
+            return upper;
+        return value;
+    }
 }
 
 #endif // DICE_UTILS_HPP_

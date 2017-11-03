@@ -290,6 +290,16 @@ namespace dice
             return var.deviation();
         }
 
+        /** Compute quantile of this random variable.
+         * @param requested probability
+         * @return quantile
+         */
+        auto quantile(ProbabilityType prob) const
+        {
+            auto var = to_random_variable();
+            return var.quantile(prob);
+        }
+
         /** Compute function of 2 random variables: A and B.
          * Variables does not need to be independent. 
          * @param other random variable B

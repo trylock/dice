@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "value.hpp"
+#include "utils.hpp"
 #include "functions.hpp"
 #include "conversions.hpp"
 #include "random_variable.hpp"

@@ -286,3 +286,75 @@ TEST_CASE("Compute standard deviation of a random variable", "[random_variable]"
     auto deviation = var.deviation();
     REQUIRE(deviation == Approx(std::sqrt(5 / 4.0)));
 }
+
+TEST_CASE("Compute quantile of a constant variable", "[random_variable]")
+{
+    dice::random_variable<int, double> constant{ dice::constant_tag{}, 4 };
+
+    auto quantile = constant.quantile(0.1);
+    REQUIRE(quantile == 4);
+    
+    quantile = constant.quantile(0.4);
+    REQUIRE(quantile == 4);
+
+    quantile = constant.quantile(1);
+    REQUIRE(quantile == 4);
+}
+
+TEST_CASE("Compute quantile of a bernoulli variable", "[random_variable]")
+{
+    dice::random_variable<int, double> constant{ dice::bernoulli_tag{}, 0.8 };
+
+    auto quantile = constant.quantile(0.1);
+    REQUIRE(quantile == 0);
+
+    quantile = constant.quantile(0.4);
+    REQUIRE(quantile == 1);
+    
+    quantile = constant.quantile(0.7);
+    REQUIRE(quantile == 1);
+
+    quantile = constant.quantile(0.9);
+    REQUIRE(quantile == 1);
+
+    quantile = constant.quantile(1);
+    REQUIRE(quantile == 1);
+}
+
+TEST_CASE("Compute quantile of a uniform variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    } };
+
+    auto quantile = var.quantile(0.1);
+    REQUIRE(quantile == 1);
+
+    quantile = var.quantile(0.25);
+    REQUIRE(quantile == 1);
+    
+    quantile = var.quantile(0.3);
+    REQUIRE(quantile == 2);
+
+    quantile = var.quantile(0.4);
+    REQUIRE(quantile == 2);
+
+    quantile = var.quantile(0.5);
+    REQUIRE(quantile == 2);
+
+    quantile = var.quantile(0.6);
+    REQUIRE(quantile == 3);
+    
+    quantile = var.quantile(0.75);
+    REQUIRE(quantile == 3);
+
+    quantile = var.quantile(0.8);
+    REQUIRE(quantile == 4);
+
+    quantile = var.quantile(0.9);
+    REQUIRE(quantile == 4);
+
+}

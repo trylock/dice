@@ -26,6 +26,7 @@ namespace dice
         using value_type = ValueType;
         using probability_type = ProbabilityType;
         using freq_list = std::vector<std::pair<value_type, std::size_t>>;
+        using prob_list = std::vector<std::pair<value_type, probability_type>>;
 
         // create an impossible event
         random_variable() {}
@@ -125,6 +126,41 @@ namespace dice
         auto deviation() const
         {
             return std::sqrt(variance());
+        }
+
+        /** Compute quantile of this random variable.
+         * Def.: Quantile(p) = min{ x : P(X <= x) >= p} 
+         * Note: complexity of this operation is linearithmic with the size of
+         *       the variable as we have to sort the values.
+         * @param requested probability
+         * @return quantile
+         */
+        auto quantile(probability_type prob) const
+        {
+            if (probability_.empty())
+                throw std::runtime_error(
+                    "Quantile is not defined.");
+
+            // sort the values
+            prob_list list{ probability_.begin(), probability_.end() };
+            std::sort(list.begin(), list.end(), [](auto&& a, auto&& b)
+            {
+                return a.first < b.first;
+            });
+
+            // compute the quantile
+            value_type result = list.front().first;
+            probability_type prob_sum = 0;
+            for (auto&& value : list)
+            {
+                if (prob_sum >= prob)
+                {
+                    break;
+                }
+                prob_sum += value.second;
+                result = value.first;
+            }
+            return result;
         }
 
         /** Calculate indicator that X (this r.v.) is in given interval
