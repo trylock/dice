@@ -458,7 +458,7 @@ TEST_CASE("If an error occurs during a function call, use default value and prov
     // E is a special function name for which the interpreter mock throws
     // a compiler error simulating a nonexistent function
     auto result = parse(symbols{
-        { symbol_type::id, "E" },
+        { symbol_type::func_id, "E" },
         { symbol_type::left_paren },
         { symbol_type::right_paren },
     });
@@ -475,7 +475,7 @@ TEST_CASE("Replace invalid function arguments with the default value", "[parser]
     using namespace dice;
 
     auto result = parse(symbols{
-        { symbol_type::id, "func" },
+        { symbol_type::func_id, "func" },
         { symbol_type::left_paren },
         { symbol_type::assign },
         { symbol_type::param_delim },

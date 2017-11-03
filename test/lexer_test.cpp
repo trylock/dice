@@ -236,3 +236,41 @@ TEST_CASE("Recognize var keyword", "[lexer]")
     REQUIRE(token.type == dice::symbol_type::end);
     REQUIRE(token.lexeme == "");
 }
+
+TEST_CASE("Distinguish function and variable identifiers", "[lexer]")
+{
+    std::stringstream input{ "id  id \t \n () id()" };
+    dice::logger log;
+    dice::lexer lex{ &input, &log };
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::id);
+    REQUIRE(token.lexeme == "id");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::func_id);
+    REQUIRE(token.lexeme == "id");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::left_paren);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::right_paren);
+    REQUIRE(token.lexeme == "");
+    
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::func_id);
+    REQUIRE(token.lexeme == "id");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::left_paren);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::right_paren);
+    REQUIRE(token.lexeme == "");
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+}

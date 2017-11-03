@@ -111,6 +111,11 @@ dice::symbol dice::lexer::read_token()
             else if (value == "var")
                 return symbol{ symbol_type::var };
 
+            // distinguish function and other identifiers
+            skip_space();
+            if (input_->peek() == '(')
+                return symbol{ symbol_type::func_id, value };
+
             // otherwise, it's an identifier
             return symbol{ symbol_type::id, value };
         }

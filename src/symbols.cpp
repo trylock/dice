@@ -25,6 +25,7 @@ static const std::string symbol_names[] = {
     "var",
     "=",
     "<number>",
+    "<function identifier>",
     "<identifier>",
     "<end of input>"
 };

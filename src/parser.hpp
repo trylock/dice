@@ -40,7 +40,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 6> first;
+        static const std::array<symbol_type, 7> first;
         static const std::array<symbol_type, 1> follow;
     };
 
@@ -49,7 +49,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 5> first;
+        static const std::array<symbol_type, 6> first;
         static const std::array<symbol_type, 2> follow;
     };
     
@@ -58,7 +58,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 5> first;
         static const std::array<symbol_type, 4> follow;
     };
     
@@ -67,7 +67,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 5> first;
         static const std::array<symbol_type, 9> follow;
     };
     
@@ -76,7 +76,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 5> first;
         static const std::array<symbol_type, 11> follow;
     };
     
@@ -85,7 +85,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 4> first;
+        static const std::array<symbol_type, 5> first;
         static const std::array<symbol_type, 12> follow;
     };
     
@@ -94,7 +94,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 3> first;
+        static const std::array<symbol_type, 4> first;
         static const std::array<symbol_type, 12> follow;
     };
     
@@ -103,7 +103,7 @@ namespace dice
     {
     public:
         static const char name[];
-        static const std::array<symbol_type, 5> first;
+        static const std::array<symbol_type, 6> first;
         static const std::array<symbol_type, 2> follow;
     };
 
@@ -426,45 +426,45 @@ namespace dice
                 eat(lookahead_.type);
                 return int_->number(lexeme);
             }
+            else if (lookahead_.type == symbol_type::func_id)
+            {
+                // function call
+                auto id = lookahead_;
+                eat(symbol_type::func_id);
+                eat(symbol_type::left_paren);
+                auto args = param_list();
+                eat(symbol_type::right_paren);
+
+                try
+                {
+                    return int_->call(id.lexeme, std::move(args));
+                }
+                catch (compiler_error& err)
+                {
+                    error(err.what());
+                    return int_->make_default();
+                }
+            }
             else if (lookahead_.type == symbol_type::id)
             {
+                // variable
                 auto id = lookahead_;
                 eat(symbol_type::id);
-
-                if (lookahead_.type == symbol_type::left_paren) 
+                try 
                 {
-                    // function call
-                    eat(symbol_type::left_paren);
-                    auto args = param_list();
-                    eat(symbol_type::right_paren);
-
-                    try
-                    {
-                        return int_->call(id.lexeme, std::move(args));
-                    }
-                    catch (compiler_error& err)
-                    {
-                        error(err.what());
-                        return int_->make_default();
-                    }
+                    return int_->variable(id.lexeme);
                 }
-                else // variable 
+                catch (compiler_error& err)
                 {
-                    try 
-                    {
-                        return int_->variable(id.lexeme);
-                    }
-                    catch (compiler_error& err)
-                    {
-                        error(err.what());
-                        return int_->make_default();
-                    }
+                    error(err.what());
+                    return int_->make_default();
                 }
             }
             
             error("Expected " + to_string(symbol_type::left_paren) + ", " + 
-                to_string(symbol_type::number) + " or " + 
-                to_string(symbol_type::id) +  ", got " + 
+                to_string(symbol_type::number) + ", " + 
+                to_string(symbol_type::id) + " or " + 
+                to_string(symbol_type::func_id) +  ", got " + 
                 to_string(lookahead_) + "."); 
             return int_->make_default();
         }
