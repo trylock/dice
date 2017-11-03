@@ -238,7 +238,7 @@ namespace dice
                 }
             }
 
-            return env_->call_var(name, args.begin(), args.end());
+            return env_->call_var(name, std::move(args));
         }
 
         /** Function called when a terminal is matched by the parser.

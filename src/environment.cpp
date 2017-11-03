@@ -1,213 +1,182 @@
 #include "environment.hpp"
 
-using fn = dice::function_traits;
+using fn = dice::execution_context;
 
 // functions implementation
 
-static fn::return_type dice_expectation(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_expectation(fn::context_type& context)
 {
     using namespace dice;
     return make<type_double>(
-        fn::arg<type_rand_var>(first)->data().expected_value()
+        context.arg<type_rand_var>(0)->data().expected_value()
     );
 }
 
-static fn::return_type dice_variance(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_variance(fn::context_type& context)
+{
+    using namespace dice;
+    return dice::make<type_double>(
+        context.arg<type_rand_var>(0)->data().variance()
+    );
+}
+
+static fn::return_type dice_deviation(fn::context_type& context)
 {
     using namespace dice;
     return make<type_double>(
-        fn::arg<type_rand_var>(first)->data().variance()
+        context.arg<type_rand_var>(0)->data().deviation()
     );
 }
 
-static fn::return_type dice_deviation(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_quantile(fn::context_type& context)
 {
     using namespace dice;
-    return make<type_double>(
-        fn::arg<type_rand_var>(first)->data().deviation()
-    );
-}
-
-static fn::return_type dice_quantile(
-    fn::args_iterator first,
-    fn::args_iterator)
-{
-    using namespace dice;
-    auto prob = clamp(fn::arg<type_double>(first + 1)->data(), 0.0, 1.0);
-    return make<type_int>(
-        fn::arg<type_rand_var>(first)->data().quantile(prob)
+    auto prob = dice::clamp(
+        context.arg<type_double>(1)->data(), 0.0, 1.0);
+    return dice::make<type_int>(
+        context.arg<type_rand_var>(0)->data().quantile(prob)
     );
 }
 
 // operator functions
 
 template<typename T>
-fn::return_type dice_add(
-    fn::args_iterator first,
-    fn::args_iterator)
+fn::return_type dice_add(fn::context_type& context)
 {
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() + 
-        fn::arg<T>(first + 1)->data();
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    auto&& b = context.arg<T>(1)->data();
+    a = a + b;
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-fn::return_type dice_sub(
-    fn::args_iterator first,
-    fn::args_iterator)
+fn::return_type dice_sub(fn::context_type& context)
 {
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() - 
-        fn::arg<T>(first + 1)->data();
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    auto&& b = context.arg<T>(1)->data();
+    a = a - b;
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-fn::return_type dice_mult(
-    fn::args_iterator first,
-    fn::args_iterator)
+fn::return_type dice_mult(fn::context_type& context)
 {
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() * 
-        fn::arg<T>(first + 1)->data();
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    auto&& b = context.arg<T>(1)->data();
+    a = a * b;
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-fn::return_type dice_div(
-    fn::args_iterator first,
-    fn::args_iterator)
+fn::return_type dice_div(fn::context_type& context)
 {
-    fn::arg<T>(first)->data() = fn::arg<T>(first)->data() / 
-        fn::arg<T>(first + 1)->data();
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    auto&& b = context.arg<T>(1)->data();
+    a = a / b;
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-fn::return_type dice_unary_minus(
-    fn::args_iterator first,
-    fn::args_iterator)
+fn::return_type dice_unary_minus(fn::context_type& context)
 {
-    fn::arg<T>(first)->data() = -fn::arg<T>(first)->data();
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    a = -a;
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_roll_op(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_roll_op(fn::context_type& context)
 {
     using namespace dice;
-    fn::arg<type_rand_var>(first)->data() = roll(
-        fn::arg<type_rand_var>(first)->data(),
-        fn::arg<type_rand_var>(first + 1)->data()
-    );
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = roll(a, b);
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-static fn::return_type dice_rand_var_in(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_rand_var_in(fn::context_type& context)
 {
-    using namespace dice;
-    auto&& var = fn::arg<type_rand_var>(first)->data();
-    auto&& lower_bound = fn::arg<T>(first + 1)->data();
-    auto&& upper_bound = fn::arg<T>(first + 2)->data();
-    
+    auto&& var = context.arg<dice::type_rand_var>(0)->data();
+    auto&& lower_bound = context.arg<T>(1)->data();
+    auto&& upper_bound = context.arg<T>(2)->data();
     var = var.in(lower_bound, upper_bound);
-    return std::move(*first);
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_less_than(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_less_than(fn::context_type& context)
 {
     using namespace dice;
-    auto a = fn::arg<type_rand_var>(first);
-    auto b = fn::arg<type_rand_var>(first + 1);
-    a->data() = a->data().less_than(b->data());
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = a.less_than(b);
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_less_than_or_equal(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_less_than_or_equal(fn::context_type& context)
 {
     using namespace dice;
-    auto a = fn::arg<type_rand_var>(first);
-    auto b = fn::arg<type_rand_var>(first + 1);
-    a->data() = a->data().less_than_or_equal(b->data());
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = a.less_than_or_equal(b);
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_equal(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_equal(fn::context_type& context)
 {
     using namespace dice;
-    auto a = fn::arg<type_rand_var>(first);
-    auto b = fn::arg<type_rand_var>(first + 1);
-    a->data() = a->data().equal(b->data());
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = a.equal(b);
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_not_equal(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_not_equal(fn::context_type& context)
 {
     using namespace dice;
-    auto a = fn::arg<type_rand_var>(first);
-    auto b = fn::arg<type_rand_var>(first + 1);
-    a->data() = a->data().not_equal(b->data());
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = a.not_equal(b);
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_greater_than(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_greater_than(fn::context_type& context)
 {
     using namespace dice;
-    auto a = fn::arg<type_rand_var>(first);
-    auto b = fn::arg<type_rand_var>(first + 1);
-    a->data() = a->data().greater_than(b->data());
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = a.greater_than(b);
+    return std::move(context.raw_arg(0));
 }
 
-static fn::return_type dice_greater_than_or_equal(
-    fn::args_iterator first,
-    fn::args_iterator)
+static fn::return_type dice_greater_than_or_equal(fn::context_type& context)
 {
     using namespace dice;
-    auto a = fn::arg<type_rand_var>(first);
-    auto b = fn::arg<type_rand_var>(first + 1);
-    a->data() = a->data().greater_than_or_equal(b->data());
-    return std::move(*first);
+    auto&& a = context.arg<type_rand_var>(0)->data();
+    auto&& b = context.arg<type_rand_var>(1)->data();
+    a = a.greater_than_or_equal(b);
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-static fn::return_type dice_min(fn::args_iterator first, fn::args_iterator)
+static fn::return_type dice_min(fn::context_type& context)
 {
     using namespace dice;
     using namespace std;
-    auto a = fn::arg<T>(first);
-    auto b = fn::arg<T>(first + 1);
-    a->data() = min(a->data(), b->data());
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    auto&& b = context.arg<T>(1)->data();
+    a = min(a, b);
+    return std::move(context.raw_arg(0));
 }
 
 template<typename T>
-static fn::return_type dice_max(fn::args_iterator first, fn::args_iterator)
+static fn::return_type dice_max(fn::context_type& context)
 {
     using namespace dice;
     using namespace std;
-    auto a = fn::arg<T>(first);
-    auto b = fn::arg<T>(first + 1);
-    a->data() = max(a->data(), b->data());
-    return std::move(*first);
+    auto&& a = context.arg<T>(0)->data();
+    auto&& b = context.arg<T>(1)->data();
+    a = max(a, b);
+    return std::move(context.raw_arg(0));
 }
 
 // generate a random number
@@ -223,15 +192,13 @@ struct dice_roll
 
     dice_roll() : engine(dev()), dist(0, 1) {}
 
-    fn::return_type operator()(
-        fn::args_iterator first,
-        fn::args_iterator)
+    fn::return_type operator()(fn::context_type& context)
     {
         using namespace dice;
 
         ProbType sum = 0;
         auto value = dist(engine);
-        auto&& var = fn::arg<type_rand_var>(first)->data();
+        auto&& var = context.arg<type_rand_var>(0)->data();
         for (auto&& pair : var.probability())
         {
             if (sum + pair.second >= value)
@@ -250,8 +217,6 @@ struct dice_roll
 
 dice::environment::environment()
 {
-    args_.resize(function_traits::max_argc);
-
     // buildin operator functions
     add_function("+", {
         dice_add<type_int>, { type_int::id(), type_int::id() }
@@ -421,12 +386,9 @@ const dice::base_value* dice::environment::get_var(const std::string& name) cons
     return it->second.get();
 }
 
-fn::return_type dice::environment::call_var(
-    const std::string& name,
-    fn::args_iterator first,
-    fn::args_iterator last)
+fn::return_type dice::environment::call_prepared(const std::string& name)
 {
-    auto expected_argc = function_traits::argc(first, last);
+    auto expected_argc = context_.argc();
 
     // find functions in the function table
     auto it = functions_.find(name);
@@ -447,11 +409,11 @@ fn::return_type dice::environment::call_var(
         }
 
         // calculate conversion cost for this function
-        auto it = first;
+        std::size_t args_index = 0;
         conversions::cost_type cost = 0;
         for (auto&& to_type : function.args())
         {
-            auto from_type = (*it)->type();
+            auto from_type = context_.arg_type(args_index++);
             auto conv_cost = conversions_.cost(from_type, to_type);
             if (conv_cost == conversions::max_cost)
             {
@@ -459,7 +421,6 @@ fn::return_type dice::environment::call_var(
                 break;
             }
             cost += conv_cost;
-            ++it;
         }
 
         // update minimal conversion function 
@@ -473,36 +434,28 @@ fn::return_type dice::environment::call_var(
     // if there is no suitable conversion, the function call fails
     if (min_func == nullptr)
     {
-        fail_call(name, first, last);
+        std::string error_message = "No matching function for: " ;
+        error_message += name + "(";
+        if (context_.argc() > 0)
+        {
+            error_message += to_string(context_.arg_type(0));
+        }
+        for (std::size_t i = 1; i < context_.argc(); ++i)
+        {
+            error_message += ", " + to_string(context_.arg_type(i));
+        }
+        error_message += ")";
+        throw compiler_error(error_message);
     }
 
     // convert arguments
-    std::size_t i = 0;
-    for (auto it = first; it != last; ++it, ++i)
+    for (std::size_t i = 0; i < context_.argc(); ++i)
     {
         type_id to = min_func->args()[i];
-        *it = conversions_.convert(to, std::move(*it));
+        context_.raw_arg(i) = conversions_.convert(to, 
+            std::move(context_.raw_arg(i)));
     }
 
     // execute it
-    return (*min_func)(first, last);
-}
-
-void dice::environment::fail_call(
-    const std::string& name, 
-    fn::args_iterator first,
-    fn::args_iterator last)
-{
-    std::string error_message = "No matching function for: " ;
-    error_message += name + "(";
-    if (first != last)
-    {
-        error_message += to_string((*first)->type());
-    }
-    for (auto it = first + 1; it != last; ++it)
-    {
-        error_message += ", " + to_string((*it)->type());
-    }
-    error_message += ")";
-    throw compiler_error(error_message);
+    return (*min_func)(context_);
 }

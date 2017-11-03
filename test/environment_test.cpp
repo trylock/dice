@@ -74,14 +74,14 @@ TEST_CASE("Roll operator converts int arguments to a random variable", "[environ
     REQUIRE(prob.find(6)->second == Approx(1 / 6.0));
 }
 
-TEST_CASE("Call function using iterators as arguments", "[environment]")
+TEST_CASE("Call function using vector as arguments", "[environment]")
 {
     std::vector<std::unique_ptr<dice::base_value>> args;
     args.push_back(dice::make<dice::type_int>(3));
     args.push_back(dice::make<dice::type_int>(5));
 
     dice::environment env;
-    auto result = env.call_var("+", args.begin(), args.end());
+    auto result = env.call_var("+", std::move(args));
     REQUIRE(result->type() == dice::type_int::id());
 
     auto int_result = dynamic_cast<dice::type_int*>(result.get());

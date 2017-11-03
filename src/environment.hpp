@@ -29,7 +29,7 @@ namespace dice
     {
     public:
         using value_type = std::unique_ptr<base_value>;
-        using fn = function_traits;
+        using fn = execution_context;
 
         environment();
 
@@ -60,16 +60,6 @@ namespace dice
          */
         void add_function(const std::string& name, user_function&& func);
 
-        /** Call a function with arguments given by argument iterators
-         * @param iterator pointing to the first argument
-         * @param iterator pointing to the last argument
-         * @return computed value
-         */
-        fn::return_type call_var(
-            const std::string& name, 
-            fn::args_iterator first, 
-            fn::args_iterator last);
-
         /** Call a function with the same arguments
          * @param function name
          * @param arguments passed to the function
@@ -81,22 +71,25 @@ namespace dice
             Arg&& first_arg, 
             Args&&... rest)
         {
-            if (argc_ >= args_.size())
-                throw compiler_error(
-                    name + "(): exceeded maximal number of arguments");
-
-            args_[argc_++] = std::forward<Arg>(first_arg);
+            context_.push_arg(std::forward<Arg>(first_arg));
             return call(name, std::forward<Args>(rest)...);
         }
 
         inline value_type call(const std::string& name)
         {
-            auto result = call_var(
-                name, 
-                args_.begin(), 
-                args_.begin() + argc_);
-            argc_ = 0;
+            auto result = call_prepared(name);
+            context_ = execution_context{};
             return result;
+        }
+
+        inline value_type call_var(
+            const std::string& name, 
+            std::vector<fn::value_type>&& args)
+        {
+            context_ = execution_context{ std::move(args) };
+            auto value = call_prepared(name);
+            context_ = execution_context{};
+            return value;
         }
 
     private:
@@ -106,15 +99,14 @@ namespace dice
         std::unordered_map<std::string, std::vector<user_function>> functions_;
         // available variables
         std::unordered_map<std::string, value_type> variables_;
+        // execution context of the last function that has been called
+        execution_context context_;
 
-        // argument value storage
-        std::vector<value_type> args_;
-        std::size_t argc_ = 0;
-
-        void fail_call(
-            const std::string& name, 
-            fn::args_iterator first,
-            fn::args_iterator last);
+        /** Call a function with prepared context in context_.
+         * @param function name
+         * @return computed value
+         */
+        fn::return_type call_prepared(const std::string& name);
     };
 }
 

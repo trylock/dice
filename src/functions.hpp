@@ -6,51 +6,86 @@
 
 namespace dice 
 {
-    // helper checks that are used in user function's code
-    class function_traits
+    // Context of a function execution
+    class execution_context
     {
     public:
-        using arg_type = std::unique_ptr<base_value>;
+        using value_type = std::unique_ptr<base_value>;
         using return_type = std::unique_ptr<base_value>;
-        using args_iterator = typename std::vector<arg_type>::iterator;
-        using callable_type = std::function<
-            return_type(args_iterator, args_iterator)>;
+        using context_type = execution_context;
+        using callable_type = std::function<return_type(context_type&)>;
 
-        static const std::size_t max_argc = 4;
+        execution_context() {}
 
-        /** Check that an argument is of given type and convert it.
-         * @param argument iterator
-         * @return converted type
+        execution_context(std::vector<value_type>&& args) : 
+            args_(std::move(args)) {}
+
+        /** Get a raw value of ith argument of current function.
+         * @param index of an argument
+         * @return value of the argument
+         */
+        value_type& raw_arg(std::size_t i)
+        {
+            return args_[i];
+        }
+        
+        /** Get a raw value of ith argument of current function.
+         * @param index of an argument
+         * @return value of the argument
+         */
+        const value_type& raw_arg(std::size_t i) const
+        {
+            return args_[i];
+        }
+
+        /** Convert ith argument to given type and return the pointer.
+         * @param index of an argument
+         * @return converted ith argument
          */
         template<typename ExpectedType>
-        static ExpectedType* arg(args_iterator it) 
+        ExpectedType* arg(std::size_t i)
         {
-            auto result = dynamic_cast<ExpectedType*>(it->get());
+            auto result = dynamic_cast<ExpectedType*>(raw_arg(i).get());
             if (result == nullptr)
                 throw std::runtime_error(
                     std::string("Invalid argument type. Expected ") + 
-                    typeid(ExpectedType).name());
+                    to_string(ExpectedType::id()));
             return result;
         }
-
-        /** Count number of arguments from arguments iterators
-         * @param first argument iterator
-         * @param last argument iterator
-         * @return number of function arguments
+        
+        /** Get type of the ith argument.
+         * @param index of an argument
+         * @return argument type
          */
-        inline static std::size_t argc(
-            args_iterator first, 
-            args_iterator last)
+        type_id arg_type(std::size_t i) const
         {
-            return std::distance(first, last);
+            return raw_arg(i)->type();
         }
+
+        /** Number of arguments of this function.
+         * @return number of arguments of this function call 
+         */
+        std::size_t argc() const
+        {
+            return args_.size();
+        }
+
+        /** Add value to argumnets of this function call.
+         * @param value of the new argument
+         */
+        void push_arg(value_type&& arg_value)
+        {
+            args_.push_back(std::move(arg_value));
+        }
+    private:
+        std::vector<value_type> args_;
     };
 
     // object representing a function callable from a dice expression
     class user_function
     {
     public:
-        using fn = function_traits;
+        using fn = execution_context;
 
         user_function() {}
         user_function(fn::callable_type callable) : callable_(callable) {}
@@ -64,11 +99,9 @@ namespace dice
          * @param argument iterator pointing at the last argument
          * @return result of the call 
          */
-        inline fn::return_type operator()(
-            fn::args_iterator first, 
-            fn::args_iterator last) const
+        inline fn::return_type operator()(fn::context_type& context) const
         {
-            return callable_(first, last);
+            return callable_(context);
         }
 
         inline const std::vector<type_id>& args() const 

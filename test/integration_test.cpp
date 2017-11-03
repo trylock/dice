@@ -4,6 +4,7 @@
 #include "logger.hpp"
 #include "interpreter.hpp"
 #include "environment.hpp"
+#include "value.hpp"
 
 #include <sstream>
 #include <string>
@@ -53,30 +54,28 @@ static interpreter_result interpret(const std::string& expr)
     dice::environment env;
     
     // functions used in some tests
-    env.add_function("one", dice::user_function([](auto&&, auto&&) 
+    env.add_function("one", dice::user_function([](auto&&) 
     { 
         return dice::make<dice::type_int>(1); 
     }));
 
     env.add_function("add", dice::user_function(
-        [](auto&& first, auto&&) 
+        [](dice::execution_context& context) 
         { 
-            using fn = dice::function_traits;
-            auto a = fn::arg<dice::type_int>(first);
-            auto b = fn::arg<dice::type_int>(first + 1);
-            a->data() = a->data() + b->data();
-            return std::move(*first);
+            auto&& a = context.arg<dice::type_int>(0)->data();
+            auto&& b = context.arg<dice::type_int>(1)->data();
+            a = a + b;
+            return std::move(context.raw_arg(0));
         }, { dice::type_int::id(), dice::type_int::id() }
     ));
     
     env.add_function("add", dice::user_function(
-        [](auto&& first, auto&&) 
+        [](dice::execution_context& context) 
         { 
-            using fn = dice::function_traits;
-            auto a = fn::arg<dice::type_rand_var>(first);
-            auto b = fn::arg<dice::type_rand_var>(first + 1);
-            a->data() = a->data() + b->data();
-            return std::move(*first);
+            auto&& a = context.arg<dice::type_rand_var>(0)->data();
+            auto&& b = context.arg<dice::type_rand_var>(1)->data();
+            a = a + b;
+            return std::move(context.raw_arg(0));
         }, { dice::type_rand_var::id(), dice::type_rand_var::id() }
     ));
 
