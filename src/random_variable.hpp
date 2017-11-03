@@ -376,7 +376,11 @@ namespace dice
             }
 
             // find maximal number of dice
-            auto max_dice = num_dice.probability_.rbegin()->first;
+            auto max_dice = std::numeric_limits<value_type>::min();
+            for (auto&& value : num_dice.probability_)
+            {
+                max_dice = std::max(max_dice, value.first);
+            }
     
             // compute distribution for each possible number of sides
             random_variable dist;
@@ -457,12 +461,12 @@ namespace dice
             return dist;
         }
 
-        const std::map<value_type, probability_type>& probability() const 
+        const auto& probability() const 
         {
             return probability_; 
         }
     private:
-        std::map<value_type, probability_type> probability_;
+        std::unordered_map<value_type, probability_type> probability_;
     };
 
     // Calculate max(X, Y) for independent r.v. X and Y
