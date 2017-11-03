@@ -460,12 +460,18 @@ namespace dice
                     return int_->make_default();
                 }
             }
-            
-            error("Expected " + to_string(symbol_type::left_paren) + ", " + 
-                to_string(symbol_type::number) + ", " + 
-                to_string(symbol_type::id) + " or " + 
-                to_string(symbol_type::func_id) +  ", got " + 
-                to_string(lookahead_) + "."); 
+
+            // format an error message
+            std::string error_message = "Expected ";
+            auto&& first = nonterminal<nonterminal_type::factor>::first;
+            for (auto it = first.begin(); it != first.end() - 1; ++it)
+            {
+                error_message += to_string(*it) + ", ";
+            }
+            error_message += to_string(first.back()) + 
+                ". Got " + to_string(lookahead_);
+
+            error(error_message); 
             return int_->make_default();
         }
 
