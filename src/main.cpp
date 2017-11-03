@@ -49,8 +49,17 @@ void print(
         << "\e[0m" 
         << std::endl;
 
+    std::vector<std::pair<ValueType, ProbabilityType>> values{
+        var.probability().begin(),
+        var.probability().end()
+    };
+    std::sort(values.begin(), values.end(), [](auto&& a, auto&& b)
+    {
+        return a.first < b.first;
+    });
+
     ProbabilityType sum = 0;
-    for (auto&& pair : var.probability())
+    for (auto&& pair : values)
     {
         std::cout 
             << std::setw(width_value) << pair.first 
