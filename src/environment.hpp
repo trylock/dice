@@ -58,7 +58,7 @@ namespace dice
          * @param function name
          * @param function implementation and metadata
          */
-        void add_function(const std::string& name, user_function&& func);
+        void add_function(const std::string& name, function_definition&& func);
 
         /** Call a function with the same arguments.
          * All functions can throw a compiler_error indicating a critical error
@@ -103,7 +103,9 @@ namespace dice
         // type conversions
         conversions conversions_;
         // available functions    
-        std::unordered_map<std::string, std::vector<user_function>> functions_;
+        std::unordered_map<
+            std::string, 
+            std::vector<function_definition>> functions_;
         // available variables
         std::unordered_map<std::string, value_type> variables_;
         // execution context of the last function that has been called

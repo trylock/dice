@@ -82,14 +82,14 @@ namespace dice
     };
 
     // object representing a function callable from a dice expression
-    class user_function
+    class function_definition
     {
     public:
         using fn = execution_context;
 
-        user_function() {}
-        user_function(fn::callable_type callable) : callable_(callable) {}
-        user_function(
+        function_definition() {}
+        function_definition(fn::callable_type callable) : callable_(callable) {}
+        function_definition(
             fn::callable_type callable, 
             std::vector<type_id>&& arg_types) : 
             callable_(callable), args_(std::move(arg_types)) {}

@@ -54,12 +54,12 @@ static interpreter_result interpret(const std::string& expr)
     dice::environment env;
     
     // functions used in some tests
-    env.add_function("one", dice::user_function([](auto&&) 
+    env.add_function("one", dice::function_definition([](auto&&) 
     { 
         return dice::make<dice::type_int>(1); 
     }));
 
-    env.add_function("add", dice::user_function(
+    env.add_function("add", dice::function_definition(
         [](dice::execution_context& context) 
         { 
             auto&& a = context.arg<dice::type_int>(0)->data();
@@ -69,7 +69,7 @@ static interpreter_result interpret(const std::string& expr)
         }, { dice::type_int::id(), dice::type_int::id() }
     ));
     
-    env.add_function("add", dice::user_function(
+    env.add_function("add", dice::function_definition(
         [](dice::execution_context& context) 
         { 
             auto&& a = context.arg<dice::type_rand_var>(0)->data();

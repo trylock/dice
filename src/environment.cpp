@@ -345,11 +345,11 @@ dice::environment::environment()
 
 void dice::environment::add_function(
     const std::string& name, 
-    user_function&& func)
+    function_definition&& func)
 {
     auto result = functions_.insert(std::make_pair(
         name, 
-        std::vector<user_function>{}
+        std::vector<function_definition>{}
     ));
     result.first->second.push_back(std::move(func));
 }
@@ -399,7 +399,7 @@ fn::return_type dice::environment::call_prepared(const std::string& name)
     auto&& functions = it->second;
 
     // choose function with the lowest conversion cost
-    user_function* min_func = nullptr;
+    function_definition* min_func = nullptr;
     auto min_cost = conversions::max_cost;
     for (auto&& function : functions)
     {
