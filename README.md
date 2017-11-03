@@ -62,8 +62,8 @@ The program implements a predictive parser for it is easy to write it by hand. O
                 
 <factor>      ::= (<expr>) 
                 | <number>
-                | <identifier>(<opt_params>)
-                | <identifier>
+                | <func_id>(<opt_params>)
+                | <id>
                 
 <opt_params>  ::= <param_list> 
                 | "" 
@@ -74,7 +74,8 @@ The program implements a predictive parser for it is easy to write it by hand. O
 
 Here are some non-trivial terminals and their regular expressions:
 - `<number>`: `[0-9]+(\.[0-9]+)?`
-- `<identifier>`: `[A-Za-z][A-Za-z0-9_]*`
+- `<id>`: `[A-Za-z][A-Za-z0-9_]*`
+- `<func_id>`: `[A-Za-z][A-Za-z0-9_]*/{whitespace}*\(` (that is, same as `<id>` but there is a `(` after it)
 - `<rel_op>`: `<|<=|==|!=|>=|>`
 
 ## Types
