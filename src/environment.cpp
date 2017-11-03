@@ -386,9 +386,11 @@ const dice::base_value* dice::environment::get_var(const std::string& name) cons
     return it->second.get();
 }
 
-fn::return_type dice::environment::call_prepared(const std::string& name)
+fn::return_type dice::environment::call_prepared(
+    const std::string& name, 
+    execution_context& context)
 {
-    auto expected_argc = context_.argc();
+    auto expected_argc = context.argc();
 
     // find functions in the function table
     auto it = functions_.find(name);
@@ -413,7 +415,7 @@ fn::return_type dice::environment::call_prepared(const std::string& name)
         conversions::cost_type cost = 0;
         for (auto&& to_type : function.args())
         {
-            auto from_type = context_.arg_type(args_index++);
+            auto from_type = context.arg_type(args_index++);
             auto conv_cost = conversions_.cost(from_type, to_type);
             if (conv_cost == conversions::max_cost)
             {
@@ -436,26 +438,26 @@ fn::return_type dice::environment::call_prepared(const std::string& name)
     {
         std::string error_message = "No matching function for: " ;
         error_message += name + "(";
-        if (context_.argc() > 0)
+        if (context.argc() > 0)
         {
-            error_message += to_string(context_.arg_type(0));
+            error_message += to_string(context.arg_type(0));
         }
-        for (std::size_t i = 1; i < context_.argc(); ++i)
+        for (std::size_t i = 1; i < context.argc(); ++i)
         {
-            error_message += ", " + to_string(context_.arg_type(i));
+            error_message += ", " + to_string(context.arg_type(i));
         }
         error_message += ")";
         throw compiler_error(error_message);
     }
 
     // convert arguments
-    for (std::size_t i = 0; i < context_.argc(); ++i)
+    for (std::size_t i = 0; i < context.argc(); ++i)
     {
         type_id to = min_func->args()[i];
-        context_.raw_arg(i) = conversions_.convert(to, 
-            std::move(context_.raw_arg(i)));
+        context.raw_arg(i) = conversions_.convert(to, 
+            std::move(context.raw_arg(i)));
     }
 
     // execute it
-    return (*min_func)(context_);
+    return (*min_func)(context);
 }

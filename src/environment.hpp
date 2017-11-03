@@ -79,7 +79,7 @@ namespace dice
 
         inline value_type call(const std::string& name)
         {
-            auto result = call_prepared(name);
+            auto result = call_prepared(name, context_);
             context_ = execution_context{};
             return result;
         }
@@ -93,9 +93,8 @@ namespace dice
             const std::string& name, 
             std::vector<fn::value_type>&& args)
         {
-            context_ = execution_context{ std::move(args) };
-            auto value = call_prepared(name);
-            context_ = execution_context{};
+            execution_context context{ std::move(args) };
+            auto value = call_prepared(name, context);
             return value;
         }
 
@@ -108,14 +107,17 @@ namespace dice
             std::vector<function_definition>> functions_;
         // available variables
         std::unordered_map<std::string, value_type> variables_;
-        // execution context of the last function that has been called
+        // auxiliary context for the call methods
         execution_context context_;
 
-        /** Call a function with prepared context in context_.
+        /** Call a function with prepared context.
          * @param function name
+         * @param execution context of this call
          * @return computed value
          */
-        fn::return_type call_prepared(const std::string& name);
+        fn::return_type call_prepared(
+            const std::string& name, 
+            execution_context& context);
     };
 }
 
