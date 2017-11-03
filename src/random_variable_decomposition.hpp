@@ -247,7 +247,7 @@ namespace dice
         }
         
         /** Roll num_rolls times with a dice of num_sides.
-         * Random variables does not to be independent.
+         * Random variables have to be independent.
          * @param number of rolls
          * @param number of dice sides
          * @return distribution of the dice roll
