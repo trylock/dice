@@ -1,4 +1,4 @@
-# Dice expressions interpreter
+# Dice expressions probability calculator
 Essential part of many tabletop games are random events. They are often introduced to the game in form of dice rolls. This program can help you to understand those dice rolls. You can give it a dice expression and it computes the probabilities and some statistics for you. It can even deal with some form of depedence using names (see examples).
 
 ## Examples
