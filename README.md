@@ -21,6 +21,23 @@ In all of these examples I assume that dice rolls are independent discrete (inte
 - **int vs double**: The program can work only with integer random variables (that is, value of a variable can only be an integer). Therefore it is invalid to use operands on random variables in conjunction with floating point numbers. For example: `1d6 * 2.5` or even `1d6 + 2.0` are invalid.
 - **Names in dice roll operator**: it is not supported to use names in the dice roll operator. For example `X d Y` is invalid. 
 
+## Reference
+
+### Types
+The program internally works with 3 basic types: `int` (a signed integer value), `double` (a 64-bit floating point number) and `rand_var` (a discrete integer random variable). Numbers without a decimal part are treated as `int`. The program will automatically convert between `int` and `double` or `rand_var` in function calls and operators but not vice versa (it can't convert `double` to `int` implicitly). 
+
+### Functions in dice expressions
+These functions are provided with this implementation. There is a mechanism to add new functions implemented in C++ (see the `add_function` method in the `environment` class). Special type `any` in this list means that you can use it with any type as long as you substitute the same type for all occurances of `any`.
+
+- `double expectation(rand_var)`: takes a random variable and computes its expected value
+- `double variance(rand_var)`: takes a random variable and computes its variance
+- `double deviation(rand_var)`: takes a random variable and computes its standard deviation
+- `int roll(rand_var)`: generate a random number from given distribution
+- `any max(any, any)`: takes 2 values and computes the maximum (it can be a random variable if `any` is `rand_var`)
+- `any min(any, any)`: takes 2 values and computes the minimum (it can be a random variable if `any` is `rand_var`)
+- `int quantile(rand_var, double)`: takes a random varialbe, a probability and computes a quantile (denote `X` a random varialbe, `quantile(X, p) = min{ k : P(X <= k) >= p}`)
+
+
 ## Operators
 Operators in this list are sorted by precedence from lowest to highest. All operators are left-associative unless stated otherwise:
 
@@ -77,9 +94,6 @@ Here are some non-trivial terminals and their regular expressions:
 - `<id>`: `[A-Za-z][A-Za-z0-9_]*`
 - `<func_id>`: `[A-Za-z][A-Za-z0-9_]*/{whitespace}*\(` (that is, same as `<id>` but there is a `(` after it)
 - `<rel_op>`: `<|<=|==|!=|>=|>`
-
-## Types
-The program works with 3 basic types: `int` (signed integer), `double` (a floating point number) and `rand_var` (a discrete integer random variable). It can convert a value of type `integer` to all other types but not vice versa. Integers are implicitly converted to those types when needed (in function calls or when evaluating an operator).
 
 ## Project structure
 The project is separated into 3 parts: a static library, simple CLI (command line interface) program and tests. The static library is linked with the CLI program and the tests.
