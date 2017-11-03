@@ -244,3 +244,45 @@ TEST_CASE("If number of sides or number of dice is an impossible event, the roll
     REQUIRE(inv_dice.probability().empty());
     REQUIRE(inv_sides.probability().empty());
 }
+
+TEST_CASE("Compute standard deviation of an impossible event", "[random_variable]")
+{
+    dice::random_variable<int, double> impossible;
+
+    auto deviation = impossible.deviation();
+    REQUIRE(deviation == 0);
+}
+
+TEST_CASE("Compute standard deviation of a constant variable", "[random_variable]")
+{
+    dice::random_variable<int, double> constant{ dice::constant_tag{}, 5 };
+
+    auto deviation = constant.deviation();
+    REQUIRE(deviation == 0);
+}
+
+TEST_CASE("Compute variance of a random variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 2),
+        std::make_pair(3, 3),
+        std::make_pair(4, 4),
+    } };
+
+    auto variance = var.variance();
+    REQUIRE(variance == 1);
+}
+
+TEST_CASE("Compute standard deviation of a random variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(4, 1),
+    } };
+
+    auto deviation = var.deviation();
+    REQUIRE(deviation == Approx(std::sqrt(5 / 4.0)));
+}

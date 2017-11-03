@@ -724,7 +724,6 @@ TEST_CASE("Name definition that contains a function of other names", "[dice]")
     auto result = interpret("var X = 1d2; var Y = add(X, 1d2); Y + Y");
 
     REQUIRE(result.values.size() == 3);
-    auto str = result.errors.str();
     result.assert_no_error();
 
     REQUIRE(result.values[0] == nullptr);
@@ -738,4 +737,18 @@ TEST_CASE("Name definition that contains a function of other names", "[dice]")
     REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(6)->second == Approx(2 / 4.0));
     REQUIRE(prob.find(8)->second == Approx(1 / 4.0));
+}
+
+TEST_CASE("Interpret deviation function call", "[dice]")
+{
+    auto result = interpret("deviation(1d4)");
+
+    REQUIRE(result.values.size() == 1);
+    result.assert_no_error();
+
+    auto value = std::move(result.values[0]);
+    REQUIRE(value->type() == dice::type_double::id());
+
+    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    REQUIRE(data == Approx(std::sqrt(5 / 4.0)));
 }

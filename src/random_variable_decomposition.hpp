@@ -281,6 +281,15 @@ namespace dice
             return var.variance();
         }
 
+        /** Compute standard deviation of this random variable.
+         * @return standard deviation
+         */
+        auto deviation() const
+        {
+            auto var = to_random_variable();
+            return var.deviation();
+        }
+
         /** Compute function of 2 random variables: A and B.
          * Variables does not need to be independent. 
          * @param other random variable B

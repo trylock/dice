@@ -24,6 +24,16 @@ static fn::return_type dice_variance(
     );
 }
 
+static fn::return_type dice_deviation(
+    fn::args_iterator first,
+    fn::args_iterator)
+{
+    using namespace dice;
+    return make<type_double>(
+        fn::arg<type_rand_var>(first)->data().deviation()
+    );
+}
+
 // operator functions
 
 template<typename T>
@@ -231,7 +241,7 @@ dice::environment::environment()
 {
     args_.resize(function_traits::max_argc);
 
-    // user functions
+    // buildin operator functions
     add_function("+", {
         dice_add<type_int>, { type_int::id(), type_int::id() }
     });
@@ -280,12 +290,6 @@ dice::environment::environment()
     add_function("__roll_op", {
         dice_roll_op, { type_rand_var::id(), type_rand_var::id() }
     });
-    add_function("expectation", {
-        dice_expectation, { type_rand_var::id() }
-    });
-    add_function("variance", {
-        dice_variance, { type_rand_var::id() }
-    });
     add_function("in", {
         dice_rand_var_in<type_double>, { 
             type_rand_var::id(), 
@@ -317,6 +321,18 @@ dice::environment::environment()
     });
     add_function(">", {
         dice_greater_than, { type_rand_var::id(), type_rand_var::id() }
+    });
+
+    // functions
+    
+    add_function("expectation", {
+        dice_expectation, { type_rand_var::id() }
+    });
+    add_function("deviation", {
+        dice_deviation, { type_rand_var::id() }
+    });
+    add_function("variance", {
+        dice_variance, { type_rand_var::id() }
     });
 
 #ifndef DISABLE_RNG

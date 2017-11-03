@@ -2,6 +2,7 @@
 #define DICE_RANDOM_VARIABLE_HPP_
 
 #include <cassert>
+#include <cmath>
 #include <limits>
 #include <vector>
 #include <algorithm>
@@ -116,6 +117,14 @@ namespace dice
                 sum += pair.first * pair.second;
             }
             return sum_sq - sum * sum;
+        }
+
+        /** Calculate standard deviation of this random variable.
+         * @return standard deviation
+         */
+        auto deviation() const
+        {
+            return std::sqrt(variance());
         }
 
         /** Calculate indicator that X (this r.v.) is in given interval
