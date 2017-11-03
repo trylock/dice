@@ -60,7 +60,9 @@ namespace dice
          */
         void add_function(const std::string& name, user_function&& func);
 
-        /** Call a function with the same arguments
+        /** Call a function with the same arguments.
+         * All functions can throw a compiler_error indicating a critical error
+         * that the caller has to handle.
          * @param function name
          * @param arguments passed to the function
          * @return computed value
@@ -82,6 +84,11 @@ namespace dice
             return result;
         }
 
+        /** Call a function with arguments in a list.
+         * @param function name
+         * @param arguments list
+         * @return computed value
+         */
         inline value_type call_var(
             const std::string& name, 
             std::vector<fn::value_type>&& args)
