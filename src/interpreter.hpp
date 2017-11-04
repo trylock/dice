@@ -75,7 +75,7 @@ namespace dice
          * @param right operand
          * @return sum
          */
-        value_type add(value_type&& lhs, value_type&& rhs)
+        value_type add(value_type lhs, value_type rhs)
         {
             process_children(lhs.get(), rhs.get());
             return env_->call("+", std::move(lhs), std::move(rhs));
@@ -86,7 +86,7 @@ namespace dice
          * @param right operand
          * @return difference
          */
-        value_type sub(value_type&& lhs, value_type&& rhs)
+        value_type sub(value_type lhs, value_type rhs)
         {
             process_children(lhs.get(), rhs.get());
             return env_->call("-", std::move(lhs), std::move(rhs));
@@ -97,7 +97,7 @@ namespace dice
          * @param right operand
          * @return product
          */
-        value_type mult(value_type&& lhs, value_type&& rhs)
+        value_type mult(value_type lhs, value_type rhs)
         {
             process_children(lhs.get(), rhs.get());
             return env_->call("*", std::move(lhs), std::move(rhs));
@@ -108,7 +108,7 @@ namespace dice
          * @param right operand
          * @return division
          */
-        value_type div(value_type&& lhs, value_type&& rhs)
+        value_type div(value_type lhs, value_type rhs)
         {
             process_children(lhs.get(), rhs.get());
             return env_->call("/", std::move(lhs), std::move(rhs));
@@ -118,7 +118,7 @@ namespace dice
          * @param original value
          * @return negation of the value
          */
-        value_type unary_minus(value_type&& value)
+        value_type unary_minus(value_type value)
         {
             return env_->call("unary-", std::move(value));
         }
@@ -129,8 +129,8 @@ namespace dice
          * @param right operand
          * @return result
          */
-        value_type rel_op(const std::string& type, value_type&& lhs, 
-            value_type&& rhs)
+        value_type rel_op(const std::string& type, value_type lhs, 
+            value_type rhs)
         {
             process_children(lhs.get(), rhs.get());
             return env_->call(type, std::move(lhs), std::move(rhs));
@@ -142,8 +142,8 @@ namespace dice
          * @param upper bound of the interval
          * @return result of the in operator
          */
-        value_type rel_in(value_type&& var, value_type&& lower_bound, 
-            value_type&& upper_bound)
+        value_type rel_in(value_type var, value_type lower_bound, 
+            value_type upper_bound)
         {
             return env_->call("in", 
                 std::move(var), 
@@ -156,7 +156,7 @@ namespace dice
          * @param right operand
          * @return result of the operator
          */
-        value_type roll(value_type&& lhs, value_type&& rhs)
+        value_type roll(value_type lhs, value_type rhs)
         {
             // check that none of the operands depends on a random variable
             if (has_dependencies(lhs) || has_dependencies(rhs))
@@ -172,7 +172,7 @@ namespace dice
          * @param new value of the variable
          * @return nullptr
          */
-        value_type assign(const std::string& name, value_type&& value)
+        value_type assign(const std::string& name, value_type value)
         {
             compute_decomposition(value);
             env_->set_var(name, std::move(value));
