@@ -123,8 +123,6 @@ public:
         }
         return trans + ")";
     }
-
-    void terminal(const dice::symbol&) {}
 };
 
 struct parse_result

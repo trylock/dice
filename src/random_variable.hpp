@@ -9,6 +9,14 @@
 #include <unordered_map>
 #include <map>
 
+#ifdef min
+#undef min
+#endif // min
+
+#ifdef max
+#undef max
+#endif // max
+
 namespace dice 
 {
     class bernoulli_tag{};

@@ -11,35 +11,7 @@
 
 namespace dice 
 {
-    class formatter 
-    {
-    public:
-        // List of symbols before which the formatter should insert a space
-        static const std::array<symbol_type, 8> add_space_before;
-        // List of symbols after which the formatter should insert a space
-        static const std::array<symbol_type, 10> add_space_after;
-        // List of symbols after which the formatter should insert a newline
-        static const std::array<symbol_type, 1> add_newline;
-        // List keywords
-        static const std::array<symbol_type, 2> keywords;
-        // Highlighting for keywords
-        static const char highlight_keyword[];
-        // Highlighting for numbers
-        static const char highlight_number[];
-        // Highlighting for identifiers
-        static const char highlight_id[];
-        
-        /** Format next terminal.
-         * @param matched terminal
-         */
-        void add(const symbol& symbol);
-
-        std::stringstream& stream() { return output_; }
-    private:
-        std::stringstream output_;
-    };
-
-    template<typename Environment, typename Formatter = formatter>
+    template<typename Environment>
     class interpreter
     {
     public:
@@ -242,20 +214,8 @@ namespace dice
             return env_->call_var(name, std::move(args));
         }
 
-        /** Function called when a terminal is matched by the parser.
-         * @param matched terminal
-         */
-        void terminal(const symbol& terminal)
-        {
-            if (terminal.type == symbol_type::end)
-                return;
-            formatter_.add(terminal);
-        }
-
-        inline std::stringstream& code() { return formatter_.stream(); }
     private:
         Environment* env_;
-        Formatter formatter_;
         bool is_definition_ = false;
 
         /** Process children of a binary node. 

@@ -43,10 +43,9 @@ void print(
     const int width_cdf = 15;
 
     std::cout << std::endl
-        << "\e[1m" << std::setw(width_value) << "Value" 
-        << "\e[1m" << std::setw(width_prob) << "PMF"  
-        << "\e[1m" << std::setw(width_cdf) << "CDF"  
-        << "\e[0m" 
+		<< std::setw(width_value) << "Value" 
+		<< std::setw(width_prob) << "PMF"  
+		<< std::setw(width_cdf) << "CDF"
         << std::endl;
 
 	auto probability = var.probability();
@@ -180,19 +179,7 @@ int main(int argc, char** argv)
 
         for (auto&& value : result)
         {
-            std::string expr;
-            std::getline(interpret.code(), expr);
-            if (value != nullptr || opt.verbose)
-            {
-                std::cout << expr;
-                if (value != nullptr)
-                    std::cout << ": ";
-            }
             print_value(value.get());
-            if (value != nullptr || opt.verbose)
-            {
-                std::cout << std::endl;
-            }
         }
     }
     else 

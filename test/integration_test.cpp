@@ -48,6 +48,7 @@ static interpreter_result interpret(const std::string& expr)
     interpreter_result result;
 
     std::stringstream input{ expr };
+	std::stringstream output;
 
     dice::logger log{ &result.errors };
     dice::lexer lexer{ &input, &log };
