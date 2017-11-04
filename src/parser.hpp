@@ -145,6 +145,12 @@ namespace dice
         Interpreter* int_;
         symbol lookahead_;
 
+        /** Parse statements and return their results.
+         * Production: stmts -> stmst; stmt 
+         *                    | stmt 
+         *                    | ""
+         * @return vector of computed values in each statement
+         */
         std::vector<value_type> stmts()
         {
             std::vector<value_type> values;
@@ -182,6 +188,11 @@ namespace dice
             return std::move(values);
         }
 
+        /** Parse a statement and return its result.
+         * Production: stmt -> var <id> = <expr> 
+         *                   | <expr>
+         * @return computed value (nullptr if this is an assignment)
+         */
         value_type stmt()
         {
             if (lookahead_.type == symbol_type::var)
@@ -212,6 +223,11 @@ namespace dice
             return expr();
         }
 
+        /** Parse expression and return computed value.
+         * Production: <expr> -> <add> in [<add>, <add>] 
+         *                     | <add> <rel_op> <add>
+         *                     | <add> 
+         */
         value_type expr()
         {
             auto left = add();
@@ -272,6 +288,12 @@ namespace dice
             return std::move(left);
         }
 
+        /** Parse an addition and return computed value.
+         * Production: <add> -> <add> + <mult>
+         *                    | <add> - <mult>
+         *                    | <mult>
+         * @return computed value
+         */
         value_type add()
         {
             std::string op;
@@ -310,6 +332,12 @@ namespace dice
             return std::move(result);
         }
 
+        /** Parse multiplication and return computed value.
+         * Production: <mult> -> <mult> * <unary_minus>
+         *                     | <mult> / <unary_minus>
+         *                     | <unary_minus>
+         * @return computed value
+         */
         value_type mult()
         {
             std::string op;
@@ -348,6 +376,13 @@ namespace dice
             return std::move(result);
         }
 
+        /** Parse unary minus and dice roll.
+         * Productions: <unary_minus> -> -<unary_minus>
+         *                             | <dice_roll>
+         *                <dice_roll> -> <dice_roll> d <factor>
+         *                             | <factor>
+         * @return computed value
+         */
         value_type dice_roll()
         {
             // determine the sign
@@ -398,6 +433,13 @@ namespace dice
             return std::move(result); 
         }
 
+        /** Parse factor and return its value.
+         * Productions: <factor> -> (<expr>)
+         *                        | <number>
+         *                        | <func_id>(<opt_params>)
+         *                        | <id>
+         * @return value of the factor
+         */
         value_type factor()
         {
             if (lookahead_.type == symbol_type::left_paren)
@@ -475,6 +517,13 @@ namespace dice
             return int_->make_default();
         }
 
+        /** Parse function parameter list.
+         * Productions: <opt_params> -> <param_list>
+         *                            | ""
+         *              <param_list> -> <param_list>, <expr>
+         *                            | <expr>
+         * @return list of parameters
+         */
         std::vector<value_type> param_list()
         {
             std::vector<value_type> args;
