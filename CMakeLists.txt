@@ -4,6 +4,7 @@ project(DICE)
 
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(TESTS_DIR ${PROJECT_SOURCE_DIR}/test)
+set(EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/external)
 
 set(dice_headers
     ${SRC_DIR}/utils.hpp
@@ -33,7 +34,7 @@ set(dice_sources
 set(dice_cli ${SRC_DIR}/main.cpp)
 
 set(all_tests
-    ${TESTS_DIR}/catch.hpp
+    ${EXTERNAL_DIR}/catch.hpp
     ${TESTS_DIR}/main.cpp
     ${TESTS_DIR}/lexer_test.cpp
     ${TESTS_DIR}/parser_test.cpp
@@ -46,6 +47,7 @@ set(all_tests
 
 include_directories(
     ${SRC_DIR}
+	${EXTERNAL_DIR}
 )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") # GCC
