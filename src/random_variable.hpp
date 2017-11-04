@@ -25,8 +25,9 @@ namespace dice
     public:
         using value_type = ValueType;
         using probability_type = ProbabilityType;
-        using freq_list = std::vector<std::pair<value_type, std::size_t>>;
-        using prob_list = std::vector<std::pair<value_type, probability_type>>;
+        using frequency_list = std::vector<std::pair<value_type, std::size_t>>;
+        using probability_list = std::vector<
+			std::pair<value_type, probability_type>>;
 
         // create an impossible event
         random_variable() {}
@@ -53,7 +54,7 @@ namespace dice
             }
         }
 
-        random_variable(freq_list&& list)
+        random_variable(frequency_list&& list)
         {
             probability_type sum = 0;
             for (auto&& item : list)
@@ -142,7 +143,7 @@ namespace dice
                     "Quantile is not defined.");
 
             // sort the values
-            prob_list list{ probability_.begin(), probability_.end() };
+            probability_list list{ probability_.begin(), probability_.end() };
             std::sort(list.begin(), list.end(), [](auto&& a, auto&& b)
             {
                 return a.first < b.first;

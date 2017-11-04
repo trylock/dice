@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "random_variable.hpp"
 
-using freq_list = dice::random_variable<int, double>::freq_list;
+using freq_list = dice::random_variable<int, double>::frequency_list;
 
 TEST_CASE("Compute distribution of a single dice roll", "[random_variable]")
 {
