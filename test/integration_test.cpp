@@ -29,15 +29,6 @@ struct interpreter_result
         std::string actual_msg; 
         std::getline(errors, actual_msg);
         REQUIRE(actual_msg.size() > 0);
-            
-        // remove line, column number and "error:" string
-        auto pos = actual_msg.find("error:") + 10;
-        while (pos < actual_msg.size() && std::isspace(actual_msg[pos]))
-        {
-            ++pos;
-        }
-        actual_msg = actual_msg.substr(pos);
-
         REQUIRE(actual_msg == expected_msg);
     }
 };
@@ -50,7 +41,7 @@ static interpreter_result interpret(const std::string& expr)
     std::stringstream input{ expr };
 	std::stringstream output;
 
-    dice::logger log{ &result.errors };
+    dice::logger log{ &result.errors, true };
     dice::lexer lexer{ &input, &log };
     dice::environment env;
     

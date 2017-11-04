@@ -7,6 +7,8 @@
 #include <iostream>
 #include <cassert>
 
+#include <termcolor.hpp>
+
 namespace dice
 {
     class logger
@@ -16,7 +18,7 @@ namespace dice
         logger();
 
         // Use given output stream as the output of the logger
-        explicit logger(std::ostream* output);
+        explicit logger(std::ostream* output, bool print_just_message = false);
 
         /** Add a new error log
          * @param line of the input at which the error occured
@@ -30,6 +32,7 @@ namespace dice
     private:
         std::ostream* output_;
         bool has_error_ = false;
+		bool print_just_message_ = false;
     };
 }
 
