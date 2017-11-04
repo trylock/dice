@@ -5,8 +5,6 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
-#include <unordered_set>
-#include <unordered_map>
 
 #include "utils.hpp"
 #include "random_variable.hpp"
