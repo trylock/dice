@@ -17,7 +17,7 @@ namespace dice
 
         execution_context() {}
 
-        execution_context(std::vector<value_type>&& args) : 
+        explicit execution_context(std::vector<value_type>&& args) : 
             args_(std::move(args)) {}
 
         /** Get a raw value of ith argument of current function.
@@ -77,6 +77,7 @@ namespace dice
         {
             args_.push_back(std::move(arg_value));
         }
+
     private:
         std::vector<value_type> args_;
     };

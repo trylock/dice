@@ -62,7 +62,7 @@ namespace dice
             }
         }
 
-        random_variable(frequency_list&& list)
+        explicit random_variable(frequency_list&& list)
         {
             probability_type sum = 0;
             for (auto&& item : list)
