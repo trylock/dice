@@ -1,6 +1,7 @@
 #ifndef DICE_INTERPRETER_HPP_
 #define DICE_INTERPRETER_HPP_
 
+#include <array>
 #include <memory>
 #include <sstream>
 
