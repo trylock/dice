@@ -49,9 +49,10 @@ void print(
         << "\e[0m" 
         << std::endl;
 
+	auto probability = var.probability();
     std::vector<std::pair<ValueType, ProbabilityType>> values{
-        var.probability().begin(),
-        var.probability().end()
+		probability.begin(),
+		probability.end()
     };
     std::sort(values.begin(), values.end(), [](auto&& a, auto&& b)
     {
