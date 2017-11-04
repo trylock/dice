@@ -392,8 +392,8 @@ namespace dice
         {
             // If there are no dice or dice sizes, 
             // then this is an impossible event
-            if (num_dice.probability_.size() <= 0 || 
-                num_sides.probability_.size() <= 0)
+            if (num_dice.probability_.empty() || 
+                num_sides.probability_.empty())
             {
                 return random_variable{};
             }
