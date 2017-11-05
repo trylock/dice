@@ -457,15 +457,6 @@ namespace dice
             return result;
         }
 
-        /** Map value -> probability of this random variable.
-         * @return probability map
-         */
-        auto probability() const
-        {
-            auto var = to_random_variable();
-            return var.probability();
-        }
-
         /** Check whether this decomposition has dependencies on other random 
          * variables.
          * @return true iff it has at least 1 dependency

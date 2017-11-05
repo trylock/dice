@@ -200,7 +200,8 @@ namespace
 
 			ProbType sum = 0;
 			auto value = dist(engine);
-			auto&& var = context.arg<type_rand_var>(0)->data();
+            auto var = context.arg<type_rand_var>(0)->data()
+                .to_random_variable(); 
 			for (auto&& pair : var.probability())
 			{
 				if (sum + pair.second >= value)

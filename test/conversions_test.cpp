@@ -41,7 +41,7 @@ TEST_CASE("Convert value to all other values", "[conversions]")
     int_value = make<type_int>(1);
     auto var_value = conv.convert(type_id::random_variable, std::move(int_value));
     auto var = dynamic_cast<type_rand_var&>(*var_value);
-    auto prob = var.data().probability();
+    auto prob = var.data().to_random_variable().probability();
     REQUIRE(prob.find(1)->second == Approx(1));
 
     // double -> int

@@ -12,7 +12,7 @@
 #include "environment.hpp"
 #include "direct_interpreter.hpp"
 
-// conver a double value to percent
+// convert double to percent string
 std::string format_probability(double prob)
 {
     if (prob < 0.0001 && prob != 0)
@@ -51,7 +51,7 @@ public:
             << std::endl;
     
         // sort PMF by value
-        auto probability = value->data().probability();
+        auto probability = value->data().to_random_variable().probability();
         dice::random_variable<int, double>::probability_list values{
             probability.begin(),
             probability.end()
