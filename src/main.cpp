@@ -66,7 +66,7 @@ public:
             return;
         
         auto sum = values.front().second;
-        for (auto it = values.begin() + 1; it != values.end(); ++it)
+        for (auto it = values.begin(); it != values.end(); ++it)
         {
             std::cout 
                 << std::setw(width_value) << it->first 
