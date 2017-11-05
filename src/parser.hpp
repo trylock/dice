@@ -12,7 +12,7 @@
 #include "value.hpp"
 #include "lexer.hpp"
 #include "symbols.hpp"
-#include "interpreter.hpp"
+#include "environment.hpp"
 #include "random_variable.hpp"
 
 namespace dice

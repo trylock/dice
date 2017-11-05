@@ -41,14 +41,18 @@ namespace dice
         std::size_t counter_ = 0;
     };
 
+    /** Direct interpreter is a dice expressions interpreter that evaluates
+     * expressions as soon as they are parsed. It does not use any itermediate
+     * representation.
+     */
     template<typename Environment>
-    class interpreter
+    class direct_interpreter
     {
     public:
         using value_type = std::unique_ptr<base_value>;
         using value_list = std::vector<value_type>;
 
-        explicit interpreter(Environment* env) : env_(env) {}
+        explicit direct_interpreter(Environment* env) : env_(env) {}
 
         void enter_assign()
         {

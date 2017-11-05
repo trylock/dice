@@ -2,7 +2,7 @@
 #include "parser.hpp"
 #include "lexer.hpp"
 #include "logger.hpp"
-#include "interpreter.hpp"
+#include "direct_interpreter.hpp"
 #include "environment.hpp"
 #include "value.hpp"
 
@@ -71,7 +71,7 @@ static interpreter_result interpret(const std::string& expr)
         }, { dice::type_rand_var::id(), dice::type_rand_var::id() }
     ));
 
-    dice::interpreter<dice::environment> interpret{ &env };
+    dice::direct_interpreter<dice::environment> interpret{ &env };
 
     auto parser = dice::make_parser(&lexer, &log, &interpret);
 
