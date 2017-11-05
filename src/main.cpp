@@ -10,7 +10,7 @@
 #include "lexer.hpp"
 #include "parser.hpp"
 #include "environment.hpp"
-#include "interpreter.hpp"
+#include "direct_interpreter.hpp"
 
 // conver a double value to percent
 std::string format_probability(double prob)
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
         dice::logger log;
         dice::lexer lexer{ opt.input, &log };
         dice::environment env;
-        dice::interpreter<dice::environment> interpret{ &env };
+        dice::direct_interpreter<dice::environment> interpret{ &env };
         auto parser = dice::make_parser(&lexer, &log, &interpret);
         auto result = parser.parse(); 
 
