@@ -24,87 +24,59 @@ std::string format_probability(double prob)
 
 // value formatting functions
 
-void print(int value)
+class formatting_visitor : public dice::value_visitor
 {
-    std::cout << value << std::endl;
-}
-
-void print(double value)
-{
-    std::cout << value << std::endl;
-}
-
-template<typename ValueType, typename ProbabilityType>
-void print(
-    const dice::random_variable_decomposition<ValueType, ProbabilityType>& var)
-{
-    const int width_value = 10;
-    const int width_prob = 15;
-    const int width_cdf = 15;
-
-    std::cout << std::endl
-		<< std::setw(width_value) << "Value" 
-		<< std::setw(width_prob) << "PMF"  
-		<< std::setw(width_cdf) << "CDF"
-        << std::endl;
-
-	auto probability = var.probability();
-    std::vector<std::pair<ValueType, ProbabilityType>> values{
-		probability.begin(),
-		probability.end()
-    };
-    std::sort(values.begin(), values.end(), [](auto&& a, auto&& b)
+public:
+    void visit(dice::type_int* value) override
     {
-        return a.first < b.first;
-    });
-
-    ProbabilityType sum = 0;
-    for (auto&& pair : values)
-    {
-        std::cout 
-            << std::setw(width_value) << pair.first 
-            << std::setw(width_prob) << format_probability(pair.second)
-            << std::setw(width_cdf) << format_probability(sum)
-            << std::endl;
-        sum += pair.second;
-    }
-}
-
-/** Print computed value.
- * @param computed value
- */
-void print_value(const dice::base_value* value)
-{
-    if (value == nullptr)
-    {
-        return;
-    }
-
-    // print value
-    auto int_value = dynamic_cast<const dice::type_int*>(value);
-    if (int_value != nullptr)
-    {
-        print(int_value->data());
-        return;
+        std::cout << value->data() << std::endl;
     }
     
-    auto double_value = dynamic_cast<const dice::type_double*>(value);
-    if (double_value != nullptr)
+    void visit(dice::type_double* value) override
     {
-        print(double_value->data());
-        return;
+        std::cout << value->data() << std::endl;
     }
 
-    auto var_value = dynamic_cast<const dice::type_rand_var*>(value);
-    if (var_value != nullptr)
+    void visit(dice::type_rand_var* value) override
     {
-        print(var_value->data());
-        return;
+        const int width_value = 10;
+        const int width_prob = 15;
+        const int width_cdf = 15;
+    
+        // print table header
+        std::cout << std::endl
+            << std::setw(width_value) << "Value" 
+            << std::setw(width_prob) << "PMF"  
+            << std::setw(width_cdf) << "CDF"
+            << std::endl;
+    
+        // sort PMF by value
+        auto probability = value->data().probability();
+        dice::random_variable<int, double>::probability_list values{
+            probability.begin(),
+            probability.end()
+        };
+        std::sort(values.begin(), values.end(), [](auto&& a, auto&& b)
+        {
+            return a.first < b.first;
+        });
+    
+        // print the random variable
+        if (values.empty())
+            return;
+        
+        auto sum = values.front().second;
+        for (auto it = values.begin() + 1; it != values.end(); ++it)
+        {
+            std::cout 
+                << std::setw(width_value) << it->first 
+                << std::setw(width_prob) << format_probability(it->second)
+                << std::setw(width_cdf) << format_probability(sum)
+                << std::endl;
+            sum += it->second;
+        }
     }
-
-    throw std::runtime_error("Unknown value.");
-}
-
+};
 
 struct options
 {
@@ -177,9 +149,12 @@ int main(int argc, char** argv)
         auto parser = dice::make_parser(&lexer, &log, &interpret);
         auto result = parser.parse(); 
 
+        formatting_visitor format;
         for (auto&& value : result)
         {
-            print_value(value.get());
+            if (value == nullptr)
+                continue;
+            value->accept(&format);
         }
     }
     else 
