@@ -519,6 +519,21 @@ namespace dice
         {
             return probability_; 
         }
+
+        /** Chek whether this random variable is equal to some other variable.
+         * Note: this will use the == operator on the ProbabilityType.
+         * @param other random variable
+         * @return true iff the variables are exactly equal
+         */
+        bool operator==(const random_variable& other) const
+        {
+            return probability_ == other.probability_;
+        }
+
+        bool operator!=(const random_variable& other) const
+        {
+            return probability_ != other.probability_;
+        }
     private:
         std::unordered_map<value_type, probability_type> probability_;
     };

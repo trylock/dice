@@ -491,6 +491,21 @@ namespace dice
             }
         }
 
+        /** Check whether this is exactly equal to other decomposition.
+         * Note: this test is exact and expensive. It is manly provided so
+         *       we can use this type as a value in dice expressions.
+         * @param other random variable
+         * @return true iff the values are exactly equal
+         */
+        bool operator==(const random_variable_decomposition& other) const
+        {
+            return deps_ == other.deps_ && vars_ == other.vars_;
+        }
+
+        bool operator!=(const random_variable_decomposition& other) const
+        {
+            return deps_ != other.deps_ || vars_ != other.vars_; 
+        }
     private:
         /** Set of variables on which this random variable depends.
          * It is kept sorted by the pointer value. This simplifies the
