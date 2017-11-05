@@ -11,6 +11,36 @@
 
 namespace dice 
 {
+    // compute decomposition of a random variable
+    class decomposition_visitor : public value_visitor
+    {
+    public:
+        inline void visit(type_int*) override {}
+        inline void visit(type_double*) override {}
+        inline void visit(type_rand_var* var) override 
+        {
+            if (!var->data().has_dependencies())
+                var->data().compute_decomposition();
+        }
+    };
+
+    // count random variables with dependencies
+    class dependencies_visitor : public value_visitor
+    {
+    public:
+        inline void visit(type_int*) override {}
+        inline void visit(type_double*) override {}
+        inline void visit(type_rand_var* var) override 
+        {
+            if (var->data().has_dependencies())
+                ++counter_;
+        }
+
+        inline std::size_t count() const { return counter_; }
+    private:
+        std::size_t counter_ = 0;
+    };
+
     template<typename Environment>
     class interpreter
     {
@@ -159,7 +189,10 @@ namespace dice
         value_type roll(value_type lhs, value_type rhs)
         {
             // check that none of the operands depends on a random variable
-            if (has_dependencies(lhs) || has_dependencies(rhs))
+            dependencies_visitor deps;
+            lhs->accept(&deps);
+            rhs->accept(&deps);
+            if (deps.count() > 0)
             {
                 throw compiler_error(
                     "It is invalid to use names in dice roll operator");
@@ -174,7 +207,8 @@ namespace dice
          */
         value_type assign(const std::string& name, value_type value)
         {
-            compute_decomposition(value);
+            decomposition_visitor decomp;
+            value->accept(&decomp);
             env_->set_var(name, std::move(value));
             return nullptr;
         }
@@ -190,23 +224,22 @@ namespace dice
             {
                 // check whether there is a parameter that depends on 
                 // a random variable
-                bool convert = false;
+                dependencies_visitor deps;
                 for (auto&& arg : args)
                 {
-                    if (has_dependencies(arg))
-                    {
-                        convert = true;
+                    arg->accept(&deps);
+                    if (deps.count() > 0)
                         break;
-                    }
                 }
 
                 // if there is such a parameter, compute decomposition for
                 // all random variables in the list
-                if (convert)
+                if (deps.count() > 0)
                 {
+                    decomposition_visitor decomp;
                     for (auto&& arg : args)
                     {
-                        compute_decomposition(arg);
+                        arg->accept(&decomp);
                     }
                 }
             }
@@ -228,46 +261,14 @@ namespace dice
             if (!is_definition_)
                 return;
 
-            auto var_a = dynamic_cast<type_rand_var*>(lhs);
-            if (var_a == nullptr)
-                return;
-            auto var_b = dynamic_cast<type_rand_var*>(rhs);
-            if (var_b == nullptr)
-                return;
-
-            if (!var_a->data().has_dependencies() && 
-                !var_b->data().has_dependencies())
-                return;
-            
-            if (!var_a->data().has_dependencies())
-                var_a->data().compute_decomposition();
-            else if (!var_b->data().has_dependencies())
-                var_b->data().compute_decomposition();
-        }
-
-        /** Check whether a random variable has dependencies.
-         * @param arbitrary value (doesn't have to be a random variable)
-         * @return true iff the value is a random variable and 
-         *         it has dependencies
-         */
-        template<typename ValuePtr>
-        bool has_dependencies(ValuePtr&& value)
-        {
-            auto var = dynamic_cast<type_rand_var*>(&*value);
-            return var != nullptr && var->data().has_dependencies();
-        }
-
-        /** Compute decomposition of a random variable.
-         * Noop if the value is not a random variable.
-         * @param arbitrary value (doesn't have to be a random variable)
-         */
-        template<typename ValuePtr>
-        void compute_decomposition(ValuePtr&& value)
-        {
-            auto var = dynamic_cast<type_rand_var*>(&*value);
-            if (var != nullptr && !var->data().has_dependencies())
+            dependencies_visitor deps;
+            lhs->accept(&deps);
+            rhs->accept(&deps);
+            if (deps.count() > 0)
             {
-                var->data().compute_decomposition();
+                decomposition_visitor decomp;
+                lhs->accept(&decomp);
+                rhs->accept(&decomp);
             }
         }
     };

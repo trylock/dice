@@ -10,7 +10,7 @@
 
 namespace dice 
 {
-    // Type of the type identifier of a value in a dice expression
+    // Type identifier of a value in a dice expression
     enum class type_id
     {
         integer,
@@ -33,6 +33,41 @@ namespace dice
     {
         return type_id::random_variable;
     } 
+    
+    /** Convert type id to human readable string.
+     * @param type id
+     * @return name of the type
+     */
+    inline std::string to_string(type_id tid)
+    {
+        switch (tid)
+        {
+        case type_id::integer:
+            return "int";
+        case type_id::floating_point:
+            return "double";
+        case type_id::random_variable:
+            return "random_variable";
+        default:
+            throw std::runtime_error(
+                "Unknown type id: " + static_cast<int>(tid));
+        }
+    }
+
+    template<typename T>
+    class typed_value;
+
+    // Visitor of a dice value
+    class value_visitor
+    {
+    public:
+        virtual ~value_visitor() {}
+
+        virtual void visit(typed_value<int>* value) = 0;
+        virtual void visit(typed_value<double>* value) = 0;
+        virtual void visit(
+            typed_value<random_variable_decomposition<int, double>>* value) = 0;
+    };
 
     // Parent of all value types that are used in a dice expressions
     class base_value 
@@ -51,6 +86,11 @@ namespace dice
          * @return copied value 
          */
         virtual std::unique_ptr<base_value> clone() const = 0;
+
+        /** Visit this value using given visitor.
+         * @param visitor
+         */
+        virtual void accept(value_visitor* visitor) = 0;
     };
 
     // Value with data
@@ -71,6 +111,12 @@ namespace dice
 
         // get type id
         type_id type() const override { return id(); }
+
+        // visit this value
+        void accept(value_visitor* visitor) override
+        {
+            visitor->visit(this);
+        }
 
         // copy value
         std::unique_ptr<base_value> clone() const override
@@ -98,26 +144,6 @@ namespace dice
             "Dice value has to be derived from dice::base_value.");
         using value_type = typename T::value_type;
         return std::make_unique<T>(value_type{ std::forward<Value>(data)... });
-    }
-
-    /** Convert type id to human readable string.
-     * @param type id
-     * @return name of the type
-     */
-    inline std::string to_string(type_id tid)
-    {
-        switch (tid)
-        {
-        case type_id::integer:
-            return "int";
-        case type_id::floating_point:
-            return "double";
-        case type_id::random_variable:
-            return "random_variable";
-        default:
-            throw std::runtime_error(
-                "Unknown type id: " + static_cast<int>(tid));
-        }
     }
 }
 

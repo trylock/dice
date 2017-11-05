@@ -19,9 +19,9 @@ dice::conversions::cost_type dice::conversions::cost(
     return max_cost;
 }
 
-dice::conversions::value_ptr dice::conversions::convert(
+dice::conversions::value_type dice::conversions::convert(
     type_id to, 
-    value_ptr&& value) const 
+    value_type&& value) const 
 {
     auto from = value->type();
     if (from == to)
@@ -29,19 +29,7 @@ dice::conversions::value_ptr dice::conversions::convert(
         return std::move(value);
     }
 
-    if (from != dice::type_int::id())
-    {
-        return nullptr; // conversion is not possible
-    }
-    
-    auto int_value = dynamic_cast<type_int&>(*value);
-    if (to == dice::type_double::id())
-    {
-        return make<type_double>(static_cast<double>(int_value.data()));
-    }
-    else if (to == dice::type_rand_var::id())
-    {
-        return make<type_rand_var>(constant_tag{}, int_value.data());
-    }
-    return nullptr;
+    conversion_visitor conversion{ to };
+    value->accept(&conversion);
+    return conversion.value();
 }
