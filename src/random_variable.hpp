@@ -442,19 +442,9 @@ namespace dice
             {
                 auto sides_count = pair.first;
                 auto sides_prob = pair.second;
-
-                // probability P(XdY = k | X = dice_count, Y = sides_count)
-                std::vector<probability_type> probability(
-                    sides_count * max_dice + 1, 0);
-
-                // base case: roll only 1 die
                 auto base_prob = 1 / static_cast<probability_type>(sides_count);
-                for (value_type i = 1; i <= sides_count; ++i)
-                {
-                    probability[i] = base_prob;
-                }
                 
-                // save the probability
+                // save the probability of 1 roll
                 auto num_rolls = num_dice.probability_.find(1);
                 if (num_rolls != num_dice.probability_.end())
                 {
@@ -474,23 +464,46 @@ namespace dice
                     }
                 }
 
-                // roll `dice_count` dice given the result of 
-                // `dice_count - 1` dice
+                /** Prefix sum of probability:
+                 *  P(XdY = k | X = dice_count, Y = sides_count)
+                 */
+                std::vector<probability_type> probability(
+                    sides_count * max_dice + 1, 0);
+                
+                // base case: roll only 1 die
+                for (value_type i = 1; i <= sides_count; ++i)
+                {
+                    probability[i] = base_prob;
+                }
+
+                /** Roll `dice_count` dice given the result of 
+                 * `dice_count - 1` dice
+                 */
                 for (value_type dice_count = 2; 
                     dice_count <= max_dice; 
                     ++dice_count)
                 {
-                    // iterate backwards so that we don't override 
-                    // probability values that will be needed
+                    // compute the prefix sum of the probability array
+                    for (value_type i = 2; i <= sides_count * dice_count; ++i)
+                    {
+                        probability[i] = probability[i - 1] + probability[i];
+                    }
+
+                    /** For computation of the probability of the sum of i, 
+                     * we only need values j < i. By iterating backwards we 
+                     * don't overwrite those values.
+                     */
                     for (value_type i = sides_count * dice_count; i > 0; --i)
                     {
                         // compute the probability of the sum of i
-                        probability_type prob_i = 0;
-                        value_type j = std::max(i - sides_count, 1);
-                        for (; j < i; ++j)
-                        {
-                            prob_i += probability[j] * base_prob;
-                        }
+                        value_type j = std::max(i - sides_count, 1) - 1;
+                        auto prob_i = (probability[i - 1] - probability[j]);
+                        prob_i *= base_prob;
+
+                        /** We will break the invariant that the probability 
+                         * array is a prefix sum of the probabilities but it
+                         * will be restored in the next iteration.
+                         */
                         probability[i] = prob_i;
     
                         // save the probability
