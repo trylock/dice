@@ -446,7 +446,37 @@ namespace dice
                 // probability P(XdY = k | X = dice_count, Y = sides_count)
                 std::vector<probability_type> probability(
                     sides_count * max_dice + 1, 0);
-                for (value_type dice_count = 1; 
+
+                // base case: roll only 1 die
+                auto base_prob = 1 / static_cast<probability_type>(sides_count);
+                for (value_type i = 1; i <= sides_count; ++i)
+                {
+                    probability[i] = base_prob;
+                }
+                
+                // save the probability
+                auto num_rolls = num_dice.probability_.find(1);
+                if (num_rolls != num_dice.probability_.end())
+                {
+                    auto rolls_prob = num_rolls->second;
+                    auto prob = base_prob * sides_prob * rolls_prob;
+                    if (prob != 0)
+                    {
+                        for (value_type i = 1; i <= sides_count; ++i)
+                        {
+                            auto result = dist.probability_.insert(
+                                std::make_pair(i, prob));
+                            if (!result.second)
+                            {
+                                result.first->second += prob;
+                            }
+                        }
+                    }
+                }
+
+                // roll `dice_count` dice given the result of 
+                // `dice_count - 1` dice
+                for (value_type dice_count = 2; 
                     dice_count <= max_dice; 
                     ++dice_count)
                 {
@@ -455,9 +485,7 @@ namespace dice
                     for (value_type i = sides_count * dice_count; i > 0; --i)
                     {
                         // compute the probability of the sum of i
-                        auto base_prob = 
-                            1 / static_cast<probability_type>(sides_count);
-                        auto prob_i = dice_count == 1 ? base_prob : 0;
+                        probability_type prob_i = 0;
                         value_type j = std::max(i - sides_count, 1);
                         for (; j < i; ++j)
                         {
