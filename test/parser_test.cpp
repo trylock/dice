@@ -35,7 +35,6 @@ public:
     using value_list = std::vector<value_type>;
 
     void enter_assign() {}
-    void leave_assign() {}
 
     value_type make_default()
     {

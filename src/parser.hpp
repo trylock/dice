@@ -216,7 +216,6 @@ namespace dice
                         "Using the default value instead.");
                     value = int_->make_default();
                 }
-                int_->leave_assign();
 
                 return int_->assign(id.lexeme, std::move(value));
             }

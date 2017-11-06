@@ -59,11 +59,6 @@ namespace dice
             is_definition_ = true;
         }
 
-        void leave_assign()
-        {
-            is_definition_ = false;
-        }
-
         /** Create a new default value.
          * This is used when there is a parsing error.
          * @return default value
@@ -214,6 +209,7 @@ namespace dice
             decomposition_visitor decomp;
             value->accept(&decomp);
             env_->set_var(name, std::move(value));
+            is_definition_ = false;
             return nullptr;
         }
 
