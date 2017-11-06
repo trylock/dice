@@ -65,9 +65,10 @@ public:
         if (values.empty())
             return;
         
-        auto sum = values.front().second;
+        double sum = 0;
         for (auto it = values.begin(); it != values.end(); ++it)
         {
+            sum += it->second;
             std::cout 
                 << std::setw(width_value) << it->first 
                 << std::setw(width_prob) << format_probability(it->second)
