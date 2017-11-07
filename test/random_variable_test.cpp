@@ -94,24 +94,13 @@ TEST_CASE("Random variable with exactly 1 value is constant", "[dice]")
     REQUIRE(!rv().is_constant());
 
     REQUIRE(rv(dice::constant_tag{}, 5).is_constant());
-    REQUIRE(rv(dice::constant_tag{}, 5).value() == 5);
-
     REQUIRE(!rv(dice::bernoulli_tag{}, 0.5).is_constant());
-
     REQUIRE(rv(dice::bernoulli_tag{}, 1).is_constant());
-    REQUIRE(rv(dice::bernoulli_tag{}, 1).value() == 1);
-    
     REQUIRE(rv(dice::bernoulli_tag{}, 0).is_constant());
-    REQUIRE(rv(dice::bernoulli_tag{}, 0).value() == 0);
-
     REQUIRE(rv({ std::make_pair(5, 1) }).is_constant());
-    REQUIRE(rv({ std::make_pair(5, 1) }).value() == 5);
-
     REQUIRE(!rv({ std::make_pair(5, 1), std::make_pair(1, 1) }).is_constant());
     REQUIRE(!rv().is_constant());
-
     REQUIRE(rv({ std::make_pair(4, 1), std::make_pair(5, 0) }).is_constant());
-    REQUIRE(rv({ std::make_pair(4, 1), std::make_pair(5, 0) }).value() == 4);
 }
 
 TEST_CASE("Add random variables", "[dice]")

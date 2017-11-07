@@ -94,13 +94,6 @@ namespace dice
             return probability_.size() == 1;
         }
 
-        // value of the variable (makes sense for constant variables only)
-        value_type value() const 
-        {
-            assert(is_constant());
-            return probability_.begin()->first;
-        }
-
         /** Compute expected value of this random variable.
          * @return expected value of this variable
          */
@@ -464,9 +457,8 @@ namespace dice
                     }
                 }
 
-                /** Prefix sum of probability:
-                 *  P(XdY = k | X = dice_count, Y = sides_count)
-                 */
+                // Prefix sum of probability:
+                // P(XdY = k | X = dice_count, Y = sides_count)
                 std::vector<probability_type> probability(
                     sides_count * max_dice + 1, 0);
                 
@@ -476,9 +468,8 @@ namespace dice
                     probability[i] = base_prob;
                 }
 
-                /** Roll `dice_count` dice given the result of 
-                 * `dice_count - 1` dice
-                 */
+                // Roll `dice_count` dice given the result of 
+                // `dice_count - 1` dice
                 for (value_type dice_count = 2; 
                     dice_count <= max_dice; 
                     ++dice_count)
@@ -489,21 +480,19 @@ namespace dice
                         probability[i] = probability[i - 1] + probability[i];
                     }
 
-                    /** For computation of the probability of the sum of i, 
-                     * we only need values j < i. By iterating backwards we 
-                     * don't overwrite those values.
-                     */
+                    // For computation of the probability of the sum of i, 
+                    // we only need values j < i. By iterating backwards we 
+                    // don't overwrite those values.
                     for (value_type i = sides_count * dice_count; i > 0; --i)
                     {
                         // compute the probability of the sum of i
-                        value_type j = std::max(i - sides_count, 1) - 1;
-                        auto prob_i = (probability[i - 1] - probability[j]);
+                        value_type j = std::max(i - sides_count, 1);
+                        auto prob_i = probability[i - 1] - probability[j - 1];
                         prob_i *= base_prob;
 
-                        /** We will break the invariant that the probability 
-                         * array is a prefix sum of the probabilities but it
-                         * will be restored in the next iteration.
-                         */
+                        // We will break the invariant that the probability 
+                        // array is a prefix sum of the probabilities but it
+                        // will be restored in the next iteration.
                         probability[i] = prob_i;
     
                         // save the probability
