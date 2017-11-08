@@ -443,16 +443,13 @@ namespace dice
                 {
                     auto rolls_prob = num_rolls->second;
                     auto prob = base_prob * sides_prob * rolls_prob;
-                    if (prob != 0)
+                    for (value_type i = 1; i <= sides_count; ++i)
                     {
-                        for (value_type i = 1; i <= sides_count; ++i)
+                        auto result = dist.probability_.insert(
+                            std::make_pair(i, prob));
+                        if (!result.second)
                         {
-                            auto result = dist.probability_.insert(
-                                std::make_pair(i, prob));
-                            if (!result.second)
-                            {
-                                result.first->second += prob;
-                            }
+                            result.first->second += prob;
                         }
                     }
                 }
@@ -483,7 +480,7 @@ namespace dice
                     // For computation of the probability of the sum of i, 
                     // we only need values j < i. By iterating backwards we 
                     // don't overwrite those values.
-                    for (value_type i = sides_count * dice_count; i > 0; --i)
+                    for (auto i = sides_count * dice_count; i >= dice_count; --i)
                     {
                         // compute the probability of the sum of i
                         value_type j = std::max(i - sides_count, 1);
@@ -501,10 +498,6 @@ namespace dice
                         {
                             auto rolls_prob = num_rolls->second;
                             auto prob = prob_i * sides_prob * rolls_prob;
-                            // don't save impossible events
-                            if (prob == 0) 
-                                continue;
-    
                             auto result = dist.probability_.insert(
                                 std::make_pair(i, prob));
                             if (!result.second)
@@ -512,6 +505,12 @@ namespace dice
                                 result.first->second += prob;
                             }
                         }
+                    }
+
+                    // zero out probabilities of lower values
+                    for (value_type i = 1; i < dice_count; ++i)
+                    {
+                        probability[i] = 0;
                     }
                 }
             }
