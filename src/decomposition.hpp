@@ -11,6 +11,9 @@
 
 namespace dice
 {
+    template<typename ValueType, typename ProbabilityType>
+    class decomposition_iterator;
+
     /** Object representing a decomposition of a function of random variables.
      * 
      * Denote A a random variable. Then, from Law of total probability: 
@@ -26,9 +29,12 @@ namespace dice
     template<typename ValueType, typename ProbabilityType>
     class decomposition
     {
+        friend class decomposition_iterator<ValueType, ProbabilityType>;
     public:
         using var_type = random_variable<ValueType, ProbabilityType>;
         using value_type = ValueType;
+        using probability_iterator = 
+            decomposition_iterator<ValueType, ProbabilityType>;
 
         decomposition() {}
 
@@ -61,16 +67,12 @@ namespace dice
         }
         
         // allow copy
-        decomposition(
-            const decomposition&) = default;
-        decomposition& operator=(
-            const decomposition&) = default;
+        decomposition(const decomposition&) = default;
+        decomposition& operator=(const decomposition&) = default;
 
         // allow move
-        decomposition(
-            decomposition&&) = default;
-        decomposition& operator=(
-            decomposition&&) = default;
+        decomposition(decomposition&&) = default;
+        decomposition& operator=(decomposition&&) = default;
 
         /** Compute sum of 2 random variables.
          * Random variables don't need to be indendent.
@@ -265,8 +267,12 @@ namespace dice
          */
         auto expected_value() const
         {
-            auto var = to_random_variable();
-            return var.expected_value();
+            ProbabilityType expectation = 0;
+            for (auto it = begin(); it != end(); ++it)
+            {
+                expectation += it->first * it->second;
+            }
+            return expectation;
         }
 
         /** Compute variance of this random variable.
@@ -274,8 +280,14 @@ namespace dice
          */
         auto variance() const
         {
-            auto var = to_random_variable();
-            return var.variance();
+            ProbabilityType sum_sq = 0;
+            ProbabilityType sum = 0;
+            for (auto it = begin(); it != end(); ++it)
+            {
+                sum_sq += it->first * it->first * it->second;
+                sum += it->first * it->second;
+            }
+            return sum_sq - sum * sum;
         }
 
         /** Compute standard deviation of this random variable.
@@ -283,8 +295,7 @@ namespace dice
          */
         auto deviation() const
         {
-            auto var = to_random_variable();
-            return var.deviation();
+            return std::sqrt(variance());
         }
 
         /** Compute quantile of this random variable.
@@ -415,43 +426,12 @@ namespace dice
                 return result;
             }
 
-            // store variables distributions in an array so we can access ith 
-            // element faster
-            std::vector<
-                std::vector<
-                    std::pair<value_type, ProbabilityType>>> vars;
-            for (auto&& var : deps_)
+            for (auto it = begin(); it != end(); ++it)
             {
-                vars.push_back(
-                    std::vector<std::pair<value_type, ProbabilityType>>(
-                        var->probability().begin(),
-                        var->probability().end()
-                    ));
-            }
- 
-            for (std::size_t i = 0; i < vars_.size(); ++i)
-            {
-                // compute P(X = x) 
-                ProbabilityType prob = 1;
-                std::size_t hash = i;
-                for (auto&& value : vars)
+                auto pair = result.probability_.insert(*it);
+                if (!pair.second)
                 {
-                    auto index = hash % value.size();
-                    prob *= value[index].second;
-                    hash /= value.size();
-                }
-
-                // compute P(A | X = x) * P(X = x)
-                for (auto&& pair : vars_[i].probability())
-                {
-                    auto resp = result.probability_.insert(std::make_pair(
-                        pair.first,
-                        pair.second * prob
-                    ));
-                    if (!resp.second)
-                    {
-                        resp.first->second += pair.second * prob;
-                    }
+                    pair.first->second += it->second;
                 }
             }
             return result;
@@ -483,7 +463,7 @@ namespace dice
         }
 
         /** Check whether this is exactly equal to other decomposition.
-         * Note: this test is exact and expensive. It is manly provided so
+         * Note: this test is exact and expensive. It is mainly provided so
          *       we can use this type as a value in dice expressions.
          * @param other random variable
          * @return true iff the values are exactly equal
@@ -496,6 +476,16 @@ namespace dice
         bool operator!=(const decomposition& other) const
         {
             return deps_ != other.deps_ || vars_ != other.vars_; 
+        }
+
+        auto begin() const
+        {
+            return probability_iterator{ this, false };
+        }
+
+        auto end() const
+        {
+            return probability_iterator{ this, true };
         }
     private:
         /** Set of variables on which this random variable depends.
@@ -519,6 +509,150 @@ namespace dice
          * -# A | X = 2, Y = 2
          */
         std::vector<var_type> vars_;
+    };
+
+    /** Decompositon value iterator.
+     * It will iterate through pairs (value, probability). One value can be in
+     * multiple pairs. The probabilities sum up to 1.
+     */
+    template<typename ValueType, typename ProbabilityType>
+    class decomposition_iterator
+    {
+    public:
+        using decomposition_type = decomposition<ValueType, ProbabilityType>;
+        using value_type = std::pair<ValueType, ProbabilityType>;
+
+        decomposition_iterator(
+            const decomposition_type* decomp, 
+            bool is_end = false)
+            : decomposition_(decomp)
+        {
+            if (is_end)
+            {
+                leaf_it_ = leaf_end();
+                return;
+            }
+
+            for (auto&& dep : decomposition_->deps_)
+            {
+                inner_it_.push_back(dep->probability().begin());
+            }
+            leaf_it_ = decomposition_->vars_.begin();
+            value_it_ = leaf_it_->probability().begin();
+            precompute_value();
+        }
+
+        /** Move to the next value.
+         * Next value is precomputed.
+         * @return this iterator
+         */
+        decomposition_iterator& operator++()
+        {
+            // move to the next value in current leaf node
+            ++value_it_;
+            if (value_it_ == leaf_it_->probability().end())
+            {
+                // move to the next leaf node
+                ++leaf_it_;
+                if (leaf_it_ != leaf_end())
+                {
+                    value_it_ = leaf_it_->probability().begin();
+                }
+
+                // move inner node iterators
+                std::size_t index = inner_it_.size();
+                while (index > 0)
+                {
+                    --index;
+                    ++inner_it_[index];
+                    if (inner_it_[index] != inner_end(index))
+                    {
+                        break;
+                    }
+                    inner_it_[index] = inner_begin(index);
+                }
+            }
+
+            // precompute the value
+            precompute_value();
+            return *this;
+        }
+
+        /** Get reference to current value.
+         * This is only valid if this is not an end iterator.
+         * @return reference to current value
+         */
+        const value_type& operator*()
+        {
+            return current_value_;
+        }
+
+        /** Access current value.
+         * @return pointer to current value
+         */
+        value_type* operator->()
+        {
+            return &current_value_;
+        }
+
+        /** Compare 2 iterators.
+         * @param other iterator
+         * @return true iff both point at the same value in the same variable
+         */
+        bool operator==(const decomposition_iterator& other) const
+        {
+            return leaf_it_ == other.leaf_it_ && 
+                value_it_ == other.value_it_;
+        }
+
+        bool operator!=(const decomposition_iterator& other) const 
+        {
+            return leaf_it_ != other.leaf_it_ || 
+                value_it_ != other.value_it_;
+        }
+    private:
+        using rand_var = random_variable<ValueType, ProbabilityType>;
+        using var_iterator = typename std::vector<rand_var>::const_iterator;
+        using value_iterator = 
+            typename std::unordered_map<ValueType, ProbabilityType>::const_iterator;
+
+        // current decomposition object pointer
+        const decomposition_type* decomposition_;
+        // inner node value iterators
+        std::vector<value_iterator> inner_it_;
+        // leaf node variable iterator
+        var_iterator leaf_it_;
+        // value in this variable
+        value_iterator value_it_;
+        // current value
+        value_type current_value_;
+
+        auto inner_end(std::size_t index) const
+        {
+            return decomposition_->deps_[index]->probability().end();
+        }
+        
+        auto inner_begin(std::size_t index) const
+        {
+            return decomposition_->deps_[index]->probability().begin();
+        }
+
+        auto leaf_end() const
+        {
+            return decomposition_->vars_.end();
+        }
+
+        void precompute_value()
+        {
+            if (leaf_it_ == leaf_end())
+                return;
+
+            current_value_ = *value_it_;
+            for (auto&& it : inner_it_)
+            {
+                current_value_.second *= it->second;
+            }
+        }
     };
 
     /** Compute maximum of 2 random variables.

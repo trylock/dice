@@ -253,3 +253,43 @@ TEST_CASE("Compute minimum of dependent random variables", "[decomposition]")
     REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
 }
+
+TEST_CASE("Compute expected value using decomposition", "[decomposition]")
+{
+    dice::decomposition<int, double> a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+    } };
+    a.compute_decomposition();
+
+    dice::decomposition<int, double> b{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+    } };
+    b.compute_decomposition();
+    
+    auto result = a + b;
+    auto expectation = result.expected_value();
+    REQUIRE(expectation == Approx(3.5));
+}
+
+TEST_CASE("Compute variance using decomposition", "[decomposition]")
+{
+    dice::decomposition<int, double> a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+    } };
+    a.compute_decomposition();
+
+    dice::decomposition<int, double> b{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+    } };
+    b.compute_decomposition();
+    
+    auto result = a + b;
+    auto variance = result.variance();
+    REQUIRE(variance == Approx(11 / 12.0));
+}
