@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include "random_variable_decomposition.hpp"
+#include "decomposition.hpp"
 
 using freq_list = dice::random_variable<int, double>::frequency_list;
 
-TEST_CASE("Compute probability of indepedent random variables", "[random_variable_decomposition]")
+TEST_CASE("Compute probability of indepedent random variables", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -12,8 +12,8 @@ TEST_CASE("Compute probability of indepedent random variables", "[random_variabl
         std::make_pair(4, 1),
     } };
     dice::random_variable<int, double> var_b(dice::constant_tag{}, 2);
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> b{ var_b };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> b{ var_b };
 
     auto result = a + b;
     auto var = result.to_random_variable();
@@ -25,7 +25,7 @@ TEST_CASE("Compute probability of indepedent random variables", "[random_variabl
     REQUIRE(prob.find(6)->second == Approx(0.25));
 }
 
-TEST_CASE("Compute probability of independent random variables", "[random_variable_decomposition]")
+TEST_CASE("Compute probability of independent random variables", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -34,8 +34,8 @@ TEST_CASE("Compute probability of independent random variables", "[random_variab
         std::make_pair(4, 1),
     } };
     dice::random_variable<int, double> var_b(dice::constant_tag{}, 2);
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> b{ var_b };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> b{ var_b };
 
     auto result = a + b;
     auto var = result.to_random_variable();
@@ -47,7 +47,7 @@ TEST_CASE("Compute probability of independent random variables", "[random_variab
     REQUIRE(prob.find(6)->second == Approx(0.25));
 }
 
-TEST_CASE("Compute probability of dependent random variables", "[random_variable_decomposition]")
+TEST_CASE("Compute probability of dependent random variables", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -55,7 +55,7 @@ TEST_CASE("Compute probability of dependent random variables", "[random_variable
         std::make_pair(3, 1),
         std::make_pair(4, 1),
     } };
-    dice::random_variable_decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> a{ var_a };
     a.compute_decomposition();
 
     auto result = a + a;
@@ -68,7 +68,7 @@ TEST_CASE("Compute probability of dependent random variables", "[random_variable
     REQUIRE(prob.find(8)->second == Approx(0.25));
 }
 
-TEST_CASE("Compute probability of mix of random variables", "[random_variable_decomposition]")
+TEST_CASE("Compute probability of mix of random variables", "[decomposition]")
 {
     dice::random_variable<int, double> var_a(dice::bernoulli_tag{}, 0.7);
     dice::random_variable<int, double> var_b{ freq_list{
@@ -83,10 +83,10 @@ TEST_CASE("Compute probability of mix of random variables", "[random_variable_de
     } };
     dice::random_variable<int, double> var_one(dice::constant_tag{}, 1);
     
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> b{ var_b };
-    dice::random_variable_decomposition<int, double> c{ var_c };
-    dice::random_variable_decomposition<int, double> one{ var_one };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> b{ var_b };
+    dice::decomposition<int, double> c{ var_c };
+    dice::decomposition<int, double> one{ var_one };
     a.compute_decomposition();
 
     auto result = a * b + (one - a) * c;
@@ -99,7 +99,7 @@ TEST_CASE("Compute probability of mix of random variables", "[random_variable_de
     REQUIRE(prob.find(4)->second == Approx(0.7 / 4));
 }
 
-TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomposition]")
+TEST_CASE("Compute probability of depedent indicators", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -109,9 +109,9 @@ TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomp
     } };
     dice::random_variable<int, double> var_two(dice::constant_tag{}, 2);
     dice::random_variable<int, double> var_three(dice::constant_tag{}, 3);
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> two{ var_two };
-    dice::random_variable_decomposition<int, double> three{ var_three };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> two{ var_two };
+    dice::decomposition<int, double> three{ var_three };
     a.compute_decomposition();
 
     auto result = a.less_than_or_equal(three) * a.equal(two);
@@ -122,7 +122,7 @@ TEST_CASE("Compute probability of depedent indicators", "[random_variable_decomp
     REQUIRE(prob.find(0)->second == Approx(3 / 4.0));
 }
 
-TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]")
+TEST_CASE("Compute probability of X in [A, B]", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -134,8 +134,8 @@ TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]
     } };
     dice::random_variable<int, double> var_six(dice::constant_tag{}, 6);
 
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> six{ var_six };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> six{ var_six };
     a.compute_decomposition();
 
     auto result = a.in(4, 5) + a.equal(six);
@@ -146,7 +146,7 @@ TEST_CASE("Compute probability of X in [A, B]", "[random_variable_decomposition]
     REQUIRE(prob.find(0)->second == Approx(1 / 2.0));
 }
 
-TEST_CASE("Compute probability of multiple depedent variables", "[random_variable_decomposition][multiple_vars]")
+TEST_CASE("Compute probability of multiple depedent variables", "[decomposition][multiple_vars]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -164,9 +164,9 @@ TEST_CASE("Compute probability of multiple depedent variables", "[random_variabl
         std::make_pair(3, 1),
     } };
 
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> b{ var_b };
-    dice::random_variable_decomposition<int, double> c{ var_c };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> b{ var_b };
+    dice::decomposition<int, double> c{ var_c };
     a.compute_decomposition();
     b.compute_decomposition();
     c.compute_decomposition();
@@ -189,7 +189,7 @@ TEST_CASE("Compute probability of multiple depedent variables", "[random_variabl
     REQUIRE(prob.find(576)->second == Approx(1 / 24.0));
 }
 
-TEST_CASE("Compute negation of a random variable", "[random_variable_decomposition]")
+TEST_CASE("Compute negation of a random variable", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -197,7 +197,7 @@ TEST_CASE("Compute negation of a random variable", "[random_variable_decompositi
         std::make_pair(3, 3),
         std::make_pair(4, 4),
     } };
-    dice::random_variable_decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> a{ var_a };
     a.compute_decomposition();
     
     auto result = -a;
@@ -210,7 +210,7 @@ TEST_CASE("Compute negation of a random variable", "[random_variable_decompositi
     REQUIRE(prob.find(-4)->second == Approx(4 / 10.0));
 }
 
-TEST_CASE("Compute maximum of dependent random variables", "[random_variable_decomposition]")
+TEST_CASE("Compute maximum of dependent random variables", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -219,8 +219,8 @@ TEST_CASE("Compute maximum of dependent random variables", "[random_variable_dec
         std::make_pair(4, 1),
     } };
     dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> one{ var_one };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> one{ var_one };
     a.compute_decomposition();
 
     auto result = max(a, a + one);
@@ -232,7 +232,7 @@ TEST_CASE("Compute maximum of dependent random variables", "[random_variable_dec
     REQUIRE(prob.find(5)->second == Approx(1 / 4.0));
 }
 
-TEST_CASE("Compute minimum of dependent random variables", "[random_variable_decomposition]")
+TEST_CASE("Compute minimum of dependent random variables", "[decomposition]")
 {
     dice::random_variable<int, double> var_a{ freq_list{
         std::make_pair(1, 1),
@@ -241,8 +241,8 @@ TEST_CASE("Compute minimum of dependent random variables", "[random_variable_dec
         std::make_pair(4, 1),
     } };
     dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
-    dice::random_variable_decomposition<int, double> a{ var_a };
-    dice::random_variable_decomposition<int, double> one{ var_one };
+    dice::decomposition<int, double> a{ var_a };
+    dice::decomposition<int, double> one{ var_one };
     a.compute_decomposition();
 
     auto result = min(a, a + one);

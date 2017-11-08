@@ -6,7 +6,7 @@
 #include <typeinfo>
 
 #include "random_variable.hpp"
-#include "random_variable_decomposition.hpp"
+#include "decomposition.hpp"
 
 namespace dice 
 {
@@ -29,7 +29,7 @@ namespace dice
     inline type_id get_type_id<double>() { return type_id::floating_point; }
 
     template<>
-    inline type_id get_type_id<random_variable_decomposition<int, double>>()
+    inline type_id get_type_id<decomposition<int, double>>()
     {
         return type_id::random_variable;
     } 
@@ -66,7 +66,7 @@ namespace dice
         virtual void visit(typed_value<int>* value) = 0;
         virtual void visit(typed_value<double>* value) = 0;
         virtual void visit(
-            typed_value<random_variable_decomposition<int, double>>* value) = 0;
+            typed_value<decomposition<int, double>>* value) = 0;
     };
 
     // Parent of all value types that are used in a dice expressions
@@ -159,8 +159,7 @@ namespace dice
     // used data types
     using type_int = typed_value<int>;
     using type_double = typed_value<double>;
-    using type_rand_var = typed_value<
-        random_variable_decomposition<int, double>>;
+    using type_rand_var = typed_value<decomposition<int, double>>;
 
     template<typename T, typename... Value>
     std::unique_ptr<T> make(Value&&... data)

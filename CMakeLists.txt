@@ -18,7 +18,7 @@ set(dice_headers
     ${SRC_DIR}/environment.hpp
     ${SRC_DIR}/direct_interpreter.hpp
     ${SRC_DIR}/random_variable.hpp
-    ${SRC_DIR}/random_variable_decomposition.hpp
+    ${SRC_DIR}/decomposition.hpp
 )
 
 set(dice_sources
@@ -41,7 +41,7 @@ set(all_tests
     ${TESTS_DIR}/environment_test.cpp
     ${TESTS_DIR}/integration_test.cpp
     ${TESTS_DIR}/random_variable_test.cpp
-    ${TESTS_DIR}/random_variable_decomposition_test.cpp
+    ${TESTS_DIR}/decomposition_test.cpp
 )
 
 include_directories(

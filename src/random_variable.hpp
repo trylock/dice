@@ -23,13 +23,13 @@ namespace dice
     class constant_tag{};
 
     template<typename ValueType, typename ProbabilityType>
-    class random_variable_decomposition;
+    class decomposition;
 
     // discrete random variable
     template<typename ValueType, typename ProbabilityType>
     class random_variable 
     {
-        friend class random_variable_decomposition<ValueType, ProbabilityType>;
+        friend class decomposition<ValueType, ProbabilityType>;
     public:
         using value_type = ValueType;
         using probability_type = ProbabilityType;

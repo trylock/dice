@@ -1,5 +1,5 @@
-#ifndef DICE_RANDOM_VARIABLE_DECOMPOSITION_HPP_
-#define DICE_RANDOM_VARIABLE_DECOMPOSITION_HPP_
+#ifndef DICE_DECOMPOSITION_HPP_
+#define DICE_DECOMPOSITION_HPP_
 
 #include <memory>
 #include <vector>
@@ -13,8 +13,7 @@ namespace dice
 {
     /** Object representing a decomposition of a function of random variables.
      * 
-     * Denote A a random variable. Let us assume that A depends on random 
-     * variables X1,..., Xn. Then, from Law of total probability: 
+     * Denote A a random variable. Then, from Law of total probability: 
      * P(A = k) = sum of 
      *      P(A = k | X1 = x1, ..., Xn = xn) * P(X1 = x1, ..., Xn = xn) 
      * for all x1, ..., xn
@@ -25,60 +24,60 @@ namespace dice
      * be independent.
      */
     template<typename ValueType, typename ProbabilityType>
-    class random_variable_decomposition
+    class decomposition
     {
     public:
         using var_type = random_variable<ValueType, ProbabilityType>;
         using value_type = ValueType;
 
-        random_variable_decomposition() {}
+        decomposition() {}
 
-        explicit random_variable_decomposition(const var_type& variable)
+        explicit decomposition(const var_type& variable)
         {
             vars_.push_back(variable);
         }
 
-        explicit random_variable_decomposition(var_type&& variable)
+        explicit decomposition(var_type&& variable)
         {
             vars_.push_back(std::move(variable));
         }
         
         // Random variable constructors
 
-        random_variable_decomposition(
+        decomposition(
             std::vector<std::pair<value_type, std::size_t>>&& list)
-            : random_variable_decomposition(var_type(std::move(list)))
+            : decomposition(var_type(std::move(list)))
         {
         }
 
-        random_variable_decomposition(bernoulli_tag, ProbabilityType success)
-            : random_variable_decomposition(var_type(bernoulli_tag{}, success))
+        decomposition(bernoulli_tag, ProbabilityType success)
+            : decomposition(var_type(bernoulli_tag{}, success))
         {
         }
         
-        random_variable_decomposition(constant_tag, value_type value)
-            : random_variable_decomposition(var_type(constant_tag{}, value))
+        decomposition(constant_tag, value_type value)
+            : decomposition(var_type(constant_tag{}, value))
         {
         }
         
         // allow copy
-        random_variable_decomposition(
-            const random_variable_decomposition&) = default;
-        random_variable_decomposition& operator=(
-            const random_variable_decomposition&) = default;
+        decomposition(
+            const decomposition&) = default;
+        decomposition& operator=(
+            const decomposition&) = default;
 
         // allow move
-        random_variable_decomposition(
-            random_variable_decomposition&&) = default;
-        random_variable_decomposition& operator=(
-            random_variable_decomposition&&) = default;
+        decomposition(
+            decomposition&&) = default;
+        decomposition& operator=(
+            decomposition&&) = default;
 
         /** Compute sum of 2 random variables.
          * Random variables don't need to be indendent.
          * @param right hand side of the operator
          * @return distribution of the sum
          */
-        auto operator+(const random_variable_decomposition& other) const
+        auto operator+(const decomposition& other) const
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -91,7 +90,7 @@ namespace dice
          * @param right hand side of the operator
          * @return result of the subtraction
          */
-        auto operator-(const random_variable_decomposition& other) const
+        auto operator-(const decomposition& other) const
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -104,7 +103,7 @@ namespace dice
          * @param right hand side of the operator
          * @return result of the product
          */
-        auto operator*(const random_variable_decomposition& other) const
+        auto operator*(const decomposition& other) const
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -117,7 +116,7 @@ namespace dice
          * @param right hand side of the operator
          * @return result of the division
          */
-        auto operator/(const random_variable_decomposition& other) const
+        auto operator/(const decomposition& other) const
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -130,7 +129,7 @@ namespace dice
          */
         auto operator-() const 
         {
-            random_variable_decomposition result;
+            decomposition result;
             result.deps_ = deps_;
             for (auto&& var : vars_)
             {
@@ -145,7 +144,7 @@ namespace dice
          * @return indicator of A < B 
          * (i.e. a random variable with a bernoulli distribution)
          */
-        auto less_than(const random_variable_decomposition& other) const 
+        auto less_than(const decomposition& other) const 
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -160,7 +159,7 @@ namespace dice
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto less_than_or_equal(
-            const random_variable_decomposition& other) const 
+            const decomposition& other) const 
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -174,7 +173,7 @@ namespace dice
          * @return indicator of A = B
          * (i.e. a random variable with a bernoulli distribution)
          */
-        auto equal(const random_variable_decomposition& other) const 
+        auto equal(const decomposition& other) const 
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -188,7 +187,7 @@ namespace dice
          * @return indicator of A != B 
          * (i.e. a random variable with a bernoulli distribution)
          */
-        auto not_equal(const random_variable_decomposition& other) const 
+        auto not_equal(const decomposition& other) const 
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -202,7 +201,7 @@ namespace dice
          * @return indicator of A > B 
          * (i.e. a random variable with a bernoulli distribution)
          */
-        auto greater_than(const random_variable_decomposition& other) const 
+        auto greater_than(const decomposition& other) const 
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -217,7 +216,7 @@ namespace dice
          * (i.e. a random variable with a bernoulli distribution)
          */
         auto greater_than_or_equal(
-            const random_variable_decomposition& other) const 
+            const decomposition& other) const 
         {
             return combine(other, [](auto&& var_a, auto&& var_b) 
             {
@@ -235,7 +234,7 @@ namespace dice
         template<typename T>
         auto in(T&& lower_bound, T&& upper_bound) const 
         {
-            random_variable_decomposition result;
+            decomposition result;
             result.deps_ = deps_;
             for (auto&& var : vars_)
             {
@@ -251,13 +250,13 @@ namespace dice
          * @return distribution of the dice roll
          */
         friend auto roll(
-            const random_variable_decomposition& num_rolls, 
-            const random_variable_decomposition& num_sides)
+            const decomposition& num_rolls, 
+            const decomposition& num_sides)
         {
             if (num_rolls.vars_.size() > 1 || num_sides.vars_.size()  > 1)
                 throw std::runtime_error(
                     "Variable names are not supported in roll operator");
-            return random_variable_decomposition(
+            return decomposition(
                 roll(num_rolls.vars_.front(), num_sides.vars_.front()));
         }
 
@@ -306,10 +305,10 @@ namespace dice
          */
         template<typename VarCombFunc>
         auto combine(
-            const random_variable_decomposition& other, 
+            const decomposition& other, 
             VarCombFunc combination) const
         {
-            random_variable_decomposition result;
+            decomposition result;
 
             // compute union of the deps_ sets
             result.deps_ = sorted_union(deps_, other.deps_);
@@ -369,6 +368,7 @@ namespace dice
                 std::size_t index_a = 0;
                 std::size_t index_b = 0;
 
+                // find corresponding variables in both trees
                 std::size_t index_result = i;
                 std::size_t size_a = 1;
                 std::size_t size_b = 1;
@@ -389,6 +389,7 @@ namespace dice
                     index_result /= var_values_count;
                 }
 
+                // combine them
                 result.vars_.push_back(
                     combination(vars_[index_a], other.vars_[index_b]));
             }
@@ -430,14 +431,13 @@ namespace dice
  
             for (std::size_t i = 0; i < vars_.size(); ++i)
             {
-                // compute P(X = x)
+                // compute P(X = x) 
                 ProbabilityType prob = 1;
                 std::size_t hash = i;
                 for (auto&& value : vars)
                 {
                     auto index = hash % value.size();
                     prob *= value[index].second;
-
                     hash /= value.size();
                 }
 
@@ -488,12 +488,12 @@ namespace dice
          * @param other random variable
          * @return true iff the values are exactly equal
          */
-        bool operator==(const random_variable_decomposition& other) const
+        bool operator==(const decomposition& other) const
         {
             return deps_ == other.deps_ && vars_ == other.vars_;
         }
 
-        bool operator!=(const random_variable_decomposition& other) const
+        bool operator!=(const decomposition& other) const
         {
             return deps_ != other.deps_ || vars_ != other.vars_; 
         }
@@ -507,7 +507,7 @@ namespace dice
 
         /** List of conditional random variables.
          * 
-         * Each item on this list is a r.v.: `A | X = x` where X is a random
+         * Each item in this list is a r.v.: `A | X = x` where X is a random
          * vector deps_ and x is a value of this random vector.
          * 
          * `x` is defined implicitly by the index. For example, consider 
@@ -529,8 +529,8 @@ namespace dice
      */
     template<typename ValueType, typename ProbabilityType>
     auto max(
-        const random_variable_decomposition<ValueType, ProbabilityType>& a,
-        const random_variable_decomposition<ValueType, ProbabilityType>& b)
+        const decomposition<ValueType, ProbabilityType>& a,
+        const decomposition<ValueType, ProbabilityType>& b)
     {
         return a.combine(b, [](auto&& var_a, auto&& var_b) 
         {
@@ -546,8 +546,8 @@ namespace dice
      */
     template<typename ValueType, typename ProbabilityType>
     auto min(
-        const random_variable_decomposition<ValueType, ProbabilityType>& a,
-        const random_variable_decomposition<ValueType, ProbabilityType>& b)
+        const decomposition<ValueType, ProbabilityType>& a,
+        const decomposition<ValueType, ProbabilityType>& b)
     {
         return a.combine(b, [](auto&& var_a, auto&& var_b) 
         {
@@ -556,4 +556,4 @@ namespace dice
     }
 }
 
-#endif // DICE_RANDOM_VARIABLE_DECOMPOSITION_HPP_
+#endif // DICE_DECOMPOSITION_HPP_
