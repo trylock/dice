@@ -45,8 +45,8 @@ namespace
 	template<typename T>
 	fn::return_type dice_add(fn::context_type& context)
 	{
-		auto&& a = context.arg<T>(0)->data();
-		auto&& b = context.arg<T>(1)->data();
+		auto& a = context.arg<T>(0)->data();
+		auto& b = context.arg<T>(1)->data();
 		a = a + b;
 		return std::move(context.raw_arg(0));
 	}
@@ -54,8 +54,8 @@ namespace
 	template<typename T>
 	fn::return_type dice_sub(fn::context_type& context)
 	{
-		auto&& a = context.arg<T>(0)->data();
-		auto&& b = context.arg<T>(1)->data();
+		auto& a = context.arg<T>(0)->data();
+		auto& b = context.arg<T>(1)->data();
 		a = a - b;
 		return std::move(context.raw_arg(0));
 	}
@@ -63,8 +63,8 @@ namespace
 	template<typename T>
 	fn::return_type dice_mult(fn::context_type& context)
 	{
-		auto&& a = context.arg<T>(0)->data();
-		auto&& b = context.arg<T>(1)->data();
+		auto& a = context.arg<T>(0)->data();
+		auto& b = context.arg<T>(1)->data();
 		a = a * b;
 		return std::move(context.raw_arg(0));
 	}
@@ -72,8 +72,8 @@ namespace
 	template<typename T>
 	fn::return_type dice_div(fn::context_type& context)
 	{
-		auto&& a = context.arg<T>(0)->data();
-		auto&& b = context.arg<T>(1)->data();
+		auto& a = context.arg<T>(0)->data();
+		auto& b = context.arg<T>(1)->data();
 		a = a / b;
 		return std::move(context.raw_arg(0));
 	}
@@ -81,7 +81,7 @@ namespace
 	template<typename T>
 	fn::return_type dice_unary_minus(fn::context_type& context)
 	{
-		auto&& a = context.arg<T>(0)->data();
+		auto& a = context.arg<T>(0)->data();
 		a = -a;
 		return std::move(context.raw_arg(0));
 	}
@@ -89,8 +89,8 @@ namespace
 	fn::return_type dice_roll_op(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = roll(a, b);
 		return std::move(context.raw_arg(0));
 	}
@@ -98,9 +98,9 @@ namespace
 	template<typename T>
 	fn::return_type dice_rand_var_in(fn::context_type& context)
 	{
-		auto&& var = context.arg<dice::type_rand_var>(0)->data();
-		auto&& lower_bound = context.arg<T>(1)->data();
-		auto&& upper_bound = context.arg<T>(2)->data();
+		auto& var = context.arg<dice::type_rand_var>(0)->data();
+		auto& lower_bound = context.arg<T>(1)->data();
+		auto& upper_bound = context.arg<T>(2)->data();
 		var = var.in(lower_bound, upper_bound);
 		return std::move(context.raw_arg(0));
 	}
@@ -108,8 +108,8 @@ namespace
 	fn::return_type dice_less_than(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = a.less_than(b);
 		return std::move(context.raw_arg(0));
 	}
@@ -117,8 +117,8 @@ namespace
 	fn::return_type dice_less_than_or_equal(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = a.less_than_or_equal(b);
 		return std::move(context.raw_arg(0));
 	}
@@ -126,8 +126,8 @@ namespace
 	fn::return_type dice_equal(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = a.equal(b);
 		return std::move(context.raw_arg(0));
 	}
@@ -135,8 +135,8 @@ namespace
 	fn::return_type dice_not_equal(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = a.not_equal(b);
 		return std::move(context.raw_arg(0));
 	}
@@ -144,8 +144,8 @@ namespace
 	fn::return_type dice_greater_than(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = a.greater_than(b);
 		return std::move(context.raw_arg(0));
 	}
@@ -153,8 +153,8 @@ namespace
 	fn::return_type dice_greater_than_or_equal(fn::context_type& context)
 	{
 		using namespace dice;
-		auto&& a = context.arg<type_rand_var>(0)->data();
-		auto&& b = context.arg<type_rand_var>(1)->data();
+		auto& a = context.arg<type_rand_var>(0)->data();
+		auto& b = context.arg<type_rand_var>(1)->data();
 		a = a.greater_than_or_equal(b);
 		return std::move(context.raw_arg(0));
 	}
@@ -164,8 +164,8 @@ namespace
 	{
 		using namespace dice;
 		using namespace std;
-		auto&& a = context.arg<T>(0)->data();
-		auto&& b = context.arg<T>(1)->data();
+		auto& a = context.arg<T>(0)->data();
+		auto& b = context.arg<T>(1)->data();
 		a = min(a, b);
 		return std::move(context.raw_arg(0));
 	}
@@ -175,8 +175,8 @@ namespace
 	{
 		using namespace dice;
 		using namespace std;
-		auto&& a = context.arg<T>(0)->data();
-		auto&& b = context.arg<T>(1)->data();
+		auto& a = context.arg<T>(0)->data();
+		auto& b = context.arg<T>(1)->data();
 		a = max(a, b);
 		return std::move(context.raw_arg(0));
 	}
