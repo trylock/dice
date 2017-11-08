@@ -74,7 +74,6 @@ public:
                 << std::setw(width_prob) << format_probability(it->second)
                 << std::setw(width_cdf) << format_probability(sum)
                 << std::endl;
-            sum += it->second;
         }
     }
 };
