@@ -56,7 +56,7 @@ TEST_CASE("Compute probability of dependent random variables", "[decomposition]"
         std::make_pair(4, 1),
     } };
     dice::decomposition<int, double> a{ var_a };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     auto result = a + a;
     auto var = result.to_random_variable();
@@ -87,7 +87,7 @@ TEST_CASE("Compute probability of mix of random variables", "[decomposition]")
     dice::decomposition<int, double> b{ var_b };
     dice::decomposition<int, double> c{ var_c };
     dice::decomposition<int, double> one{ var_one };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     auto result = a * b + (one - a) * c;
     auto var = result.to_random_variable();
@@ -112,7 +112,7 @@ TEST_CASE("Compute probability of depedent indicators", "[decomposition]")
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> two{ var_two };
     dice::decomposition<int, double> three{ var_three };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     auto result = a.less_than_or_equal(three) * a.equal(two);
     auto var = result.to_random_variable();
@@ -136,7 +136,7 @@ TEST_CASE("Compute probability of X in [A, B]", "[decomposition]")
 
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> six{ var_six };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     auto result = a.in(4, 5) + a.equal(six);
     auto var = result.to_random_variable();
@@ -167,9 +167,9 @@ TEST_CASE("Compute probability of multiple depedent variables", "[decomposition]
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> b{ var_b };
     dice::decomposition<int, double> c{ var_c };
-    a.compute_decomposition();
-    b.compute_decomposition();
-    c.compute_decomposition();
+    a = a.compute_decomposition();
+    b = b.compute_decomposition();
+    c = c.compute_decomposition();
 
     // notice: A, B and B, C and A, C and A, B, C are still indepednet
     auto result = a * a * b * b * c * c;
@@ -198,7 +198,7 @@ TEST_CASE("Compute negation of a random variable", "[decomposition]")
         std::make_pair(4, 4),
     } };
     dice::decomposition<int, double> a{ var_a };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
     
     auto result = -a;
     auto var = result.to_random_variable();
@@ -221,7 +221,7 @@ TEST_CASE("Compute maximum of dependent random variables", "[decomposition]")
     dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> one{ var_one };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     auto result = max(a, a + one);
     auto var = result.to_random_variable();
@@ -243,7 +243,7 @@ TEST_CASE("Compute minimum of dependent random variables", "[decomposition]")
     dice::random_variable<int, double> var_one{ dice::constant_tag{}, 1 };
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> one{ var_one };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     auto result = min(a, a + one);
     auto var = result.to_random_variable();
@@ -261,13 +261,13 @@ TEST_CASE("Compute expected value using decomposition", "[decomposition]")
         std::make_pair(2, 1),
         std::make_pair(3, 1),
     } };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     dice::decomposition<int, double> b{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
     } };
-    b.compute_decomposition();
+    b = b.compute_decomposition();
     
     auto result = a + b;
     auto expectation = result.expected_value();
@@ -281,13 +281,13 @@ TEST_CASE("Compute variance using decomposition", "[decomposition]")
         std::make_pair(2, 1),
         std::make_pair(3, 1),
     } };
-    a.compute_decomposition();
+    a = a.compute_decomposition();
 
     dice::decomposition<int, double> b{ freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
     } };
-    b.compute_decomposition();
+    b = b.compute_decomposition();
     
     auto result = a + b;
     auto variance = result.variance();

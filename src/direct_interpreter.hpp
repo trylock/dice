@@ -20,7 +20,7 @@ namespace dice
         inline void visit(type_rand_var* var) override 
         {
             if (!var->data().has_dependencies())
-                var->data().compute_decomposition();
+                var->data() = var->data().compute_decomposition();
         }
     };
 
@@ -86,7 +86,7 @@ namespace dice
 
         /** Interpret a variable name.
          * @param name of a variable
-         * @return value of the variable on nullptr if it does not exist
+         * @return value of the variable or nullptr if it does not exist
          */
         value_type variable(const std::string& name)
         {

@@ -449,17 +449,20 @@ namespace dice
         /** Compute the decomposition of this random variable.
          *  It is only valid if there are no dependencies.
          */
-        void compute_decomposition()
+        auto compute_decomposition() const
         {
             assert(!has_dependencies());
             assert(vars_.size() == 1);
 
-            deps_.emplace_back(std::make_shared<var_type>(vars_.front()));
-            vars_.clear();
-            for (auto&& pair : deps_.front()->probability())
+            decomposition result;
+            result.deps_.emplace_back(
+                std::make_shared<var_type>(vars_.front()));
+            
+            for (auto&& pair : result.deps_.front()->probability())
             {
-                vars_.emplace_back(constant_tag{}, pair.first);
+                result.vars_.emplace_back(constant_tag{}, pair.first);
             }
+            return result;
         }
 
         /** Check whether this is exactly equal to other decomposition.
