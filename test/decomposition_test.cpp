@@ -167,12 +167,16 @@ TEST_CASE("Compute probability of multiple depedent variables", "[decomposition]
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> b{ var_b };
     dice::decomposition<int, double> c{ var_c };
-    a = a.compute_decomposition();
     b = b.compute_decomposition();
+    a = a.compute_decomposition();
     c = c.compute_decomposition();
 
     // notice: A, B and B, C and A, C and A, B, C are still indepednet
-    auto result = a * a * b * b * c * c;
+    auto a2 = a * a;
+    auto b2 = b * b;
+    auto c2 = c * c;
+    auto a2b2 = a2 * b2;
+    auto result = a2b2 * c2;
     auto var = result.to_random_variable();
     auto&& prob = var.probability();
 

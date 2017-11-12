@@ -381,21 +381,19 @@ namespace dice
 
                 // find corresponding variables in both trees
                 std::size_t index_result = i;
-                std::size_t size_a = 1;
-                std::size_t size_b = 1;
                 for (std::size_t j = 0; j < result.deps_.size(); ++j)
                 {
                     auto&& var = result.deps_[j];
                     auto var_values_count = var->probability().size();
                     if ((is_in[j] & A) != 0)
                     {
-                        index_a += (index_result % var_values_count) * size_a;
-                        size_a *= var_values_count;
+                        index_a *= var_values_count;
+                        index_a += index_result % var_values_count;
                     }
                     if ((is_in[j] & B) != 0)
                     {
-                        index_b += (index_result % var_values_count) * size_b;
-                        size_b *= var_values_count;
+                        index_b *= var_values_count;
+                        index_b += index_result % var_values_count;
                     }
                     index_result /= var_values_count;
                 }
@@ -455,8 +453,7 @@ namespace dice
             assert(vars_.size() == 1);
 
             decomposition result;
-            result.deps_.emplace_back(
-                std::make_shared<var_type>(vars_.front()));
+            result.deps_.emplace_back(make_variable_ptr(vars_.front()));
             
             for (auto&& pair : result.deps_.front()->probability())
             {
@@ -491,12 +488,97 @@ namespace dice
             return probability_iterator{ this, true };
         }
     private:
+        struct var_ptr
+        {
+            using value_type = std::pair<std::size_t, var_type>;
+            using pointer_type = std::shared_ptr<value_type>;
+
+            var_ptr() : data_(nullptr) {}   
+            var_ptr(var_type&& var) 
+                : data_(
+                    std::make_shared<value_type>(value_type{ 
+                        counter_++, 
+                        std::move(var) 
+                    })) {}
+
+            // allow copy
+            var_ptr(const var_ptr&) = default;
+            var_ptr& operator=(const var_ptr&) = default;
+
+            // allow move
+            var_ptr(var_ptr&&) = default;
+            var_ptr& operator=(var_ptr&&) = default;
+
+            // data getters
+            var_type& variable()
+            {
+                assert(data_ != nullptr);
+                return data_->second;
+            }
+
+            const var_type& variable() const
+            {
+                assert(data_ != nullptr);
+                return data_->second;
+            }
+
+            std::size_t id() const
+            {
+                return data_ == nullptr ? 0 : data_->first;
+            }
+
+            // pointer like access to variable
+            var_type& operator*() 
+            {
+                return variable();
+            }
+
+            const var_type& operator*() const
+            {
+                return variable();
+            }
+            
+            var_type* operator->()
+            {
+                return &variable();
+            }
+            
+            const var_type* operator->() const
+            {
+                return &variable();
+            }
+
+            // comparison
+            bool operator<(const var_ptr& other) const
+            {
+                return id() < other.id();
+            }
+
+            bool operator==(const var_ptr& other) const
+            {
+                return id() == other.id();
+            }
+
+            bool operator!=(const var_ptr& other) const
+            {
+                return id() != other.id();
+            }
+        private:
+            pointer_type data_;
+            static std::size_t counter_;
+        };
+
+        var_ptr make_variable_ptr(var_type var) const
+        {
+            return var_ptr{ std::move(var) };
+        }
+
         /** Set of variables on which this random variable depends.
          * It is kept sorted by the pointer value. This simplifies the
          * combination algorithm as we can make some assumptions in the
          * variable index computation.
          */
-        std::vector<std::shared_ptr<var_type>> deps_;
+        std::vector<var_ptr> deps_;
 
         /** List of conditional random variables.
          * 
@@ -513,6 +595,9 @@ namespace dice
          */
         std::vector<var_type> vars_;
     };
+
+    template<typename T, typename U>
+    std::size_t decomposition<T, U>::var_ptr::counter_ = 1;
 
     /** Decompositon value iterator.
      * It will iterate through pairs (value, probability). One value can be in
