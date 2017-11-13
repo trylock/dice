@@ -16,15 +16,17 @@ namespace dice
 
     /** Object representing a decomposition of a function of random variables.
      * 
-     * Denote A a random variable. Then, from Law of total probability: 
-     * P(A = k) = sum of 
-     *      P(A = k | X1 = x1, ..., Xn = xn) * P(X1 = x1, ..., Xn = xn) 
-     * for all x1, ..., xn
-     * Because events `X1 = x1, ..., Xn = xn` are disjoint and they form 
-     * the whole sample space (we are considering all such xi's)
+     * It uses the Law of total probability to decompose varibales to 
+     * conditional variables which are then treated as independent.
      * 
-     * Purpose of this is that variables `A | X1 = x1, ..., Xn = xn` might 
-     * be independent.
+     * Variables are organized in a tree structure. Only leaf nodes are stored 
+     * in the vars_ list. Inner nodes are implicitly given by the deps_ list.
+     * Each variable in the deps_ list corresponds to a level of this tree.
+     * 
+     * An inner node in this tree is a random variable. It has children 
+     * corresponding to its values. For example: a random variable whose values
+     * are 1 or 2 whould have 2 children labeled 1 and 2. A leaf node is 
+     * a random variable without children nodes.
      */
     template<typename ValueType, typename ProbabilityType>
     class decomposition
