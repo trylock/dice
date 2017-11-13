@@ -757,3 +757,24 @@ TEST_CASE("Interpret quantile function call", "[dice]")
     auto data = dynamic_cast<dice::type_int&>(*value).data();
     REQUIRE(data == 2);
 }
+
+TEST_CASE("Interpret variable names in dice roll operator", "[dice]")
+{
+    auto result = interpret("var X = 1d2; var Y = X d X; Y + Y");
+    
+    REQUIRE(result.values.size() == 3);
+    result.assert_no_error();
+    
+    REQUIRE(result.values[0] == nullptr);
+    REQUIRE(result.values[1] == nullptr);
+    
+    auto value = std::move(result.values[2]);
+    REQUIRE(value->type() == dice::type_rand_var::id());
+    
+    auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
+    auto prob = data.to_random_variable().probability();
+    REQUIRE(prob.find(2)->second == Approx(1 / 2.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 8.0));
+    REQUIRE(prob.find(6)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(8)->second == Approx(1 / 8.0));
+}

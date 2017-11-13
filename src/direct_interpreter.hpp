@@ -19,8 +19,7 @@ namespace dice
         inline void visit(type_double*) override {}
         inline void visit(type_rand_var* var) override 
         {
-            if (!var->data().has_dependencies())
-                var->data() = var->data().compute_decomposition();
+            var->data() = var->data().compute_decomposition();
         }
     };
 
@@ -187,15 +186,7 @@ namespace dice
          */
         value_type roll(value_type lhs, value_type rhs)
         {
-            // check that none of the operands depends on a random variable
-            dependencies_visitor deps;
-            lhs->accept(&deps);
-            rhs->accept(&deps);
-            if (deps.count() > 0)
-            {
-                throw compiler_error(
-                    "It is invalid to use names in dice roll operator");
-            }
+            process_children(lhs.get(), rhs.get());
             return env_->call("__roll_op", std::move(lhs), std::move(rhs));
         }
 
