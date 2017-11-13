@@ -19,7 +19,6 @@ In all of these examples I assume that dice rolls are independent discrete (inte
 ## Pitfalls
 - **independence**: The program works with random variables. **Each operation on them assumes their independence**. This assumption is quite limiting. Consider following expression: `2 * (1d20 == 19) + 3 * (1d20 == 20)`. Some misguided assumption clould be that this expression is equal to 2 if we roll a 19 and 3 if we roll a 20. This is *not* the case. Both subexpressions `1d20` are independent - they are completely different rolls. In this example, we can get 0, 2, 3 or 5. You can use variables to resolve this issue: `var X = 1d20; 2 * (X == 19) + 3 * (X == 20)`
 - **int vs double**: The program can work only with integer random variables (that is, value of a variable can only be an integer). Therefore it is invalid to use operands on random variables in conjunction with floating point numbers. For example: `1d6 * 2.5` or even `1d6 + 2.0` are invalid.
-- **Names in dice roll operator**: it is not supported to use names in the dice roll operator. For example `X d Y` is invalid. 
 
 ## Reference
 
@@ -36,7 +35,6 @@ These functions are provided with this implementation. There is a mechanism to a
 - `any max(any, any)`: takes 2 values and computes the maximum (it can be a random variable if `any` is `rand_var`)
 - `any min(any, any)`: takes 2 values and computes the minimum (it can be a random variable if `any` is `rand_var`)
 - `int quantile(rand_var, double)`: takes a random varialbe, a probability and computes a quantile (denote `X` a random varialbe, `quantile(X, p) = min{ k : P(X <= k) >= p}`)
-
 
 ## Operators
 Operators in this list are sorted by precedence from lowest to highest. All operators are left-associative unless stated otherwise:
