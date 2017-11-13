@@ -255,11 +255,12 @@ namespace dice
             const decomposition& num_rolls, 
             const decomposition& num_sides)
         {
-            if (num_rolls.vars_.size() > 1 || num_sides.vars_.size()  > 1)
-                throw std::runtime_error(
-                    "Variable names are not supported in roll operator");
-            return decomposition(
-                roll(num_rolls.vars_.front(), num_sides.vars_.front()));
+            return num_rolls.combine(num_sides, [](auto&& var_a, auto&& var_b)
+            {
+                // this is a different roll function (on random_variable types)
+                // operands are independent random variables
+                return roll(var_a, var_b);
+            });
         }
 
         /** Compute expected value of this random variable.
@@ -381,19 +382,21 @@ namespace dice
 
                 // find corresponding variables in both trees
                 std::size_t index_result = i;
+                std::size_t size_a = 1;
+                std::size_t size_b = 1;
                 for (std::size_t j = 0; j < result.deps_.size(); ++j)
                 {
                     auto&& var = result.deps_[j];
                     auto var_values_count = var->probability().size();
                     if ((is_in[j] & A) != 0)
                     {
-                        index_a *= var_values_count;
-                        index_a += index_result % var_values_count;
+                        index_a += (index_result % var_values_count) * size_a;
+                        size_a *= var_values_count;
                     }
                     if ((is_in[j] & B) != 0)
                     {
-                        index_b *= var_values_count;
-                        index_b += index_result % var_values_count;
+                        index_b += (index_result % var_values_count) * size_b;
+                        size_b *= var_values_count;
                     }
                     index_result /= var_values_count;
                 }
@@ -424,13 +427,14 @@ namespace dice
                 return result;
             }
 
-            for (auto it = begin(); it != end(); ++it)
+            for (auto it = begin(); it != end();)
             {
                 auto pair = result.probability_.insert(*it);
                 if (!pair.second)
                 {
                     pair.first->second += it->second;
                 }
+                ++it;
             }
             return result;
         }
@@ -445,19 +449,62 @@ namespace dice
         }
 
         /** Compute the decomposition of this random variable.
-         *  It is only valid if there are no dependencies.
+         * Random variables in leafs (vars_ list) are made constants (making 
+         * them independent) at the cost of adding new dependencies and thus 
+         * increasing the size.
+         * @return new decomposition
          */
         auto compute_decomposition() const
         {
-            assert(!has_dependencies());
-            assert(vars_.size() == 1);
-
             decomposition result;
-            result.deps_.emplace_back(make_variable_ptr(vars_.front()));
-            
-            for (auto&& pair : result.deps_.front()->probability())
+            result.deps_ = deps_;
+
+            std::vector<
+                typename std::unordered_map<
+                    ValueType, ProbabilityType>::const_iterator> state;
+
+            // add new dependencies
+            for (auto&& var : vars_)
             {
-                result.vars_.emplace_back(constant_tag{}, pair.first);
+                if (!var.is_constant())
+                {
+                    result.deps_.push_back(make_variable_ptr(var));
+                }
+                state.push_back(var.probability().begin());
+            }
+
+            // calculate new size
+            std::size_t num_values = 1;
+            for (auto&& dep : result.deps_)
+            {
+                num_values *= dep->probability().size();
+            }
+            
+            // add values
+            auto state_it = state.begin();
+            for (std::size_t i = 0; i < num_values; ++i)
+            {
+                auto value_it = *state_it;
+                result.vars_.emplace_back(constant_tag{}, value_it->first);
+
+                ++state_it;
+                if (state_it == state.end())
+                {
+                    state_it = state.begin();
+
+                    auto index = state.size();
+                    while (index > 0)
+                    {
+                        --index;
+                        ++state[index];
+
+                        if (state[index] != vars_[index].probability().end())
+                        {
+                            break;
+                        }
+                        state[index] = vars_[index].probability().begin();
+                    }
+                }
             }
             return result;
         }
@@ -525,6 +572,11 @@ namespace dice
             std::size_t id() const
             {
                 return data_ == nullptr ? 0 : data_->first;
+            }
+
+            const var_type* get() const
+            {
+                return &variable();
             }
 
             // pointer like access to variable
@@ -648,16 +700,14 @@ namespace dice
                 }
 
                 // move inner node iterators
-                std::size_t index = inner_it_.size();
-                while (index > 0)
+                for (std::size_t i = 0; i < inner_it_.size(); ++i)
                 {
-                    --index;
-                    ++inner_it_[index];
-                    if (inner_it_[index] != inner_end(index))
+                    ++inner_it_[i];
+                    if (inner_it_[i] != inner_end(i))
                     {
                         break;
                     }
-                    inner_it_[index] = inner_begin(index);
+                    inner_it_[i] = inner_begin(i);
                 }
             }
 

@@ -167,8 +167,8 @@ TEST_CASE("Compute probability of multiple depedent variables", "[decomposition]
     dice::decomposition<int, double> a{ var_a };
     dice::decomposition<int, double> b{ var_b };
     dice::decomposition<int, double> c{ var_c };
-    b = b.compute_decomposition();
     a = a.compute_decomposition();
+    b = b.compute_decomposition();
     c = c.compute_decomposition();
 
     // notice: A, B and B, C and A, C and A, B, C are still indepednet
@@ -296,4 +296,38 @@ TEST_CASE("Compute variance using decomposition", "[decomposition]")
     auto result = a + b;
     auto variance = result.variance();
     REQUIRE(variance == Approx(11 / 12.0));
+}
+
+TEST_CASE("Compute distribution of dice roll with dependent variables", "[decomposition]")
+{
+    dice::decomposition<int, double> a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+    } };
+    a = a.compute_decomposition();
+
+    auto roll_a = roll(a, a);
+    roll_a = roll_a.compute_decomposition();
+    auto prob = roll_a.to_random_variable().probability();
+    REQUIRE(prob.find(1)->second == Approx(1 / 2.0));
+    REQUIRE(prob.find(2)->second == Approx(1 / 8.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 8.0));
+}
+
+TEST_CASE("Compute distribution of sum of dependent dice rolls", "[decomposition]")
+{
+    dice::decomposition<int, double> a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+    } };
+    a = a.compute_decomposition();
+
+    auto roll_a = roll(a, a).compute_decomposition();
+    auto sum = roll_a + roll_a;
+    auto prob = sum.to_random_variable().probability();
+    REQUIRE(prob.find(2)->second == Approx(1 / 2.0));
+    REQUIRE(prob.find(4)->second == Approx(1 / 8.0));
+    REQUIRE(prob.find(6)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(8)->second == Approx(1 / 8.0));
 }
