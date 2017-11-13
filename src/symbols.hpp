@@ -18,7 +18,7 @@ namespace dice
 
     struct symbol
     {
-        // type of this symbol (terminal or non-terminal)
+        // type of this symbol
         symbol_type type;
 
         /** Matched symbol string.
