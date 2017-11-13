@@ -1,6 +1,7 @@
 #ifndef DICE_RANDOM_VARIABLE_HPP_
 #define DICE_RANDOM_VARIABLE_HPP_
 
+#include <tuple>
 #include <cassert>
 #include <cmath>
 #include <limits>
@@ -445,12 +446,7 @@ namespace dice
                     auto prob = base_prob * faces_prob * rolls_prob;
                     for (value_type i = 1; i <= faces_count; ++i)
                     {
-                        auto result = dist.probability_.insert(
-                            std::make_pair(i, prob));
-                        if (!result.second)
-                        {
-                            result.first->second += prob;
-                        }
+                        dist.add_probability(i, prob);
                     }
                 }
 
@@ -498,12 +494,7 @@ namespace dice
                         {
                             auto rolls_prob = num_rolls->second;
                             auto prob = prob_i * faces_prob * rolls_prob;
-                            auto result = dist.probability_.insert(
-                                std::make_pair(i, prob));
-                            if (!result.second)
-                            {
-                                result.first->second += prob;
-                            }
+                            dist.add_probability(i, prob);
                         }
                     }
 
@@ -533,12 +524,7 @@ namespace dice
                 {
                     auto value = combination(pair_a.first, pair_b.first);
                     auto probability = pair_b.second * pair_a.second;
-                    auto result = dist.probability_.insert(
-                        std::make_pair(value, probability));
-                    if (!result.second)
-                    {
-                        result.first->second += probability;
-                    }
+                    dist.add_probability(value, probability);
                 }
             }
             return dist;
@@ -565,6 +551,22 @@ namespace dice
         }
     private:
         std::unordered_map<value_type, probability_type> probability_;
+
+        /** Add probability to current porbability of given value.
+         * Note: caller guarantees that probabilities sum up to 1.
+         * @param value
+         * @param probability that whill be added
+         */
+        void add_probability(value_type value, probability_type prob)
+        {
+            auto result = probability_.insert(std::make_pair(value, prob));
+            auto iter = result.first;
+            auto is_inserted = result.second;
+            if (!is_inserted)
+            {
+                iter->second += prob;
+            }
+        }
     };
 
     // Calculate max(X, Y) for independent r.v. X and Y

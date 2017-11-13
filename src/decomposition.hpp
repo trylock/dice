@@ -429,14 +429,9 @@ namespace dice
                 return result;
             }
 
-            for (auto it = begin(); it != end();)
+            for (auto it = begin(); it != end(); ++it)
             {
-                auto pair = result.probability_.insert(*it);
-                if (!pair.second)
-                {
-                    pair.first->second += it->second;
-                }
-                ++it;
+                result.add_probability(it->first, it->second);
             }
             return result;
         }
