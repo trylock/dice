@@ -80,7 +80,7 @@ TEST_CASE("Roll throws an exception if number of sides or number of dice is non-
     
     REQUIRE_THROWS_WITH(
         roll(num_dice, num_sides),
-        "Number of dice sides has to be a positive integer."
+        "Number of dice faces has to be a positive integer."
     );
     REQUIRE_THROWS_WITH(
         roll(num_sides, num_dice),

@@ -384,24 +384,24 @@ namespace dice
          * 
          * @param number of dice X (independent of Y)
          *        Each value has to be a positive integer
-         * @param number of sides of each dice Y (independent of X)
+         * @param number of faces of each dice Y (independent of X)
          *        Each value has to be a positive integer
          * @return distribution of XdY
          */
         friend auto roll(
             const random_variable& num_dice, 
-            const random_variable& num_sides)
+            const random_variable& num_faces)
         {
             // If there are no dice or dice sizes, 
             // then this is an impossible event
             if (num_dice.probability_.empty() || 
-                num_sides.probability_.empty())
+                num_faces.probability_.empty())
             {
                 return random_variable{};
             }
 
             // Throw an exception if the number of dice or
-            // number of dice sides is not positive.
+            // number of dice faces is not positive.
             // note: Use the restrict method to restrict variable's 
             //       range to positive integers.
             for (auto&& pair : num_dice.probability_)
@@ -413,12 +413,12 @@ namespace dice
                 }
             }
 
-            for (auto&& pair : num_sides.probability_)
+            for (auto&& pair : num_faces.probability_)
             {
                 if (pair.first <= 0)
                 {
                     throw std::runtime_error(
-                        "Number of dice sides has to be a positive integer.");
+                        "Number of dice faces has to be a positive integer.");
                 }
             }
 
@@ -429,21 +429,21 @@ namespace dice
                 max_dice = std::max(max_dice, value.first);
             }
     
-            // compute distribution for each possible number of sides
+            // compute distribution for each possible number of faces
             random_variable dist;
-            for (auto&& pair : num_sides.probability_)
+            for (auto&& pair : num_faces.probability_)
             {
-                auto sides_count = pair.first;
-                auto sides_prob = pair.second;
-                auto base_prob = 1 / static_cast<probability_type>(sides_count);
+                auto faces_count = pair.first;
+                auto faces_prob = pair.second;
+                auto base_prob = 1 / static_cast<probability_type>(faces_count);
                 
                 // save the probability of 1 roll
                 auto num_rolls = num_dice.probability_.find(1);
                 if (num_rolls != num_dice.probability_.end())
                 {
                     auto rolls_prob = num_rolls->second;
-                    auto prob = base_prob * sides_prob * rolls_prob;
-                    for (value_type i = 1; i <= sides_count; ++i)
+                    auto prob = base_prob * faces_prob * rolls_prob;
+                    for (value_type i = 1; i <= faces_count; ++i)
                     {
                         auto result = dist.probability_.insert(
                             std::make_pair(i, prob));
@@ -455,12 +455,12 @@ namespace dice
                 }
 
                 // Prefix sum of probability:
-                // P(XdY = k | X = dice_count, Y = sides_count)
+                // P(XdY = k | X = dice_count, Y = faces_count)
                 std::vector<probability_type> probability(
-                    sides_count * max_dice + 1, 0);
+                    faces_count * max_dice + 1, 0);
                 
                 // base case: roll only 1 die
-                for (value_type i = 1; i <= sides_count; ++i)
+                for (value_type i = 1; i <= faces_count; ++i)
                 {
                     probability[i] = base_prob;
                 }
@@ -472,7 +472,7 @@ namespace dice
                     ++dice_count)
                 {
                     // compute the prefix sum of the probability array
-                    for (value_type i = 2; i <= sides_count * dice_count; ++i)
+                    for (value_type i = 2; i <= faces_count * dice_count; ++i)
                     {
                         probability[i] = probability[i - 1] + probability[i];
                     }
@@ -480,10 +480,10 @@ namespace dice
                     // For computation of the probability of the sum of i, 
                     // we only need values j < i. By iterating backwards we 
                     // don't overwrite those values.
-                    for (auto i = sides_count * dice_count; i >= dice_count; --i)
+                    for (auto i = faces_count * dice_count; i >= dice_count; --i)
                     {
                         // compute the probability of the sum of i
-                        value_type j = std::max(i - sides_count, 1);
+                        value_type j = std::max(i - faces_count, 1);
                         auto prob_i = probability[i - 1] - probability[j - 1];
                         prob_i *= base_prob;
 
@@ -497,7 +497,7 @@ namespace dice
                         if (num_rolls != num_dice.probability_.end())
                         {
                             auto rolls_prob = num_rolls->second;
-                            auto prob = prob_i * sides_prob * rolls_prob;
+                            auto prob = prob_i * faces_prob * rolls_prob;
                             auto result = dist.probability_.insert(
                                 std::make_pair(i, prob));
                             if (!result.second)
