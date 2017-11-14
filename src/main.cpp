@@ -156,6 +156,9 @@ int main(int argc, char** argv)
                 continue;
             value->accept(&format);
         }
+
+        if (!log.empty())
+            return 1;
     }
     else 
     {
