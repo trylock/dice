@@ -33,3 +33,21 @@ dice::conversions::value_type dice::conversions::convert(
     value->accept(&conversion);
     return conversion.value();
 }
+
+// conversion visitor
+
+void dice::conversion_visitor::visit(type_int* value) 
+{
+    if (result_type_ == type_id::floating_point)
+    {
+        converted_value_ = make<type_double>(
+            static_cast<double>(value->data())
+        );
+    }
+    else if (result_type_ == type_id::random_variable)
+    {
+        converted_value_ = make<type_rand_var>(
+            constant_tag{}, value->data()
+        );
+    }
+}
