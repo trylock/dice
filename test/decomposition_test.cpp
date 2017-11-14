@@ -331,3 +331,30 @@ TEST_CASE("Compute distribution of sum of dependent dice rolls", "[decomposition
     REQUIRE(prob.find(6)->second == Approx(1 / 4.0));
     REQUIRE(prob.find(8)->second == Approx(1 / 8.0));
 }
+
+TEST_CASE("Decomposition adds values in correct order", "[decomposition]")
+{
+    dice::random_variable<int, double> var_a{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 2)
+    } };
+    dice::random_variable<int, double> var_b{ freq_list{
+        std::make_pair(3, 2),
+        std::make_pair(4, 3)
+    } };
+    dice::random_variable<int, double> var_c{ freq_list{
+        std::make_pair(5, 4),
+        std::make_pair(6, 5)
+    } };
+    dice::decomposition<int, double> a{ var_a };
+    a = a.compute_decomposition();
+    a.variables_internal()[0] = var_b;
+    a.variables_internal()[1] = var_c; 
+    a = a.compute_decomposition();
+
+    auto prob = a.to_random_variable().probability();
+    REQUIRE(prob.find(3)->second == Approx(4 / 15.0));
+    REQUIRE(prob.find(4)->second == Approx(2 / 5.0));
+    REQUIRE(prob.find(5)->second == Approx(4 / 27.0));
+    REQUIRE(prob.find(6)->second == Approx(5 / 27.0));
+}

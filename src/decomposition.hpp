@@ -489,17 +489,14 @@ namespace dice
                 {
                     state_it = state.begin();
 
-                    auto index = state.size();
-                    while (index > 0)
+                    for (std::size_t i = 0; i < state.size(); ++i)
                     {
-                        --index;
-                        ++state[index];
-
-                        if (state[index] != vars_[index].probability().end())
+                        ++state[i];
+                        if (state[i] != vars_[i].probability().end())
                         {
                             break;
                         }
-                        state[index] = vars_[index].probability().begin();
+                        state[i] = vars_[i].probability().begin();
                     }
                 }
             }
@@ -531,6 +528,10 @@ namespace dice
         {
             return probability_iterator{ this, true };
         }
+
+        // for debugging only
+        auto& variables_internal() { return vars_; }
+        auto& dependencies_internal() { return deps_; }
     private:
         struct var_ptr
         {
@@ -577,16 +578,6 @@ namespace dice
             }
 
             // pointer like access to variable
-            var_type& operator*() 
-            {
-                return variable();
-            }
-
-            const var_type& operator*() const
-            {
-                return variable();
-            }
-            
             var_type* operator->()
             {
                 return &variable();
@@ -711,15 +702,6 @@ namespace dice
             // precompute the value
             precompute_value();
             return *this;
-        }
-
-        /** Get reference to current value.
-         * This is only valid if this is not an end iterator.
-         * @return reference to current value
-         */
-        const value_type& operator*()
-        {
-            return current_value_;
         }
 
         /** Access current value.
