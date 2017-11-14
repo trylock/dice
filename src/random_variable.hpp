@@ -63,6 +63,9 @@ namespace dice
             }
         }
 
+        /** Compute probabilities from list of value frequencies.
+         * @param list of (value, frequency) pairs (values can repeat)
+         */
         explicit random_variable(frequency_list&& list)
         {
             probability_type sum = 0;
@@ -73,11 +76,8 @@ namespace dice
             {
                 if (item.second == 0)
                     continue;
-
-                probability_.insert(std::make_pair(
-                    item.first,
-                    item.second / sum
-                ));
+                
+                add_probability(item.first, item.second / sum);
             }
         }
 
@@ -373,8 +373,7 @@ namespace dice
             return result;
         }
 
-        /** 
-         * Create a random variable Z = XdY.
+        /** Create a random variable Z = XdY.
          * X times roll a Y sided dice.
          * Assumes X, Y are independent random variables.
          * 

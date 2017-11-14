@@ -345,5 +345,19 @@ TEST_CASE("Compute quantile of a uniform variable", "[random_variable]")
 
     quantile = var.quantile(0.9);
     REQUIRE(quantile == 4);
+}
 
+TEST_CASE("Construct a random variable from a list of value frequencies", "[random_variable]")
+{
+    dice::random_variable<int, double> var{ freq_list{
+        std::make_pair(1, 1),
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(1, 1)
+    } };    
+    auto prob = var.probability();
+
+    REQUIRE(prob.find(1)->second == Approx(2 / 4.0));
+    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
+    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
 }
