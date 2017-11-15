@@ -650,7 +650,7 @@ namespace dice
         using decomposition_type = decomposition<ValueType, ProbabilityType>;
         using value_type = std::pair<ValueType, ProbabilityType>;
 
-        decomposition_iterator(
+        explicit decomposition_iterator(
             const decomposition_type* decomp, 
             bool is_end = false)
             : decomposition_(decomp)
@@ -718,14 +718,18 @@ namespace dice
          */
         bool operator==(const decomposition_iterator& other) const
         {
-            return leaf_it_ == other.leaf_it_ && 
-                value_it_ == other.value_it_;
+            if (leaf_it_ == other.leaf_it_)
+            {
+                if (leaf_it_ == leaf_end())
+                    return true;
+                return value_it_ == other.value_it_;
+            }
+            return false;
         }
 
         bool operator!=(const decomposition_iterator& other) const 
         {
-            return leaf_it_ != other.leaf_it_ || 
-                value_it_ != other.value_it_;
+            return !operator==(other);
         }
     private:
         using rand_var = random_variable<ValueType, ProbabilityType>;
@@ -746,17 +750,17 @@ namespace dice
 
         auto inner_end(std::size_t index) const
         {
-            return decomposition_->deps_[index]->probability().end();
+            return decomposition_->deps_[index]->probability().cend();
         }
         
         auto inner_begin(std::size_t index) const
         {
-            return decomposition_->deps_[index]->probability().begin();
+            return decomposition_->deps_[index]->probability().cbegin();
         }
 
         auto leaf_end() const
         {
-            return decomposition_->vars_.end();
+            return decomposition_->vars_.cend();
         }
 
         void precompute_value()
