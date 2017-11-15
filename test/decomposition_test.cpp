@@ -348,8 +348,21 @@ TEST_CASE("Decomposition adds values in correct order", "[decomposition]")
     } };
     dice::decomposition<int, double> a{ var_a };
     a = a.compute_decomposition();
-    a.variables_internal()[0] = var_b;
-    a.variables_internal()[1] = var_c; 
+
+    // The value is B if A = 1. Otherwise, it is C. Thus we have to store 
+    // variables B and C according to the order of values in A. This method
+    // is therefore not a part of the API. It's only purpose is to create a 
+    // simple test data in this test case.
+    if (var_a.probability().begin()->first == 1)
+    {
+        a.variables_internal()[0] = var_c;
+        a.variables_internal()[1] = var_b;
+    }
+    else
+    {
+        a.variables_internal()[0] = var_b;
+        a.variables_internal()[1] = var_c;
+    }
     a = a.compute_decomposition();
 
     auto prob = a.to_random_variable().probability();
