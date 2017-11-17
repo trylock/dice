@@ -267,7 +267,7 @@ dice::environment::environment()
     add_function("unary-", {
         dice_unary_minus<type_rand_var>, { type_rand_var::id() }
     });
-    add_function("__roll_op", {
+    add_function("roll_op", {
         dice_roll_op, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("in", {

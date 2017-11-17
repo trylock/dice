@@ -187,7 +187,7 @@ namespace dice
         value_type roll(value_type lhs, value_type rhs)
         {
             process_children(lhs.get(), rhs.get());
-            return env_->call("__roll_op", std::move(lhs), std::move(rhs));
+            return env_->call("roll_op", std::move(lhs), std::move(rhs));
         }
 
         /** Assing value to variable with given name.
