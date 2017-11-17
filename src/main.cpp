@@ -5,6 +5,7 @@
 #include <vector>
 #include <iomanip>
 #include <cassert>
+#include <chrono>
 
 #include "logger.hpp"
 #include "lexer.hpp"
@@ -147,8 +148,12 @@ int main(int argc, char** argv)
         dice::environment env;
         dice::direct_interpreter<dice::environment> interpret{ &env };
         auto parser = dice::make_parser(&lexer, &log, &interpret);
-        auto result = parser.parse(); 
 
+        auto start = std::chrono::high_resolution_clock::now();
+        auto result = parser.parse(); 
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        
         formatting_visitor format;
         for (auto&& value : result)
         {
@@ -157,6 +162,7 @@ int main(int argc, char** argv)
             value->accept(&format);
         }
 
+        std::cout << "Evaluated in " << duration << " ms" << std::endl;
         if (!log.empty())
             return 1;
     }
