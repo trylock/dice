@@ -146,7 +146,8 @@ namespace dice
         symbol lookahead_;
 
         /** Parse statements and return their results.
-         * Production: stmts -> stmst; stmt 
+         * Production: stmts -> stmts; stmt;
+         *                    | stmts; stmt
          *                    | stmt 
          *                    | ""
          * @return vector of computed values in each statement
@@ -217,7 +218,15 @@ namespace dice
                     value = int_->make_default();
                 }
 
-                return int_->assign(id.lexeme, std::move(value));
+                try
+                {
+                    return int_->assign(id.lexeme, std::move(value));
+                }
+                catch (compiler_error& err)
+                {
+                    error(err.what());
+                    return value;
+                }
             }
             return expr();
         }

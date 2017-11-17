@@ -99,6 +99,8 @@ public:
 
     value_type assign(const std::string& name, value_type&& value)
     {
+        if (name == "x")
+            throw dice::compiler_error("Variable 'x' redefinition.");
         return "(" + name + "=" + value + ");";
     }
 
@@ -506,4 +508,25 @@ TEST_CASE("Replace invalid parenthesised expression with the default value", "[p
     REQUIRE(result.errors[0].message == "Invalid token at the beginning of expression: [");
     REQUIRE(result.errors[1].message == "Invalid token at the beginning of expression: ]");
     REQUIRE(result.errors[2].message == "Invalid expression. Using the default value instead.");
+}
+
+TEST_CASE("Handle exceptions in assignment", "[parser]")
+{
+    using namespace dice;
+
+    auto result = parse(symbols{
+        { symbol_type::var },
+        { symbol_type::id, "x" },
+        { symbol_type::assign },
+        { symbol_type::number, "1" },
+        { symbol_type::semicolon },
+        { symbol_type::id, "x" }
+    });
+    
+    REQUIRE(result.values.size() == 2);
+    REQUIRE(result.values[0] == "1");
+    REQUIRE(result.values[1] == "x");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].message == "Variable 'x' redefinition.");
 }

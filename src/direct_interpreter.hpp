@@ -197,6 +197,11 @@ namespace dice
          */
         value_type assign(const std::string& name, value_type value)
         {
+            if (env_->get_var(name) != nullptr)
+            {
+                throw compiler_error("Variable '" + name + "' redefinition.");
+            }
+
             decomposition_visitor decomp;
             value->accept(&decomp);
             env_->set_var(name, std::move(value));
