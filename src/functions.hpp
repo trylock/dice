@@ -1,6 +1,7 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <cassert>
 
 #include "value.hpp"
 
@@ -14,11 +15,12 @@ namespace dice
         using return_type = std::unique_ptr<base_value>;
         using context_type = execution_context;
         using callable_type = std::function<return_type(context_type&)>;
+        using arg_iterator = typename std::vector<value_type>::iterator;
 
         execution_context() {}
 
-        explicit execution_context(std::vector<value_type>&& args) : 
-            args_(std::move(args)) {}
+        execution_context(arg_iterator first, arg_iterator last) : 
+            first_(first), last_(last) {}
 
         /** Get a raw value of ith argument of current function.
          * @param index of an argument
@@ -26,7 +28,8 @@ namespace dice
          */
         value_type& raw_arg(std::size_t i)
         {
-            return args_[i];
+            assert(i < argc());
+            return *(first_ + i);
         }
         
         /** Get a raw value of ith argument of current function.
@@ -35,7 +38,8 @@ namespace dice
          */
         const value_type& raw_arg(std::size_t i) const
         {
-            return args_[i];
+            assert(i < argc());
+            return *(first_ + i);
         }
 
         /** Convert ith argument to given type and return the pointer.
@@ -67,19 +71,12 @@ namespace dice
          */
         std::size_t argc() const
         {
-            return args_.size();
-        }
-
-        /** Add value to argumnets of this function call.
-         * @param value of the new argument
-         */
-        void push_arg(value_type&& arg_value)
-        {
-            args_.push_back(std::move(arg_value));
+            return std::distance(first_, last_);
         }
 
     private:
-        std::vector<value_type> args_;
+        arg_iterator first_;
+        arg_iterator last_;
     };
 
     // object representing a function callable from a dice expression

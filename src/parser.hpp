@@ -286,7 +286,7 @@ namespace dice
                 eat(symbol_type::rel_op);
                 if (check<nonterminal_type::add>())
                 {
-                   return int_->rel_op(op.lexeme, std::move(left), add());
+                    return int_->rel_op(op.lexeme, std::move(left), add());
                 }
                 else 
                 {

@@ -81,7 +81,7 @@ TEST_CASE("Call function using vector as arguments", "[environment]")
     args.push_back(dice::make<dice::type_int>(5));
 
     dice::environment env;
-    auto result = env.call_var("+", std::move(args));
+    auto result = env.call_var("+", args.begin(), args.end());
     REQUIRE(result->type() == dice::type_int::id());
 
     auto int_result = dynamic_cast<dice::type_int*>(result.get());

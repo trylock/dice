@@ -240,7 +240,7 @@ namespace dice
                 }
             }
 
-            return env_->call_var(name, std::move(args));
+            return env_->call_var(name, args.begin(), args.end());
         }
 
     private:

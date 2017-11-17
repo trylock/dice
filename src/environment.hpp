@@ -73,27 +73,29 @@ namespace dice
             Arg&& first_arg, 
             Args&&... rest)
         {
-            context_.push_arg(std::forward<Arg>(first_arg));
+            args_.push_back(std::forward<Arg>(first_arg));
             return call(name, std::forward<Args>(rest)...);
         }
 
         inline value_type call(const std::string& name)
         {
-            auto result = call_prepared(name, context_);
-            context_ = execution_context{};
-            return result;
+            auto value = call_var(name, args_.begin(), args_.end());
+            args_.clear();
+            return value;
         }
 
         /** Call a function with arguments in a list.
          * @param function name
-         * @param arguments list
+         * @param first argument iterator
+         * @param last argument iterator
          * @return computed value
          */
         inline value_type call_var(
             const std::string& name, 
-            std::vector<fn::value_type>&& args)
+            fn::arg_iterator first,
+            fn::arg_iterator last)
         {
-            execution_context context{ std::move(args) };
+            execution_context context{ first, last };
             auto value = call_prepared(name, context);
             return value;
         }
@@ -107,8 +109,8 @@ namespace dice
             std::vector<function_definition>> functions_;
         // available variables
         std::unordered_map<std::string, value_type> variables_;
-        // auxiliary context for the call methods
-        execution_context context_;
+        // auxiliary vector of function arguments
+        std::vector<fn::value_type> args_;
 
         /** Call a function with prepared context.
          * @param function name
