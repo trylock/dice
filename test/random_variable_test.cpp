@@ -60,6 +60,14 @@ TEST_CASE("Compute distribution of 4d4", "[random_variable]")
     REQUIRE(dist.probability(16) == Approx(1 / 256.0));
 }
 
+TEST_CASE("Probability of a value that is not explicitly in the range is 0", "[random_variable]")
+{
+    dice::random_variable<int, double> var;
+
+    REQUIRE(var.probability(0) == 0);
+    REQUIRE(var.probability(42) == 0);
+}
+
 TEST_CASE("Compute distribution of XdY where X and Y are random variables", "[random_variable]")
 {
     dice::random_variable<int, double> num_dice{ dice::constant_tag{}, 2 };
