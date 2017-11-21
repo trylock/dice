@@ -92,6 +92,14 @@ namespace dice
             std::vector<type_id>&& arg_types) : 
             callable_(callable), args_(std::move(arg_types)) {}
 
+        // disallow copy
+        function_definition(const function_definition&) = delete;
+        void operator=(const function_definition&) = delete;
+
+        // allow move
+        function_definition(function_definition&&) = default;
+        function_definition& operator=(function_definition&&) = default;
+
         /** Call this user function with given arguments 
          * @param argument iterator pointing at the first argument
          * @param argument iterator pointing at the last argument
