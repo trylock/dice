@@ -406,11 +406,11 @@ fn::return_type dice::environment::call_prepared(
         }
 
         // calculate conversion cost for this function
-        std::size_t args_index = 0;
         conversions::cost_type cost = 0;
-        for (auto&& to_type : function.args())
+        for (std::size_t i = 0; i < function.argc(); ++i)
         {
-            auto from_type = context.arg_type(args_index++);
+            auto to_type = function.arg_type(i);
+            auto from_type = context.arg_type(i);
             auto conv_cost = conversions_.cost(from_type, to_type);
             if (conv_cost == conversions::max_cost)
             {
@@ -448,7 +448,7 @@ fn::return_type dice::environment::call_prepared(
     // convert arguments
     for (std::size_t i = 0; i < context.argc(); ++i)
     {
-        type_id to = min_func->args()[i];
+        type_id to = min_func->arg_type(i);
         context.raw_arg(i) = conversions_.convert(to, 
             std::move(context.raw_arg(i)));
     }

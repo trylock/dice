@@ -90,7 +90,7 @@ namespace dice
         function_definition(
             fn::callable_type callable, 
             std::vector<type_id>&& arg_types) : 
-            callable_(callable), args_(std::move(arg_types)) {}
+            callable_(callable), arg_types_(std::move(arg_types)) {}
 
         // disallow copy
         function_definition(const function_definition&) = delete;
@@ -110,17 +110,25 @@ namespace dice
             return callable_(context);
         }
 
-        inline const std::vector<type_id>& args() const 
+        /** Get type of the ith argument.
+         * @param index of an argument
+         * @return type of the argument
+         */
+        inline type_id arg_type(std::size_t i) const 
         {
-            return args_; 
+            assert(i < argc());
+            return arg_types_[i]; 
         }
 
-        inline std::size_t argc() const { return args_.size(); }
-        
+        /** Get number of function arguments.
+         * @return number of arguemtns of this function
+         */
+        inline std::size_t argc() const { return arg_types_.size(); }
+
     private:
         // code of the function
         fn::callable_type callable_;
         // argument types for type checking
-        std::vector<type_id> args_;
+        std::vector<type_id> arg_types_;
     };
 }
