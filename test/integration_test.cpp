@@ -169,15 +169,15 @@ TEST_CASE("Interpret a dice roll expression", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 8.0));
-    REQUIRE(prob.find(2)->second == Approx(5 / 32.0));
-    REQUIRE(prob.find(3)->second == Approx(3 / 16.0));
-    REQUIRE(prob.find(4)->second == Approx(7 / 32.0));
-    REQUIRE(prob.find(5)->second == Approx(1 / 8.0));
-    REQUIRE(prob.find(6)->second == Approx(3 / 32.0));
-    REQUIRE(prob.find(7)->second == Approx(1 / 16.0));
-    REQUIRE(prob.find(8)->second == Approx(1 / 32.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 8.0));
+    REQUIRE(var.probability(2) == Approx(5 / 32.0));
+    REQUIRE(var.probability(3) == Approx(3 / 16.0));
+    REQUIRE(var.probability(4) == Approx(7 / 32.0));
+    REQUIRE(var.probability(5) == Approx(1 / 8.0));
+    REQUIRE(var.probability(6) == Approx(3 / 32.0));
+    REQUIRE(var.probability(7) == Approx(1 / 16.0));
+    REQUIRE(var.probability(8) == Approx(1 / 32.0));
 }
 
 TEST_CASE("Interpret a function call", "[dice]")
@@ -222,9 +222,9 @@ TEST_CASE("Interpret a relational operator in", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(2 / 3.0));
-    REQUIRE(prob.find(0)->second == Approx(1 / 3.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(2 / 3.0));
+    REQUIRE(var.probability(0) == Approx(1 / 3.0));
 }
 
 TEST_CASE("Interpret a relational operator <", "[dice]")
@@ -238,9 +238,9 @@ TEST_CASE("Interpret a relational operator <", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 3.0));
-    REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 3.0));
+    REQUIRE(var.probability(0) == Approx(2 / 3.0));
 }
 
 TEST_CASE("Interpret a relational operator <=", "[dice]")
@@ -254,9 +254,9 @@ TEST_CASE("Interpret a relational operator <=", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 2.0));
-    REQUIRE(prob.find(0)->second == Approx(1 / 2.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 2.0));
+    REQUIRE(var.probability(0) == Approx(1 / 2.0));
 }
 
 TEST_CASE("Interpret a relational operator ==", "[dice]")
@@ -270,9 +270,9 @@ TEST_CASE("Interpret a relational operator ==", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(0)->second == Approx(5 / 6.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 6.0));
+    REQUIRE(var.probability(0) == Approx(5 / 6.0));
 }
 
 TEST_CASE("Interpret a relational operator !=", "[dice]")
@@ -286,9 +286,9 @@ TEST_CASE("Interpret a relational operator !=", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(5 / 6.0));
-    REQUIRE(prob.find(0)->second == Approx(1 / 6.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(5 / 6.0));
+    REQUIRE(var.probability(0) == Approx(1 / 6.0));
 }
 
 TEST_CASE("Interpret a relational operator >=", "[dice]")
@@ -302,9 +302,9 @@ TEST_CASE("Interpret a relational operator >=", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 3.0));
-    REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 3.0));
+    REQUIRE(var.probability(0) == Approx(2 / 3.0));
 }
 
 TEST_CASE("Interpret a relational operator >", "[dice]")
@@ -318,9 +318,9 @@ TEST_CASE("Interpret a relational operator >", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 3.0));
-    REQUIRE(prob.find(0)->second == Approx(2 / 3.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 3.0));
+    REQUIRE(var.probability(0) == Approx(2 / 3.0));
 }
 
 TEST_CASE("Use default value for the lower bound of interval", "[dice]")
@@ -335,10 +335,10 @@ TEST_CASE("Use default value for the lower bound of interval", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
+    auto var = data.to_random_variable();
     // 0 (default value) will be used for the lower bound
-    REQUIRE(prob.find(1)->second == Approx(3 / 4.0));
-    REQUIRE(prob.find(0)->second == Approx(1 / 4.0));
+    REQUIRE(var.probability(1) == Approx(3 / 4.0));
+    REQUIRE(var.probability(0) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Use default value for the upper bound of interval", "[dice]")
@@ -356,9 +356,9 @@ TEST_CASE("Use default value for the upper bound of interval", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
+    auto var = data.to_random_variable();
     // 0 (default value) will be used for the uppder bound
-    REQUIRE(prob.find(0)->second == Approx(4 / 4.0));
+    REQUIRE(var.probability(0) == Approx(4 / 4.0));
 }
 
 TEST_CASE("Don't interpret relational operator if the second operand is invalid", "[dice]")
@@ -389,8 +389,8 @@ TEST_CASE("Resume interpreting relational operator after finding a sync symbol",
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1));
 }
 
 TEST_CASE("Don't interpret the + operator if the second operand is invalid", "[dice]")
@@ -525,11 +525,11 @@ TEST_CASE("Resume interpreting the dice roll operator if we find a sync symbol",
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 4.0));
+    REQUIRE(var.probability(2) == Approx(1 / 4.0));
+    REQUIRE(var.probability(3) == Approx(1 / 4.0));
+    REQUIRE(var.probability(4) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Resume interpreting an expression in function arguments after finding a sync symbol", "[dice]")
@@ -560,9 +560,9 @@ TEST_CASE("Interpret expression with variables", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(4)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(2)->second == Approx(5 / 6.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(4) == Approx(1 / 6.0));
+    REQUIRE(var.probability(2) == Approx(5 / 6.0));
 }
 
 TEST_CASE("Interpret expression with variables that depend on each other", "[dice]")
@@ -581,11 +581,11 @@ TEST_CASE("Interpret expression with variables that depend on each other", "[dic
     REQUIRE(value->type() == dice::type_rand_var::id());
     
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(6)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(12)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(20)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(30)->second == Approx(1 / 4.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(6) == Approx(1 / 4.0));
+    REQUIRE(var.probability(12) == Approx(1 / 4.0));
+    REQUIRE(var.probability(20) == Approx(1 / 4.0));
+    REQUIRE(var.probability(30) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Interpret expression with 2 variables that depend on each other", "[dice]")
@@ -604,17 +604,17 @@ TEST_CASE("Interpret expression with 2 variables that depend on each other", "[d
     REQUIRE(value->type() == dice::type_rand_var::id());
     
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(4)->second == Approx(1 / 16.0));
-    REQUIRE(prob.find(5)->second == Approx(1 / 16.0));
-    REQUIRE(prob.find(6)->second == Approx(2 / 16.0));
-    REQUIRE(prob.find(7)->second == Approx(2 / 16.0));
-    REQUIRE(prob.find(8)->second == Approx(2 / 16.0));
-    REQUIRE(prob.find(9)->second == Approx(2 / 16.0));
-    REQUIRE(prob.find(10)->second == Approx(2 / 16.0));
-    REQUIRE(prob.find(11)->second == Approx(2 / 16.0));
-    REQUIRE(prob.find(12)->second == Approx(1 / 16.0));
-    REQUIRE(prob.find(13)->second == Approx(1 / 16.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(4) == Approx(1 / 16.0));
+    REQUIRE(var.probability(5) == Approx(1 / 16.0));
+    REQUIRE(var.probability(6) == Approx(2 / 16.0));
+    REQUIRE(var.probability(7) == Approx(2 / 16.0));
+    REQUIRE(var.probability(8) == Approx(2 / 16.0));
+    REQUIRE(var.probability(9) == Approx(2 / 16.0));
+    REQUIRE(var.probability(10) == Approx(2 / 16.0));
+    REQUIRE(var.probability(11) == Approx(2 / 16.0));
+    REQUIRE(var.probability(12) == Approx(1 / 16.0));
+    REQUIRE(var.probability(13) == Approx(1 / 16.0));
 }
 
 TEST_CASE("Compute minimum of 2 random variables", "[dice]")
@@ -631,11 +631,11 @@ TEST_CASE("Compute minimum of 2 random variables", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
     
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 4.0));
+    REQUIRE(var.probability(2) == Approx(1 / 4.0));
+    REQUIRE(var.probability(3) == Approx(1 / 4.0));
+    REQUIRE(var.probability(4) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Compute maximum of 2 random variables", "[dice]")
@@ -652,11 +652,11 @@ TEST_CASE("Compute maximum of 2 random variables", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
     
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(5)->second == Approx(1 / 4.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(2) == Approx(1 / 4.0));
+    REQUIRE(var.probability(3) == Approx(1 / 4.0));
+    REQUIRE(var.probability(4) == Approx(1 / 4.0));
+    REQUIRE(var.probability(5) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Call to an unknown function will provide a readable error message", "[dice]")
@@ -703,11 +703,11 @@ TEST_CASE("Compute result of expression with complex dependencies", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
     
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(9)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(18)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(32)->second == Approx(1 / 4.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(4) == Approx(1 / 4.0));
+    REQUIRE(var.probability(9) == Approx(1 / 4.0));
+    REQUIRE(var.probability(18) == Approx(1 / 4.0));
+    REQUIRE(var.probability(32) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Name definition that contains a function of other names", "[dice]")
@@ -724,10 +724,10 @@ TEST_CASE("Name definition that contains a function of other names", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
 
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(4)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(6)->second == Approx(2 / 4.0));
-    REQUIRE(prob.find(8)->second == Approx(1 / 4.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(4) == Approx(1 / 4.0));
+    REQUIRE(var.probability(6) == Approx(2 / 4.0));
+    REQUIRE(var.probability(8) == Approx(1 / 4.0));
 }
 
 TEST_CASE("Interpret deviation function call", "[dice]")
@@ -772,9 +772,9 @@ TEST_CASE("Interpret variable names in dice roll operator", "[dice]")
     REQUIRE(value->type() == dice::type_rand_var::id());
     
     auto data = dynamic_cast<dice::type_rand_var&>(*value).data();
-    auto prob = data.to_random_variable().probability();
-    REQUIRE(prob.find(2)->second == Approx(1 / 2.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 8.0));
-    REQUIRE(prob.find(6)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(8)->second == Approx(1 / 8.0));
+    auto var = data.to_random_variable();
+    REQUIRE(var.probability(2) == Approx(1 / 2.0));
+    REQUIRE(var.probability(4) == Approx(1 / 8.0));
+    REQUIRE(var.probability(6) == Approx(1 / 4.0));
+    REQUIRE(var.probability(8) == Approx(1 / 8.0));
 }

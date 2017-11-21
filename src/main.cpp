@@ -52,10 +52,10 @@ public:
             << std::endl;
     
         // sort PMF by value
-        auto probability = value->data().to_random_variable().probability();
+        auto var = value->data().to_random_variable();
         dice::random_variable<int, double>::probability_list values{
-            probability.begin(),
-            probability.end()
+            var.begin(),
+            var.end()
         };
         std::sort(values.begin(), values.end(), [](auto&& a, auto&& b)
         {

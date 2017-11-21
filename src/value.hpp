@@ -65,11 +65,10 @@ namespace dice
 
         virtual void visit(typed_value<int>* value) = 0;
         virtual void visit(typed_value<double>* value) = 0;
-        virtual void visit(
-            typed_value<decomposition<int, double>>* value) = 0;
+        virtual void visit(typed_value<decomposition<int, double>>* value) = 0;
     };
 
-    // Parent of all value types that are used in a dice expressions
+    // Parent of all value types that are used in dice expressions
     class base_value 
     {
     public:
@@ -96,7 +95,7 @@ namespace dice
         /** Check whether this value is not equal to other value.
          * @param other value
          * @return ture iff values are different 
-         *         That is, the values of types are different
+         *         That is, values or types are different
          */
         inline bool operator!=(const base_value& other) const 
         {
@@ -124,6 +123,14 @@ namespace dice
         typed_value() {}
         explicit typed_value(const value_type& value) : value_(value) {}
         explicit typed_value(value_type&& value) : value_(std::move(value)) {}
+
+        // disallow copy (use the clone function instead to explicitly copy the value)
+        typed_value(const typed_value&) = delete;
+        void operator=(const typed_value&) = delete;
+
+        // allow move
+        typed_value(typed_value&&) = default;
+        typed_value& operator=(typed_value&&) = default;
 
         // get type id
         type_id type() const override { return id(); }

@@ -31,10 +31,10 @@ TEST_CASE("Call operator + on random variables", "[environment]")
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto prob = rand_var_result->data().to_random_variable().probability();
-    REQUIRE(prob.find(3)->second == Approx(1 / 5.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 2.0));
-    REQUIRE(prob.find(5)->second == Approx(3 / 10.0));
+    auto var = rand_var_result->data().to_random_variable();
+    REQUIRE(var.probability(3) == Approx(1 / 5.0));
+    REQUIRE(var.probability(4) == Approx(1 / 2.0));
+    REQUIRE(var.probability(5) == Approx(3 / 10.0));
 }
 
 TEST_CASE("Operator + converts an int to a random variable if one argument is a random variable", "[environment]")
@@ -50,9 +50,9 @@ TEST_CASE("Operator + converts an int to a random variable if one argument is a 
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto prob = rand_var_result->data().to_random_variable().probability();
-    REQUIRE(prob.find(3)->second == Approx(1 / 2.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 2.0));
+    auto var = rand_var_result->data().to_random_variable();
+    REQUIRE(var.probability(3) == Approx(1 / 2.0));
+    REQUIRE(var.probability(4) == Approx(1 / 2.0));
 }
 
 TEST_CASE("Roll operator converts int arguments to a random variable", "[environment]")
@@ -65,13 +65,13 @@ TEST_CASE("Roll operator converts int arguments to a random variable", "[environ
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto rand_var_result = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto prob = rand_var_result->data().to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(2)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(5)->second == Approx(1 / 6.0));
-    REQUIRE(prob.find(6)->second == Approx(1 / 6.0));
+    auto var = rand_var_result->data().to_random_variable();
+    REQUIRE(var.probability(1) == Approx(1 / 6.0));
+    REQUIRE(var.probability(2) == Approx(1 / 6.0));
+    REQUIRE(var.probability(3) == Approx(1 / 6.0));
+    REQUIRE(var.probability(4) == Approx(1 / 6.0));
+    REQUIRE(var.probability(5) == Approx(1 / 6.0));
+    REQUIRE(var.probability(6) == Approx(1 / 6.0));
 }
 
 TEST_CASE("Call function using vector as arguments", "[environment]")
@@ -116,9 +116,9 @@ TEST_CASE("Call unary - function on random variable", "[environment]")
     REQUIRE(result->type() == dice::type_rand_var::id());
 
     auto drv = dynamic_cast<dice::type_rand_var*>(result.get());
-    auto prob = drv->data().to_random_variable().probability();
-    REQUIRE(prob.find(-1)->second == 0.4);
-    REQUIRE(prob.find(0)->second == 0.6);
+    auto var = drv->data().to_random_variable();
+    REQUIRE(var.probability(-1) == 0.4);
+    REQUIRE(var.probability(0) == 0.6);
 }
 
 TEST_CASE("Call the variance function on a random variable", "[environment]")
@@ -146,7 +146,7 @@ TEST_CASE("Call the expectation function on a random variable", "[environment]")
 TEST_CASE("Call in operator on a random variable and int interval", "[environment]")
 {
     dice::environment env;
-    auto var = dice::make<dice::type_rand_var>(freq_list{
+    auto input = dice::make<dice::type_rand_var>(freq_list{
         std::make_pair(1, 1),
         std::make_pair(2, 1),
         std::make_pair(3, 1),
@@ -156,12 +156,12 @@ TEST_CASE("Call in operator on a random variable and int interval", "[environmen
     auto lower = dice::make<dice::type_int>(2);
     auto upper = dice::make<dice::type_int>(4);
 
-    auto result = env.call("in", std::move(var), std::move(lower), std::move(upper));
+    auto result = env.call("in", std::move(input), std::move(lower), std::move(upper));
     REQUIRE(result->type() == dice::type_rand_var::id());
 
-    auto prob = dynamic_cast<dice::type_rand_var*>(result.get())->data().to_random_variable().probability();
-    REQUIRE(prob.find(1)->second == Approx(3 / 5.0));
-    REQUIRE(prob.find(0)->second == Approx(2 / 5.0));
+    auto var = dynamic_cast<dice::type_rand_var*>(result.get())->data().to_random_variable();
+    REQUIRE(var.probability(1) == Approx(3 / 5.0));
+    REQUIRE(var.probability(0) == Approx(2 / 5.0));
 }
 
 #ifndef DISABLE_RNG

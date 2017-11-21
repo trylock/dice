@@ -198,19 +198,10 @@ namespace
         {
             using namespace dice;
 
-            ProbType sum = 0;
             auto value = dist(engine);
             auto var = context.arg<type_rand_var>(0)->data()
                 .to_random_variable(); 
-            for (auto&& pair : var.probability())
-            {
-                if (sum + pair.second >= value)
-                {
-                    return make<type_int>(pair.first);
-                }
-                sum += pair.second;
-            }
-            return make<type_int>(var.probability().end()->first);
+            return make<type_int>(var.random_value(value));
         } 
     };
 

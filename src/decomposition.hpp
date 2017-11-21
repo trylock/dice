@@ -331,7 +331,7 @@ namespace dice
             std::size_t num_values = 1;
             for (auto&& var : result.deps_)
             {
-                num_values *= var->probability().size();
+                num_values *= var->size();
             }
 
             // determine which dependencies are in A and which are in B
@@ -389,7 +389,7 @@ namespace dice
                 for (std::size_t j = 0; j < result.deps_.size(); ++j)
                 {
                     auto&& var = result.deps_[j];
-                    auto var_values_count = var->probability().size();
+                    auto var_values_count = var->size();
                     if ((is_in[j] & A) != 0)
                     {
                         index_a += (index_result % var_values_count) * size_a;
@@ -419,16 +419,6 @@ namespace dice
         var_type to_random_variable() const 
         {
             var_type result;
-
-            // if there are no dependent variables
-            if (deps_.empty())
-            {
-                assert(vars_.size() <= 1);
-                if (vars_.size() == 1)
-                    return vars_[0];
-                return result;
-            }
-
             for (auto it = begin(); it != end(); ++it)
             {
                 result.add_probability(it->first, it->second);
@@ -467,37 +457,33 @@ namespace dice
                 {
                     result.deps_.push_back(make_variable_ptr(var));
                 }
-                state.push_back(var.probability().begin());
+                state.push_back(var.begin());
             }
 
             // calculate new size
             std::size_t num_values = 1;
             for (auto&& dep : result.deps_)
             {
-                num_values *= dep->probability().size();
+                num_values *= dep->size();
             }
             
             // add values
-            auto state_it = state.begin();
-            for (std::size_t i = 0; i < num_values; ++i)
+            for (std::size_t i = 0; i < num_values / state.size(); ++i)
             {
-                auto value_it = *state_it;
-                result.vars_.emplace_back(constant_tag{}, value_it->first);
+                for (std::size_t j = 0; j < state.size(); ++j)
+                { 
+                    result.vars_.emplace_back(constant_tag{}, state[j]->first);
+                }
 
-                ++state_it;
-                if (state_it == state.end())
+                // update state
+                for (std::size_t j = 0; j < state.size(); ++j)
                 {
-                    state_it = state.begin();
-
-                    for (std::size_t i = 0; i < state.size(); ++i)
+                    ++state[j];
+                    if (state[j] != vars_[j].end())
                     {
-                        ++state[i];
-                        if (state[i] != vars_[i].probability().end())
-                        {
-                            break;
-                        }
-                        state[i] = vars_[i].probability().begin();
+                        break;
                     }
+                    state[j] = vars_[j].begin();
                 }
             }
             return result;
@@ -661,12 +647,20 @@ namespace dice
                 return;
             }
 
+            // initialize inner node iterators
             for (auto&& dep : decomposition_->deps_)
             {
-                inner_it_.push_back(dep->probability().begin());
+                inner_it_.push_back(dep->begin());
             }
+
+            // initialzie leaf and value iterators
             leaf_it_ = decomposition_->vars_.begin();
-            value_it_ = leaf_it_->probability().begin();
+            if (leaf_it_ != leaf_end())
+            {
+                value_it_ = leaf_it_->begin();
+            }
+
+            // precompute first value
             precompute_value();
         }
 
@@ -678,13 +672,13 @@ namespace dice
         {
             // move to the next value in current leaf node
             ++value_it_;
-            if (value_it_ == leaf_it_->probability().end())
+            if (value_it_ == leaf_it_->end())
             {
                 // move to the next leaf node
                 ++leaf_it_;
                 if (leaf_it_ != leaf_end())
                 {
-                    value_it_ = leaf_it_->probability().begin();
+                    value_it_ = leaf_it_->begin();
                 }
 
                 // move inner node iterators
@@ -750,12 +744,12 @@ namespace dice
 
         auto inner_end(std::size_t index) const
         {
-            return decomposition_->deps_[index]->probability().cend();
+            return decomposition_->deps_[index]->end();
         }
         
         auto inner_begin(std::size_t index) const
         {
-            return decomposition_->deps_[index]->probability().cbegin();
+            return decomposition_->deps_[index]->begin();
         }
 
         auto leaf_end() const

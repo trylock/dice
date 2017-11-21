@@ -166,6 +166,25 @@ namespace dice
             return result;
         }
 
+        /** Return first value s.t. P(X <= value) >= prob.
+         * Unlike the quantile method, values are not copied nor sorted.
+         * @param probability
+         * @return value
+         */
+        auto random_value(probability_type prob) const
+        {
+            probability_type sum = 0;
+            for (auto&& pair : probability_)
+            {
+                if (sum + pair.second >= prob)
+                {
+                    return pair.first;
+                }
+                sum += pair.second;
+            }
+            return probability_.end()->first;
+        }
+
         /** Calculate indicator that X (this r.v.) is in given interval
          * @param lower bound of the interval
          * @param upper bound of the interval
@@ -529,9 +548,50 @@ namespace dice
             return dist;
         }
 
-        const auto& probability() const 
+        /** Find the probability of given value.
+         * @param value
+         * @return probability of the value 
+         *         0 if it's not in the varaible's range
+         */
+        auto probability(const value_type& value) const
         {
-            return probability_; 
+            auto it = probability_.find(value);
+            if (it == probability_.end())
+                return probability_type{ 0 };
+            return it->second;
+        }
+
+        /** Return number of values in variable's range. 
+         * Number of values with non-zero probability.
+         * @return number of such values
+         */
+        auto size() const
+        {
+            return probability_.size();
+        }
+
+        /** First iterator of the (value, probaiblity) pair collection.
+         * @return iterator pointing at the first value
+         */
+        auto begin() const
+        {
+            return probability_.begin();
+        }
+
+        /** Last iterator of the (value, probability) pair collection.
+         * @return iterator pointing past the last value
+         */
+        auto end() const
+        {
+            return probability_.cend();
+        }
+
+        /** Check whether there are any values with non-zero probability.
+         * @return true iff there is at least 1 value with non-zero probability
+         */
+        bool empty() const
+        {
+            return probability_.empty();
         }
 
         /** Chek whether this random variable is equal to some other variable.

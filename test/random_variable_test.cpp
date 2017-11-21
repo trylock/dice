@@ -9,13 +9,13 @@ TEST_CASE("Compute distribution of a single dice roll", "[random_variable]")
     dice::random_variable<int, double> num_sides{ dice::constant_tag{}, 6 };
 
     auto dist = roll(num_dice, num_sides);
-    REQUIRE(dist.probability().size() == 6);
-    REQUIRE(dist.probability().find(1)->second == Approx(1 / 6.0));
-    REQUIRE(dist.probability().find(2)->second == Approx(1 / 6.0));
-    REQUIRE(dist.probability().find(3)->second == Approx(1 / 6.0));
-    REQUIRE(dist.probability().find(4)->second == Approx(1 / 6.0));
-    REQUIRE(dist.probability().find(5)->second == Approx(1 / 6.0));
-    REQUIRE(dist.probability().find(6)->second == Approx(1 / 6.0));
+    REQUIRE(dist.size() == 6);
+    REQUIRE(dist.probability(1) == Approx(1 / 6.0));
+    REQUIRE(dist.probability(2) == Approx(1 / 6.0));
+    REQUIRE(dist.probability(3) == Approx(1 / 6.0));
+    REQUIRE(dist.probability(4) == Approx(1 / 6.0));
+    REQUIRE(dist.probability(5) == Approx(1 / 6.0));
+    REQUIRE(dist.probability(6) == Approx(1 / 6.0));
 }
 
 TEST_CASE("Compute distribution of 2d6", "[random_variable]")
@@ -24,18 +24,18 @@ TEST_CASE("Compute distribution of 2d6", "[random_variable]")
     dice::random_variable<int, double> num_sides{ dice::constant_tag{}, 6 };
 
     auto dist = roll(num_dice, num_sides);
-    REQUIRE(dist.probability().size() == 11);
-    REQUIRE(dist.probability().find(2)->second == Approx(1 / 36.0));
-    REQUIRE(dist.probability().find(3)->second == Approx(2 / 36.0));
-    REQUIRE(dist.probability().find(4)->second == Approx(3 / 36.0));
-    REQUIRE(dist.probability().find(5)->second == Approx(4 / 36.0));
-    REQUIRE(dist.probability().find(6)->second == Approx(5 / 36.0));
-    REQUIRE(dist.probability().find(7)->second == Approx(6 / 36.0));
-    REQUIRE(dist.probability().find(8)->second == Approx(5 / 36.0));
-    REQUIRE(dist.probability().find(9)->second == Approx(4 / 36.0));
-    REQUIRE(dist.probability().find(10)->second == Approx(3 / 36.0));
-    REQUIRE(dist.probability().find(11)->second == Approx(2 / 36.0));
-    REQUIRE(dist.probability().find(12)->second == Approx(1 / 36.0));
+    REQUIRE(dist.size() == 11);
+    REQUIRE(dist.probability(2) == Approx(1 / 36.0));
+    REQUIRE(dist.probability(3) == Approx(2 / 36.0));
+    REQUIRE(dist.probability(4) == Approx(3 / 36.0));
+    REQUIRE(dist.probability(5) == Approx(4 / 36.0));
+    REQUIRE(dist.probability(6) == Approx(5 / 36.0));
+    REQUIRE(dist.probability(7) == Approx(6 / 36.0));
+    REQUIRE(dist.probability(8) == Approx(5 / 36.0));
+    REQUIRE(dist.probability(9) == Approx(4 / 36.0));
+    REQUIRE(dist.probability(10) == Approx(3 / 36.0));
+    REQUIRE(dist.probability(11) == Approx(2 / 36.0));
+    REQUIRE(dist.probability(12) == Approx(1 / 36.0));
 }
 
 TEST_CASE("Compute distribution of 4d4", "[random_variable]")
@@ -44,20 +44,20 @@ TEST_CASE("Compute distribution of 4d4", "[random_variable]")
     dice::random_variable<int, double> num_sides{ dice::constant_tag{}, 4 };
 
     auto dist = roll(num_dice, num_sides);
-    REQUIRE(dist.probability().size() == 13);
-    REQUIRE(dist.probability().find(4)->second == Approx(1 / 256.0));
-    REQUIRE(dist.probability().find(5)->second == Approx(4 / 256.0));
-    REQUIRE(dist.probability().find(6)->second == Approx(10 / 256.0));
-    REQUIRE(dist.probability().find(7)->second == Approx(20 / 256.0));
-    REQUIRE(dist.probability().find(8)->second == Approx(31 / 256.0));
-    REQUIRE(dist.probability().find(9)->second == Approx(40 / 256.0));
-    REQUIRE(dist.probability().find(10)->second == Approx(44 / 256.0));
-    REQUIRE(dist.probability().find(11)->second == Approx(40 / 256.0));
-    REQUIRE(dist.probability().find(12)->second == Approx(31 / 256.0));
-    REQUIRE(dist.probability().find(13)->second == Approx(20 / 256.0));
-    REQUIRE(dist.probability().find(14)->second == Approx(10 / 256.0));
-    REQUIRE(dist.probability().find(15)->second == Approx(4 / 256.0));
-    REQUIRE(dist.probability().find(16)->second == Approx(1 / 256.0));
+    REQUIRE(dist.size() == 13);
+    REQUIRE(dist.probability(4) == Approx(1 / 256.0));
+    REQUIRE(dist.probability(5) == Approx(4 / 256.0));
+    REQUIRE(dist.probability(6) == Approx(10 / 256.0));
+    REQUIRE(dist.probability(7) == Approx(20 / 256.0));
+    REQUIRE(dist.probability(8) == Approx(31 / 256.0));
+    REQUIRE(dist.probability(9) == Approx(40 / 256.0));
+    REQUIRE(dist.probability(10) == Approx(44 / 256.0));
+    REQUIRE(dist.probability(11) == Approx(40 / 256.0));
+    REQUIRE(dist.probability(12) == Approx(31 / 256.0));
+    REQUIRE(dist.probability(13) == Approx(20 / 256.0));
+    REQUIRE(dist.probability(14) == Approx(10 / 256.0));
+    REQUIRE(dist.probability(15) == Approx(4 / 256.0));
+    REQUIRE(dist.probability(16) == Approx(1 / 256.0));
 }
 
 TEST_CASE("Compute distribution of XdY where X and Y are random variables", "[random_variable]")
@@ -68,7 +68,7 @@ TEST_CASE("Compute distribution of XdY where X and Y are random variables", "[ra
     };
 
     auto dist = roll(num_dice, num_sides);
-    REQUIRE(dist.probability().find(2)->second == Approx(1.0 / (16 * 3) + 2.0 / (4 * 3)));
+    REQUIRE(dist.probability(2) == Approx(1.0 / (16 * 3) + 2.0 / (4 * 3)));
 }
 
 TEST_CASE("Roll throws an exception if number of sides or number of dice is non-positive", "[random_variable]")
@@ -120,16 +120,15 @@ TEST_CASE("Add random variables", "[dice]")
         std::make_pair(6, 1),
     } };
     auto result = a + b;
-    auto&& prob = result.probability();
-    REQUIRE(prob.find(2)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(3)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(4)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(5)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(6)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(7)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(8)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(9)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(10)->second == Approx(1 / 24.0));
+    REQUIRE(result.probability(2) == Approx(1 / 24.0));
+    REQUIRE(result.probability(3) == Approx(2 / 24.0));
+    REQUIRE(result.probability(4) == Approx(3 / 24.0));
+    REQUIRE(result.probability(5) == Approx(4 / 24.0));
+    REQUIRE(result.probability(6) == Approx(4 / 24.0));
+    REQUIRE(result.probability(7) == Approx(4 / 24.0));
+    REQUIRE(result.probability(8) == Approx(3 / 24.0));
+    REQUIRE(result.probability(9) == Approx(2 / 24.0));
+    REQUIRE(result.probability(10) == Approx(1 / 24.0));
 }
 
 TEST_CASE("Subtract random variables", "[dice]")
@@ -149,16 +148,15 @@ TEST_CASE("Subtract random variables", "[dice]")
         std::make_pair(6, 1),
     } };
     auto result = a - b;
-    auto&& prob = result.probability();
-    REQUIRE(prob.find(-5)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(-4)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(-3)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(-2)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(-1)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(0)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(1)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(2)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 24.0));
+    REQUIRE(result.probability(-5) == Approx(1 / 24.0));
+    REQUIRE(result.probability(-4) == Approx(2 / 24.0));
+    REQUIRE(result.probability(-3) == Approx(3 / 24.0));
+    REQUIRE(result.probability(-2) == Approx(4 / 24.0));
+    REQUIRE(result.probability(-1) == Approx(4 / 24.0));
+    REQUIRE(result.probability(0) == Approx(4 / 24.0));
+    REQUIRE(result.probability(1) == Approx(3 / 24.0));
+    REQUIRE(result.probability(2) == Approx(2 / 24.0));
+    REQUIRE(result.probability(3) == Approx(1 / 24.0));
 }
 
 TEST_CASE("Multiply random variables", "[dice]")
@@ -178,22 +176,21 @@ TEST_CASE("Multiply random variables", "[dice]")
         std::make_pair(6, 1),
     } };
     auto result = a * b;
-    auto&& prob = result.probability();
-    REQUIRE(prob.find(1)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(2)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(3)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(4)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(5)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(6)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(8)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(9)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(10)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(12)->second == Approx(3 / 24.0));
-    REQUIRE(prob.find(15)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(16)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(18)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(20)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(24)->second == Approx(1 / 24.0));
+    REQUIRE(result.probability(1) == Approx(1 / 24.0));
+    REQUIRE(result.probability(2) == Approx(2 / 24.0));
+    REQUIRE(result.probability(3) == Approx(2 / 24.0));
+    REQUIRE(result.probability(4) == Approx(3 / 24.0));
+    REQUIRE(result.probability(5) == Approx(1 / 24.0));
+    REQUIRE(result.probability(6) == Approx(3 / 24.0));
+    REQUIRE(result.probability(8) == Approx(2 / 24.0));
+    REQUIRE(result.probability(9) == Approx(1 / 24.0));
+    REQUIRE(result.probability(10) == Approx(1 / 24.0));
+    REQUIRE(result.probability(12) == Approx(3 / 24.0));
+    REQUIRE(result.probability(15) == Approx(1 / 24.0));
+    REQUIRE(result.probability(16) == Approx(1 / 24.0));
+    REQUIRE(result.probability(18) == Approx(1 / 24.0));
+    REQUIRE(result.probability(20) == Approx(1 / 24.0));
+    REQUIRE(result.probability(24) == Approx(1 / 24.0));
 }
 
 TEST_CASE("Divide random variables", "[dice]")
@@ -213,14 +210,13 @@ TEST_CASE("Divide random variables", "[dice]")
         std::make_pair(6, 1),
     } };
     auto result = b / a;
-    auto&& prob = result.probability();
-    REQUIRE(prob.find(0)->second == Approx(6 / 24.0));
-    REQUIRE(prob.find(1)->second == Approx(9 / 24.0));
-    REQUIRE(prob.find(2)->second == Approx(4 / 24.0));
-    REQUIRE(prob.find(3)->second == Approx(2 / 24.0));
-    REQUIRE(prob.find(4)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(5)->second == Approx(1 / 24.0));
-    REQUIRE(prob.find(6)->second == Approx(1 / 24.0));
+    REQUIRE(result.probability(0) == Approx(6 / 24.0));
+    REQUIRE(result.probability(1) == Approx(9 / 24.0));
+    REQUIRE(result.probability(2) == Approx(4 / 24.0));
+    REQUIRE(result.probability(3) == Approx(2 / 24.0));
+    REQUIRE(result.probability(4) == Approx(1 / 24.0));
+    REQUIRE(result.probability(5) == Approx(1 / 24.0));
+    REQUIRE(result.probability(6) == Approx(1 / 24.0));
 }
 
 TEST_CASE("If number of sides or number of dice is an impossible event, the roll is an impossible as well", "[dice]")
@@ -230,8 +226,8 @@ TEST_CASE("If number of sides or number of dice is an impossible event, the roll
     auto inv_dice = roll(impossible, constant);
     auto inv_sides = roll(constant, impossible);
 
-    REQUIRE(inv_dice.probability().empty());
-    REQUIRE(inv_sides.probability().empty());
+    REQUIRE(inv_dice.empty());
+    REQUIRE(inv_sides.empty());
 }
 
 TEST_CASE("Compute standard deviation of an impossible event", "[random_variable]")
@@ -355,9 +351,8 @@ TEST_CASE("Construct a random variable from a list of value frequencies", "[rand
         std::make_pair(3, 1),
         std::make_pair(1, 1)
     } };    
-    auto prob = var.probability();
 
-    REQUIRE(prob.find(1)->second == Approx(2 / 4.0));
-    REQUIRE(prob.find(2)->second == Approx(1 / 4.0));
-    REQUIRE(prob.find(3)->second == Approx(1 / 4.0));
+    REQUIRE(var.probability(1) == Approx(2 / 4.0));
+    REQUIRE(var.probability(2) == Approx(1 / 4.0));
+    REQUIRE(var.probability(3) == Approx(1 / 4.0));
 }
