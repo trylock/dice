@@ -112,7 +112,7 @@ namespace dice
     class parser
     {
     public:
-        using value_type = typename Interpreter::value_type;
+        using attr_type = typename Interpreter::value_type;
 
         parser(Lexer* reader, Logger* log, Interpreter* inter) : 
             lexer_(reader), 
@@ -152,9 +152,9 @@ namespace dice
          *                    | ""
          * @return vector of computed values in each statement
          */
-        std::vector<value_type> stmts()
+        std::vector<attr_type> stmts()
         {
-            std::vector<value_type> values;
+            std::vector<attr_type> values;
             if (!check<nonterminal_type::stmt>() || 
                 lookahead_.type == symbol_type::end)
             {
@@ -194,7 +194,7 @@ namespace dice
          *                   | <expr>
          * @return computed value (nullptr if this is an assignment)
          */
-        value_type stmt()
+        attr_type stmt()
         {
             if (lookahead_.type == symbol_type::var)
             {
@@ -205,7 +205,7 @@ namespace dice
                 
                 // parse value of the name
                 int_->enter_assign();
-                value_type value;
+                attr_type value;
                 if (check<nonterminal_type::expr>())
                 {
                     value = expr();
@@ -236,7 +236,7 @@ namespace dice
          *                     | <add> <rel_op> <add>
          *                     | <add> 
          */
-        value_type expr()
+        attr_type expr()
         {
             auto left = add();
             if (lookahead_.type == symbol_type::in)
@@ -244,8 +244,8 @@ namespace dice
                 eat(symbol_type::in);
                 eat(symbol_type::left_square_bracket);
 
-                value_type lower_bound;
-                value_type upper_bound;
+                attr_type lower_bound;
+                attr_type upper_bound;
         
                 // parse lower bound of the interval
                 if (check<nonterminal_type::add>())
@@ -302,7 +302,7 @@ namespace dice
          *                    | <mult>
          * @return computed value
          */
-        value_type add()
+        attr_type add()
         {
             std::string op;
             auto result = mult();
@@ -346,7 +346,7 @@ namespace dice
          *                     | <unary_minus>
          * @return computed value
          */
-        value_type mult()
+        attr_type mult()
         {
             std::string op;
             auto result = dice_roll();
@@ -391,7 +391,7 @@ namespace dice
          *                             | <factor>
          * @return computed value
          */
-        value_type dice_roll()
+        attr_type dice_roll()
         {
             // determine the sign
             int count = 0;
@@ -448,13 +448,13 @@ namespace dice
          *                        | <id>
          * @return value of the factor
          */
-        value_type factor()
+        attr_type factor()
         {
             if (lookahead_.type == symbol_type::left_paren)
             {
                 eat(symbol_type::left_paren);
                 
-                value_type result;
+                attr_type result;
                 if (check<nonterminal_type::expr>())
                 {
                     result = expr();
@@ -532,9 +532,9 @@ namespace dice
          *                            | <expr>
          * @return list of parameters
          */
-        std::vector<value_type> param_list()
+        std::vector<attr_type> param_list()
         {
-            std::vector<value_type> args;
+            std::vector<attr_type> args;
             if (lookahead_.type == symbol_type::right_paren)
             {
                 // no arguments
