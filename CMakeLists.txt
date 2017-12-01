@@ -35,6 +35,7 @@ set(dice_cli ${SRC_DIR}/main.cpp)
 set(all_tests
     ${EXTERNAL_DIR}/catch.hpp
     ${TESTS_DIR}/main.cpp
+    ${TESTS_DIR}/value_test.cpp
     ${TESTS_DIR}/lexer_test.cpp
     ${TESTS_DIR}/parser_test.cpp
     ${TESTS_DIR}/conversions_test.cpp
