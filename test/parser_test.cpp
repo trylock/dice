@@ -41,9 +41,19 @@ public:
         return "<DEFAULT>";
     }
 
-    value_type number(const std::string& value)
+    value_type number(dice::symbol& token)
     {    
-        return value;
+        auto int_value = dynamic_cast<dice::type_int*>(token.value.get());
+        auto double_value = dynamic_cast<dice::type_double*>(token.value.get());
+        if (int_value != nullptr)
+        {
+            return std::to_string(int_value->data());
+        }
+        else if (double_value != nullptr)
+        {
+            return std::to_string(double_value->data());
+        }
+        assert(false && "Number has to have an int or a double value.");
     }
 
     value_type variable(const std::string& name)
@@ -146,6 +156,15 @@ static auto parse(std::vector<dice::symbol>&& tokens)
     return result;
 }
 
+template<typename T, std::size_t n>
+static auto to_vector(T(&array)[n])
+{
+    return std::vector<T>{
+        std::make_move_iterator(std::begin(array)),
+        std::make_move_iterator(std::end(array))
+    }; 
+}
+
 TEST_CASE("Parse an empty expression", "[parser]")
 {
     auto result = parse({});
@@ -157,9 +176,10 @@ TEST_CASE("Parse simple expression", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "14" }
-    });
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(14) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -170,17 +190,18 @@ TEST_CASE("Operators + and - are left associative", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::plus },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::minus },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::plus },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::minus },
-        { symbol_type::number, "5" },
-    });
+        { symbol_type::number, make<type_int>(5) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -191,17 +212,18 @@ TEST_CASE("Operators * and / are left associative", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::times },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::divide },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::times },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::divide },
-        { symbol_type::number, "5" },
-    });
+        { symbol_type::number, make<type_int>(5) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -212,17 +234,18 @@ TEST_CASE("Operator D (dice roll) is left associative", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::roll_op },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::roll_op },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::roll_op },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::roll_op },
-        { symbol_type::number, "5" },
-    });
+        { symbol_type::number, make<type_int>(5) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -233,17 +256,18 @@ TEST_CASE("Operators * and / have higher precedence than + and -", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::plus },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::times },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::minus },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::divide },
-        { symbol_type::number, "5" },
-    });
+        { symbol_type::number, make<type_int>(5) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -254,12 +278,13 @@ TEST_CASE("Operator D has higher precedence than unary -", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::minus },
-        { symbol_type::number, "1" },
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::roll_op },
-        { symbol_type::number, "2" },
-    });
+        { symbol_type::number, make<type_int>(2) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -270,19 +295,20 @@ TEST_CASE("Operator D has higher precedence than +, -, * and /", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::plus },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::roll_op },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::times },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::roll_op },
-        { symbol_type::number, "5" },
+        { symbol_type::number, make<type_int>(5) },
         { symbol_type::minus },
-        { symbol_type::number, "6" },
-    });
+        { symbol_type::number, make<type_int>(6) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -293,13 +319,14 @@ TEST_CASE("Operator D has higher precedence than a relational operator", "[parse
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::roll_op },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::rel_op, "<" },
-        { symbol_type::number, "3" },
-    });
+        { symbol_type::number, make<type_int>(3) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -310,17 +337,18 @@ TEST_CASE("Operator D has higher precedence than in operator", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::roll_op },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::in },
         { symbol_type::left_square_bracket },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::param_delim },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::right_square_bracket },
-    });
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -331,25 +359,26 @@ TEST_CASE("Assign operator has the lowest precedence", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::var },
         { symbol_type::id, "X" },
         { symbol_type::assign },
-        { symbol_type::number, "1" },
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::rel_op, "<" },
-        { symbol_type::number, "2" },
+        { symbol_type::number, make<type_int>(2) },
         { symbol_type::plus },
-        { symbol_type::number, "3" },
+        { symbol_type::number, make<type_int>(3) },
         { symbol_type::minus },
-        { symbol_type::number, "4" },
+        { symbol_type::number, make<type_int>(4) },
         { symbol_type::times },
-        { symbol_type::number, "5" },
+        { symbol_type::number, make<type_int>(5) },
         { symbol_type::divide },
         { symbol_type::minus },
-        { symbol_type::number, "6" },
+        { symbol_type::number, make<type_int>(6) },
         { symbol_type::roll_op },
-        { symbol_type::number, "7" },
-    });
+        { symbol_type::number, make<type_int>(7) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.errors.empty());
     REQUIRE(result.values.size() == 1);
@@ -360,12 +389,13 @@ TEST_CASE("Parse erroneous second operand for a relational operator", "[parser]"
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::rel_op, "<" },
         { symbol_type::assign },
-        { symbol_type::number, "2" }
-    });
+        { symbol_type::number, make<type_int>(2) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "(1<2)");
@@ -378,13 +408,14 @@ TEST_CASE("Parse invalid tokens at the beginning of an expression", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::left_square_bracket },
         { symbol_type::plus },
-        { symbol_type::number, "1" },
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::plus },
-        { symbol_type::number, "2" }
-    });
+        { symbol_type::number, make<type_int>(2) },
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "(1+2)");
@@ -398,13 +429,14 @@ TEST_CASE("Parse an empty statement in statements list", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
-        { symbol_type::number, "1" },
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::semicolon },
         { symbol_type::right_paren },
         { symbol_type::semicolon },
-        { symbol_type::number, "2" },
-    });
+        { symbol_type::number, make<type_int>(2) },
+    };
+    auto result = parse(to_vector(input));
     
     REQUIRE(result.values.size() == 2);
     REQUIRE(result.values[0] == "1");
@@ -421,9 +453,10 @@ TEST_CASE("Use default value instead of a nonexistent variable name", "[parser]"
 
     // E is a special variable name for which the interpreter mock throws
     // a compiler error simulating a nonexitent variable
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::id, "E" }, 
-    });
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "<DEFAULT>");
@@ -436,12 +469,13 @@ TEST_CASE("Use default value instead of an invalid expression in name definition
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::var },
         { symbol_type::id, "X" },
         { symbol_type::assign },
         { symbol_type::semicolon },
-    });
+    };
+    auto result = parse(to_vector(input));
     
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "(X=<DEFAULT>);");
@@ -456,11 +490,12 @@ TEST_CASE("If an error occurs during a function call, use default value and prov
 
     // E is a special function name for which the interpreter mock throws
     // a compiler error simulating a nonexistent function
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::func_id, "E" },
         { symbol_type::left_paren },
         { symbol_type::right_paren },
-    });
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "<DEFAULT>");
@@ -473,14 +508,15 @@ TEST_CASE("Replace invalid function arguments with the default value", "[parser]
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::func_id, "func" },
         { symbol_type::left_paren },
         { symbol_type::assign },
         { symbol_type::param_delim },
-        { symbol_type::number, "1" },
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::right_paren },
-    });
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "func(<DEFAULT>,1)");
@@ -494,12 +530,13 @@ TEST_CASE("Replace invalid parenthesised expression with the default value", "[p
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::left_paren },
         { symbol_type::left_square_bracket },
         { symbol_type::right_square_bracket },
         { symbol_type::right_paren },
-    });
+    };
+    auto result = parse(to_vector(input));
 
     REQUIRE(result.values.size() == 1);
     REQUIRE(result.values[0] == "<DEFAULT>");
@@ -514,14 +551,15 @@ TEST_CASE("Handle exceptions in assignment", "[parser]")
 {
     using namespace dice;
 
-    auto result = parse(symbols{
+    dice::symbol input[] = {
         { symbol_type::var },
         { symbol_type::id, "x" },
         { symbol_type::assign },
-        { symbol_type::number, "1" },
+        { symbol_type::number, make<type_int>(1) },
         { symbol_type::semicolon },
-        { symbol_type::id, "x" }
-    });
+        { symbol_type::id, "x" },
+    };
+    auto result = parse(to_vector(input));
     
     REQUIRE(result.values.size() == 2);
     REQUIRE(result.values[0] == "1");

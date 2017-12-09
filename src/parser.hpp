@@ -199,7 +199,7 @@ namespace dice
             if (lookahead_.type == symbol_type::var)
             {
                 eat(lookahead_.type);
-                auto id = lookahead_;
+                auto id = std::move(lookahead_);
                 eat(symbol_type::id);
                 eat(symbol_type::assign);
                 
@@ -282,7 +282,7 @@ namespace dice
             }
             else if (lookahead_.type == symbol_type::rel_op)
             {
-                auto op = lookahead_;
+                auto op = std::move(lookahead_);
                 eat(symbol_type::rel_op);
                 if (check<nonterminal_type::add>())
                 {
@@ -472,14 +472,14 @@ namespace dice
             }
             else if (lookahead_.type == symbol_type::number)
             {
-                auto lexeme = lookahead_.lexeme;
+                auto token = std::move(lookahead_);
                 eat(lookahead_.type);
-                return int_->number(lexeme);
+                return int_->number(token);
             }
             else if (lookahead_.type == symbol_type::func_id)
             {
                 // function call
-                auto id = lookahead_;
+                auto id = std::move(lookahead_);
                 eat(symbol_type::func_id);
                 eat(symbol_type::left_paren);
                 auto args = param_list();
@@ -498,7 +498,7 @@ namespace dice
             else if (lookahead_.type == symbol_type::id)
             {
                 // variable
-                auto id = lookahead_;
+                auto id = std::move(lookahead_);
                 eat(symbol_type::id);
                 try 
                 {

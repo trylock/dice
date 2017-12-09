@@ -27,9 +27,16 @@ namespace dice
          */
         std::string lexeme = "";
 
+        /** Value of the symbol.
+         * It is only stored for numbers.
+         */
+        std::unique_ptr<base_value> value = nullptr;
+
         symbol() {}
         symbol(symbol_type type, std::string lexeme = "") 
             : type(type), lexeme(std::move(lexeme)) {}
+        symbol(symbol_type type, std::unique_ptr<base_value> value) 
+            : type(type), value(std::move(value)) {}
 
         inline bool operator==(const symbol& other) const
         {

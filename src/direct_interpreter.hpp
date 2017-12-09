@@ -4,6 +4,7 @@
 #include <array>
 #include <memory>
 #include <sstream>
+#include <cassert>
 
 #include "value.hpp"
 #include "symbols.hpp"
@@ -68,19 +69,13 @@ namespace dice
         }
 
         /** Interpret number as an int or double.
-         * @param string representation of the number
+         * @param number token
          * @return number's value
          */
-        value_type number(const std::string& value)
-        {    
-            if (value.find('.') != std::string::npos)
-            {
-                return make<type_double>(std::atof(value.c_str()));
-            }
-            else 
-            {
-                return make<type_int>(std::atoi(value.c_str()));
-            }
+        value_type number(symbol& token)
+        {
+            assert(token.type == symbol_type::number);
+            return std::move(token.value);
         }
 
         /** Interpret a variable name.

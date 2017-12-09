@@ -99,50 +99,7 @@ namespace dice
                 // parse numbers
                 if (std::isdigit(current))
                 {
-                    std::string value(1, current);
-                    std::size_t num_dots = 0;
-                    std::size_t invalid_pos = 0;
-                    for (;;)
-                    {
-                        if (std::isdigit(input_->peek()))
-                        {
-                            value += static_cast<char>(get_char());
-                        }
-                        else if (input_->peek() == '.')
-                        {
-                            if (num_dots == 1)
-                            {
-                                invalid_pos = value.size();
-                            }
-                            value += static_cast<char>(get_char());
-                            ++num_dots;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    // report malformed values
-                    if (value.back() == '.' || invalid_pos > 0)
-                    {
-                        error("Malformed number: '" + value + "'");
-                    }
-
-                    // fix malformed values
-                    if (value.back() == '.')
-                    {
-                        value += "0";
-                    }
-                    else if (invalid_pos > 0)
-                    {
-                        value = value.substr(0, invalid_pos);
-                    }
-
-                    return symbol{
-                        symbol_type::number,
-                        value
-                    };
+                    return parse_number(current);
                 }
 
                 // parse identifiers
@@ -195,6 +152,96 @@ namespace dice
         std::istream* input_;
         Logger* log_;
         lexer_location location_;
+
+        symbol parse_number(char current_char)
+        {
+            std::string value(1, current_char);
+            std::size_t num_dots = 0;
+            std::size_t invalid_pos = 0;
+            for (;;)
+            {
+                if (std::isdigit(input_->peek()))
+                {
+                    value += static_cast<char>(get_char());
+                }
+                else if (input_->peek() == '.')
+                {
+                    if (num_dots == 1)
+                    {
+                        invalid_pos = value.size();
+                    }
+                    value += static_cast<char>(get_char());
+                    ++num_dots;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // report malformed values
+            if (value.back() == '.' || invalid_pos > 0)
+            {
+                error("Malformed number: '" + value + "'");
+            }
+
+            // fix malformed values
+            if (value.back() == '.')
+            {
+                value += "0";
+            }
+            else if (invalid_pos > 0)
+            {
+                value = value.substr(0, invalid_pos);
+            }
+
+            // parse the number
+            auto dot_pos = value.find('.');
+            if (dot_pos == std::string::npos) // integer number
+            {
+                std::uint64_t data = 0;
+                auto is_overflow = false;
+                for (auto&& c : value)
+                {
+                    data *= 10;
+                    data += c - '0';
+                    if (data > std::numeric_limits<int>::max())
+                    {
+                        is_overflow = true;
+                    }
+                }
+
+                if (is_overflow)
+                {
+                    error("Value out of range: '" + value + "'");
+                }
+
+                auto mask = static_cast<std::uint64_t>(
+                    std::numeric_limits<int>::max());
+                return symbol{
+                    symbol_type::number,
+                    make<type_int>(static_cast<int>(data & mask))
+                };
+            }
+            else // decimal number
+            {
+                try
+                {
+                    return symbol{
+                        symbol_type::number,
+                        make<type_double>(std::stod(value))
+                    };
+                }
+                catch (std::out_of_range&)
+                {
+                    error("Value out of range: '" + value + "'");
+                    return symbol{
+                        symbol_type::number,
+                        make<type_double>(0.0)
+                    };
+                }
+            }
+        }
 
         // skip sequence of whitespace at current location
         void skip_space()

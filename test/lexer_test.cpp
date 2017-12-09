@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "lexer.hpp"
 #include "logger_mock.hpp"
+#include "value.hpp"
 
 #include <sstream>
 
@@ -118,7 +119,7 @@ TEST_CASE("Find dice operator", "[lexer]")
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "6");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 6);
 
     REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(lex.errors().empty());
@@ -130,7 +131,7 @@ TEST_CASE("Find a number", "[lexer]")
 
     auto token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "42");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 42);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::id);
@@ -138,7 +139,7 @@ TEST_CASE("Find a number", "[lexer]")
     
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "1");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 1);
 
     REQUIRE(lex.read_token().type == dice::symbol_type::end);
     REQUIRE(lex.errors().empty());
@@ -150,19 +151,19 @@ TEST_CASE("Find an integer and a double", "[lexer]")
 
     auto token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "0.45");
+    REQUIRE(dynamic_cast<dice::type_double&>(*token.value).data() == 0.45);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "14.0");
+    REQUIRE(dynamic_cast<dice::type_double&>(*token.value).data() == 14.0);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "14");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 14);
     
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "1.001");
+    REQUIRE(dynamic_cast<dice::type_double&>(*token.value).data() == 1.001);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::end);
@@ -175,7 +176,7 @@ TEST_CASE("Recognize expressions delimiter", "[lexer]")
 
     auto token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "1");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 1);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::semicolon);
@@ -183,7 +184,7 @@ TEST_CASE("Recognize expressions delimiter", "[lexer]")
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "2");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 2);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::semicolon);
@@ -191,7 +192,7 @@ TEST_CASE("Recognize expressions delimiter", "[lexer]")
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "42");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 42);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::semicolon);
@@ -215,7 +216,7 @@ TEST_CASE("Recognize assignment", "[lexer]")
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE(token.lexeme == "1");
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == 1);
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::semicolon);
@@ -296,8 +297,8 @@ TEST_CASE("Multiple decimal parts in one number", "[lexer]")
     REQUIRE(lex.errors().size() == 1);
     REQUIRE(lex.errors()[0].message == "Malformed number: '1.2.3'");
 
-    REQUIRE(token.lexeme == "1.2");
     REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(dynamic_cast<dice::type_double&>(*token.value).data() == 1.2);
 }
 
 TEST_CASE("Missing decimal part of a number", "[lexer]")
@@ -309,6 +310,42 @@ TEST_CASE("Missing decimal part of a number", "[lexer]")
     REQUIRE(lex.errors().size() == 1);
     REQUIRE(lex.errors()[0].message == "Malformed number: '3.'");
 
-    REQUIRE(token.lexeme == "3.0");
+    REQUIRE(dynamic_cast<dice::type_double&>(*token.value).data() == 3.0);
+    REQUIRE(token.type == dice::symbol_type::number);
+}
+
+TEST_CASE("Parse overflown integer", "[lexer]")
+{
+    auto lex = make_lexer("20000000000000000000000");
+
+    auto token = lex.read_token();
+
+    REQUIRE(lex.errors().size() == 1);
+    REQUIRE(lex.errors()[0].message == "Value out of range: '20000000000000000000000'");
+    
+    REQUIRE(token.type == dice::symbol_type::number);
+}
+
+TEST_CASE("Parse integer at the overflow boundary", "[lexer]")
+{
+    auto max_int = std::numeric_limits<int>::max();
+    auto lex = make_lexer(std::to_string(max_int));
+
+    auto token = lex.read_token();
+    
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE(dynamic_cast<dice::type_int&>(*token.value).data() == max_int);
+}
+
+TEST_CASE("Parse overflown double", "[lexer]")
+{
+    auto huge_number = "1" + std::to_string(std::numeric_limits<double>::max());
+    auto lex = make_lexer(huge_number);
+
+    auto token = lex.read_token();
+    auto data = dynamic_cast<dice::type_double&>(*token.value).data();
+    REQUIRE(lex.errors().size() == 1);
+    REQUIRE(lex.errors()[0].message == "Value out of range: '" + huge_number + "'");
+    
     REQUIRE(token.type == dice::symbol_type::number);
 }
