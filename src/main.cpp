@@ -45,11 +45,11 @@ public:
         const int width_cdf = 15;
     
         // print table header
-        std::cout << std::endl
+        std::cout << std::endl << termcolor::bold
             << std::setw(width_value) << "Value" 
             << std::setw(width_prob) << "PMF"  
             << std::setw(width_cdf) << "CDF"
-            << std::endl;
+            << std::endl << termcolor::reset;
     
         // sort PMF by value
         auto var = value->data().to_random_variable();
@@ -144,8 +144,8 @@ int main(int argc, char** argv)
     {
         // parse and interpret the expression
         dice::logger log;
-        dice::lexer lexer{ opt.input, &log };
         dice::environment env;
+        dice::lexer<dice::logger> lexer{ opt.input, &log };
         dice::direct_interpreter<dice::environment> interpret{ &env };
         auto parser = dice::make_parser(&lexer, &log, &interpret);
 

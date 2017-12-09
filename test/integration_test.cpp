@@ -42,7 +42,7 @@ static interpreter_result interpret(const std::string& expr)
 	std::stringstream output;
 
     dice::logger log{ &result.errors, true };
-    dice::lexer lexer{ &input, &log };
+    dice::lexer<dice::logger> lexer{ &input, &log };
     dice::environment env;
     
     // functions used in some tests
