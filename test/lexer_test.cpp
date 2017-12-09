@@ -9,7 +9,7 @@ namespace
     struct lexer_proxy
     {
         logger_mock logger;
-    std::stringstream input;
+        std::stringstream input;
         dice::lexer<logger_mock> lexer;
 
         lexer_proxy(const std::string& input_str) : 
@@ -285,4 +285,30 @@ TEST_CASE("Distinguish function and variable identifiers", "[lexer]")
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::end);
+}
+
+TEST_CASE("Multiple decimal parts in one number", "[lexer]")
+{
+    auto lex = make_lexer("1.2.3");
+
+    auto token = lex.read_token();
+
+    REQUIRE(lex.errors().size() == 1);
+    REQUIRE(lex.errors()[0].message == "Malformed number: '1.2.3'");
+
+    REQUIRE(token.lexeme == "1.2");
+    REQUIRE(token.type == dice::symbol_type::number);
+}
+
+TEST_CASE("Missing decimal part of a number", "[lexer]")
+{
+    auto lex = make_lexer("3.");
+
+    auto token = lex.read_token();
+
+    REQUIRE(lex.errors().size() == 1);
+    REQUIRE(lex.errors()[0].message == "Malformed number: '3.'");
+
+    REQUIRE(token.lexeme == "3.0");
+    REQUIRE(token.type == dice::symbol_type::number);
 }

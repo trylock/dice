@@ -118,7 +118,7 @@ TEST_CASE("Interpret an invalid double value", "[dice]")
     auto result = interpret("3.");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error("Invalid floating point number. Decimal part must not be empty: 3.");
+    result.assert_error("Malformed number: '3.'");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);

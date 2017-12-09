@@ -100,6 +100,8 @@ namespace dice
                 if (std::isdigit(current))
                 {
                     std::string value(1, current);
+                    std::size_t num_dots = 0;
+                    std::size_t invalid_pos = 0;
                     for (;;)
                     {
                         if (std::isdigit(input_->peek()))
@@ -108,7 +110,12 @@ namespace dice
                         }
                         else if (input_->peek() == '.')
                         {
+                            if (num_dots == 1)
+                            {
+                                invalid_pos = value.size();
+                            }
                             value += static_cast<char>(get_char());
+                            ++num_dots;
                         }
                         else
                         {
@@ -116,11 +123,20 @@ namespace dice
                         }
                     }
 
+                    // report malformed values
+                    if (value.back() == '.' || invalid_pos > 0)
+                    {
+                        error("Malformed number: '" + value + "'");
+                    }
+
+                    // fix malformed values
                     if (value.back() == '.')
                     {
-                        error("Invalid floating point number. " 
-                            "Decimal part must not be empty: " + value);
                         value += "0";
+                    }
+                    else if (invalid_pos > 0)
+                    {
+                        value = value.substr(0, invalid_pos);
                     }
 
                     return symbol{
