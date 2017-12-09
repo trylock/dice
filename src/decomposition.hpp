@@ -600,7 +600,7 @@ namespace dice
         }
 
         /** Set of variables on which this random variable depends.
-         * It is kept sorted by the pointer value. This simplifies the
+         * It is kept sorted by the time it was created. This simplifies the 
          * combination algorithm as we can make some assumptions in the
          * variable index computation.
          */
