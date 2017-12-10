@@ -135,3 +135,20 @@ TEST_CASE("Handle division by zero", "[checked]")
     REQUIRE_THROWS_AS(checked<int>{ std::numeric_limits<int>::max() } / 0, std::overflow_error);
     REQUIRE_THROWS_AS(checked<int>{ std::numeric_limits<int>::min() } / 0, std::overflow_error);
 }
+
+TEST_CASE("Compute unary minus of a value in range", "[checked]")
+{
+    using namespace dice;
+
+    REQUIRE(-checked<int>{ 5 } == -5);
+    REQUIRE(-checked<int>{ 0 } == 0);
+    REQUIRE(-checked<int>{ -5 } == 5);
+    REQUIRE(-checked<int>{ std::numeric_limits<int>::max() } == -std::numeric_limits<int>::max());
+}
+
+TEST_CASE("Hnalde overflow in unary minus", "[checked]")
+{
+    using namespace dice;
+
+    REQUIRE_THROWS_AS(-checked<int>{ std::numeric_limits<int>::min() }, std::overflow_error);
+}

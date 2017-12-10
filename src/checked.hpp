@@ -144,6 +144,23 @@ namespace dice
             return checked<T>{ value_ / other_value };
         }
 
+        /** Compute unary minus of the value.
+         * If an overflow occurs, the std::overflow_error is thrown.
+         * @return result of the unary minus as a checked type
+         */
+        auto operator-() const
+        {
+            using namespace std;
+
+            static_assert(max() + min() == -1);
+
+            if (value_ == min())
+            {
+                throw std::overflow_error{ "-" + to_string(value_) };
+            }
+            return checked<T>{ -value_ };
+        }
+
         // cast to type T
         operator T() const 
         { 
