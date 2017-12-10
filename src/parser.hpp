@@ -327,10 +327,18 @@ namespace dice
                 // compute the operator if there won't be any parse error
                 if (check<nonterminal_type::mult>())
                 {
-                    if (op == "+")
-                        result = int_->add(std::move(result), mult());
-                    else 
-                        result = int_->sub(std::move(result), mult());
+                    try
+                    {
+                        if (op == "+")
+                            result = int_->add(std::move(result), mult());
+                        else 
+                            result = int_->sub(std::move(result), mult());
+                    }
+                    catch (compiler_error& err)
+                    {
+                        error(err.what());
+                        result = int_->make_default();
+                    }
                 }
                 else // otherwise, ignore the operator
                 {
@@ -371,10 +379,18 @@ namespace dice
                 // compute the operation if there won't be any parse error
                 if (check<nonterminal_type::dice_roll>())
                 {
-                    if (op == "*")
-                        result = int_->mult(std::move(result), dice_roll());
-                    else
-                        result = int_->div(std::move(result), dice_roll());
+                    try
+                    {
+                        if (op == "*")
+                            result = int_->mult(std::move(result), dice_roll());
+                        else
+                            result = int_->div(std::move(result), dice_roll());
+                    }
+                    catch (compiler_error& err)
+                    {
+                        error(err.what());
+                        result = int_->make_default();
+                    }
                 }
                 else // otherwise, ignore the operator
                 {
@@ -420,7 +436,15 @@ namespace dice
                     // parse error
                     if (check<nonterminal_type::factor>())
                     {
-                        result = int_->roll(std::move(result), factor());
+                        try
+                        {
+                            result = int_->roll(std::move(result), factor());
+                        }
+                        catch (compiler_error& err)
+                        {
+                            error(err.what());
+                            result = int_->make_default();
+                        }
                     }
                     else // otherwise, ignore the operator 
                     {
@@ -436,7 +460,17 @@ namespace dice
 
             // add sign
             if (count % 2 != 0)
-                result = int_->unary_minus(std::move(result));
+            {
+                try
+                {
+                    result = int_->unary_minus(std::move(result));
+                }
+                catch (compiler_error& err)
+                {
+                    error(err.what());
+                    result = int_->make_default();
+                }
+            }
 
             return std::move(result); 
         }
