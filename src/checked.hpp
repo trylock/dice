@@ -7,14 +7,31 @@
 namespace dice
 {
     // Check for arithmetic errors 
-    template<typename T, bool is_signed = std::numeric_limits<T>::is_signed>
-    class checked;
+    template<
+        typename T, 
+        bool is_integral = std::numeric_limits<T>::is_integer,
+        bool is_signed = std::numeric_limits<T>::is_signed>
+    class checked
+    {
+    public:
+        template<typename ValueType>
+        static auto make(ValueType&& value)
+        {
+            return std::forward<ValueType>(value);
+        }
+    };
 
     // signed value specialization
     template<typename T>
-    class checked<T, true>
+    class checked<T, true, true>
     {
     public:
+        template<typename ValueType>
+        static auto make(ValueType&& value)
+        {
+            return checked{ std::forward<ValueType>(value) };
+        }
+
         checked() {}
         checked(const T& value) : value_(value) {}
 
@@ -89,8 +106,8 @@ namespace dice
             auto diff = max() + min();
             if (diff < 0)
             {
-                if (value_ == -1 && other_value == min() ||
-                    value_ == min() && other_value == -1)
+                if ((value_ == -1 && other_value == min()) ||
+                    (value_ == min() && other_value == -1))
                 {
                     throw std::overflow_error{ 
                         to_string(value_) + " * " + to_string(other_value) 
@@ -99,8 +116,8 @@ namespace dice
             }
             else if (diff > 0)
             {
-                if (value_ == -1 && other_value == max() ||
-                    value_ == max() && other_value == -1)
+                if ((value_ == -1 && other_value == max()) ||
+                    (value_ == max() && other_value == -1))
                 {
                     throw std::underflow_error{
                         to_string(value_) + " * " + to_string(other_value) 
@@ -111,16 +128,16 @@ namespace dice
             if (other_value != 0 && value_ != 0 && other_value != -1)
             {
                 // check whether there would be an overflow error
-                if (other_value > 0 && value_ > max() / other_value ||
-                    other_value < 0 && value_ < max() / other_value)
+                if ((other_value > 0 && value_ > max() / other_value) ||
+                    (other_value < 0 && value_ < max() / other_value))
                 {
                     throw std::overflow_error{ 
                         to_string(value_) + " * " + to_string(other_value) };
                 }
 
                 // check whether there would be an underflow error
-                if (other_value > 0 && value_ < min() / other_value ||
-                    other_value < 0 && value_ > min() / other_value)
+                if ((other_value > 0 && value_ < min() / other_value) ||
+                    (other_value < 0 && value_ > min() / other_value))
                 {
                     throw std::underflow_error{ 
                         to_string(value_) + " * " + to_string(other_value) };
@@ -221,9 +238,15 @@ namespace dice
 
     // unsigned value specialization
     template<typename T>
-    class checked<T, false>
+    class checked<T, true, false>
     {
     public:
+        template<typename ValueType>
+        static auto make(ValueType&& value)
+        {
+            return checked{ std::forward<ValueType>(value) };
+        }
+
         checked() {}
         checked(const T& value) : value_(value) {}
 
@@ -347,6 +370,12 @@ namespace dice
             return std::numeric_limits<T>::max();
         }
     };
+
+    template<typename T>
+    auto make_checked(const T& value)
+    {
+        return checked<T>{ value };
+    }
 }
 
 #endif // DICE_CHECKED_HPP_
