@@ -9,6 +9,7 @@ set(EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/external)
 set(dice_headers
     ${SRC_DIR}/utils.hpp
     ${SRC_DIR}/logger.hpp
+    ${SRC_DIR}/checked.hpp
     ${SRC_DIR}/value.hpp
     ${SRC_DIR}/lexer.hpp
     ${SRC_DIR}/parser.hpp
@@ -36,6 +37,7 @@ set(all_tests
     ${TESTS_DIR}/main.cpp
     ${TESTS_DIR}/utils_test.cpp
     ${TESTS_DIR}/value_test.cpp
+    ${TESTS_DIR}/checked_test.cpp
     ${TESTS_DIR}/lexer_test.cpp
     ${TESTS_DIR}/parser_test.cpp
     ${TESTS_DIR}/conversions_test.cpp
