@@ -103,23 +103,14 @@ namespace dice
         {
             using namespace std;
 
-            auto diff = max() + min();
-            if (diff < 0)
+            static_assert(max() + min() <= 0);
+
+            if (max() + min() < 0)
             {
                 if ((value_ == -1 && other_value == min()) ||
                     (value_ == min() && other_value == -1))
                 {
                     throw std::overflow_error{ 
-                        to_string(value_) + " * " + to_string(other_value) 
-                    };
-                }
-            }
-            else if (diff > 0)
-            {
-                if ((value_ == -1 && other_value == max()) ||
-                    (value_ == max() && other_value == -1))
-                {
-                    throw std::underflow_error{
                         to_string(value_) + " * " + to_string(other_value) 
                     };
                 }
@@ -157,27 +148,19 @@ namespace dice
         {
             using namespace std;
 
+            static_assert(max() + min() <= 0);
+
             if (other_value == 0)
             {
                 throw std::overflow_error{ "Division by zero: " + 
                     to_string(value_) + " / 0" };
             }
 
-            auto diff = max() + min();
-            if (diff < 0)
+            if (max() + min() < 0)
             {
                 if (value_ == min() && other_value == -1)
                 {
                     throw std::overflow_error{ 
-                        to_string(value_) + " / " + to_string(other_value) 
-                    };
-                }
-            }
-            else if (diff > 0)
-            {
-                if (value_ == max() && other_value == -1)
-                {
-                    throw std::underflow_error{
                         to_string(value_) + " / " + to_string(other_value) 
                     };
                 }
@@ -193,15 +176,12 @@ namespace dice
         auto operator-() const
         {
             using namespace std;
+            
+            static_assert(max() + min() <= 0);
 
-            auto diff = max() + min();
-            if (diff < 0 && value_ == min())
+            if (max() + min() < 0 && value_ == min())
             {
                 throw std::overflow_error{ "-" + to_string(value_) };
-            }
-            else if (diff > 0 && value_ == max())
-            {
-                throw std::underflow_error{ "-" + to_string(value_) };
             }
             return checked<T>{ -value_ };
         }
