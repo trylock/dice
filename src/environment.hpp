@@ -9,6 +9,7 @@
 #include <random>
 #include <algorithm>
 
+#include "checked.hpp"
 #include "value.hpp"
 #include "utils.hpp"
 #include "functions.hpp"

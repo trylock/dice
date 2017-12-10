@@ -47,7 +47,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = a + b;
+        a = dice::checked<typename T::value_type>::make(a) + b;
         return std::move(context.raw_arg(0));
     }
 
@@ -56,7 +56,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = a - b;
+        a = dice::checked<typename T::value_type>::make(a) - b;
         return std::move(context.raw_arg(0));
     }
 
@@ -65,7 +65,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = a * b;
+        a = dice::checked<typename T::value_type>::make(a) * b;
         return std::move(context.raw_arg(0));
     }
 
@@ -74,7 +74,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = a / b;
+        a = dice::checked<typename T::value_type>::make(a) / b;
         return std::move(context.raw_arg(0));
     }
 
@@ -82,7 +82,7 @@ namespace
     fn::return_type dice_unary_minus(fn::context_type& context)
     {
         auto& a = context.arg<T>(0)->data();
-        a = -a;
+        a = -dice::checked<typename T::value_type>::make(a);
         return std::move(context.raw_arg(0));
     }
 
