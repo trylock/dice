@@ -454,5 +454,16 @@ fn::return_type dice::environment::call_prepared(
     }
 
     // execute it
-    return (*min_func)(context);
+    try
+    {
+        return (*min_func)(context);
+    }
+    catch (std::overflow_error& error)
+    {
+        throw compiler_error(std::string{ "Overflow: " } + error.what());
+    }
+    catch (std::underflow_error& error)
+    {
+        throw compiler_error(std::string{ "Underflow: " } + error.what());
+    }
 }
