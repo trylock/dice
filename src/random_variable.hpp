@@ -95,6 +95,20 @@ namespace dice
             return probability_.size() == 1;
         }
 
+        /** Find maximal value in the variable's range.
+         * @return maximal value in the range or minimal value of the 
+         *         value_type if this is an impossible event
+         */
+        auto max_value() const
+        {
+            auto value = std::numeric_limits<value_type>::min();
+            for (auto&& pair : probability_)
+            {
+                value = std::max(value, pair.first);
+            }
+            return value;
+        }
+
         /** Compute expected value of this random variable.
          * @return expected value of this variable
          */
@@ -442,11 +456,7 @@ namespace dice
             }
 
             // find maximal number of dice
-            auto max_dice = std::numeric_limits<value_type>::min();
-            for (auto&& value : num_dice.probability_)
-            {
-                max_dice = std::max(max_dice, value.first);
-            }
+            auto max_dice = num_dice.max_value();
     
             // compute distribution for each possible number of faces
             random_variable dist;
