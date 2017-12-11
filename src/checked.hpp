@@ -4,6 +4,14 @@
 #include <limits>
 #include <stdexcept>
 
+#ifdef min
+#undef min
+#endif // min
+
+#ifdef max
+#undef max
+#endif // max
+
 namespace dice
 {
     // Check for arithmetic errors 
@@ -51,18 +59,20 @@ namespace dice
          */
         auto operator+(const T& other_value) const
         {
-            using namespace std;
-
             if (other_value > 0 && value_ > max() - other_value)
             {
                 throw std::overflow_error{ 
-                    to_string(value_) + " + " + to_string(other_value) };
+                    std::to_string(value_) + " + " + 
+                    std::to_string(other_value) 
+                };
             }
 
             if (other_value < 0 && value_ < min() - other_value)
             {
                 throw std::underflow_error{ 
-                    to_string(value_) + " + " + to_string(other_value) };
+                    std::to_string(value_) + " + " + 
+                    std::to_string(other_value) 
+                };
             }
 
             return checked<T>{ value_ + other_value };
@@ -76,18 +86,20 @@ namespace dice
          */
         auto operator-(const T& other_value) const
         {
-            using namespace std;
-
             if (other_value < 0 && value_ > max() + other_value)
             {
                 throw std::overflow_error{ 
-                    to_string(value_) + " - " + to_string(other_value) };
+                    std::to_string(value_) + " - " + 
+                    std::to_string(other_value) 
+                };
             }
 
             if (other_value > 0 && value_ < min() + other_value)
             {
                 throw std::underflow_error{ 
-                    to_string(value_) + " - " + to_string(other_value) };
+                    std::to_string(value_) + " - " + 
+                    std::to_string(other_value) 
+                };
             }
 
             return checked<T>{ value_ - other_value };
@@ -101,9 +113,8 @@ namespace dice
          */
         auto operator*(const T& other_value) const
         {
-            using namespace std;
-
-            static_assert(max() + min() <= 0);
+            static_assert(max() + min() <= 0, 
+                "-max() has to be a valid value for type T");
 
             if (max() + min() < 0)
             {
@@ -111,7 +122,8 @@ namespace dice
                     (value_ == min() && other_value == -1))
                 {
                     throw std::overflow_error{ 
-                        to_string(value_) + " * " + to_string(other_value) 
+                        std::to_string(value_) + " * " + 
+                        std::to_string(other_value)
                     };
                 }
             }
@@ -123,7 +135,9 @@ namespace dice
                     (other_value < 0 && value_ < max() / other_value))
                 {
                     throw std::overflow_error{ 
-                        to_string(value_) + " * " + to_string(other_value) };
+                        std::to_string(value_) + " * " + 
+                        std::to_string(other_value) 
+                    };
                 }
 
                 // check whether there would be an underflow error
@@ -131,7 +145,9 @@ namespace dice
                     (other_value < 0 && value_ > min() / other_value))
                 {
                     throw std::underflow_error{ 
-                        to_string(value_) + " * " + to_string(other_value) };
+                        std::to_string(value_) + " * " + 
+                        std::to_string(other_value)
+                    };
                 }
             }
 
@@ -146,14 +162,13 @@ namespace dice
          */
         auto operator/(const T& other_value) const
         {
-            using namespace std;
-
-            static_assert(max() + min() <= 0);
+            static_assert(max() + min() <= 0,
+                "-max() has to be a valid value for type T");
 
             if (other_value == 0)
             {
                 throw std::overflow_error{ "Division by zero: " + 
-                    to_string(value_) + " / 0" };
+                    std::to_string(value_) + " / 0" };
             }
 
             if (max() + min() < 0)
@@ -161,7 +176,8 @@ namespace dice
                 if (value_ == min() && other_value == -1)
                 {
                     throw std::overflow_error{ 
-                        to_string(value_) + " / " + to_string(other_value) 
+                        std::to_string(value_) + " / " + 
+                        std::to_string(other_value) 
                     };
                 }
             }
@@ -175,13 +191,12 @@ namespace dice
          */
         auto operator-() const
         {
-            using namespace std;
-            
-            static_assert(max() + min() <= 0);
+            static_assert(max() + min() <= 0,
+                "-max() has to be a valid value for type T");
 
             if (max() + min() < 0 && value_ == min())
             {
-                throw std::overflow_error{ "-" + to_string(value_) };
+                throw std::overflow_error{ "-" + std::to_string(value_) };
             }
             return checked<T>{ -value_ };
         }
@@ -245,12 +260,12 @@ namespace dice
          */
         auto operator+(const T& other_value) const
         {
-            using namespace std;
-
             if (value_ > max() - other_value)
             {
                 throw std::overflow_error{ 
-                    to_string(value_) + " + " + to_string(other_value) };
+                    std::to_string(value_) + " + " + 
+                    std::to_string(other_value) 
+                };
             }
 
             return checked<T>{ value_ + other_value };
@@ -263,12 +278,12 @@ namespace dice
          */
         auto operator-(const T& other_value) const
         {
-            using namespace std;
-
             if (value_ <  other_value)
             {
                 throw std::underflow_error{ 
-                    to_string(value_) + " - " + to_string(other_value) };
+                    std::to_string(value_) + " - " + 
+                    std::to_string(other_value) 
+                };
             }
 
             return checked<T>{ value_ - other_value };
@@ -281,13 +296,13 @@ namespace dice
          */
         auto operator*(const T& other_value) const
         {
-            using namespace std;
-
             // check whether there would be an overflow error
             if (other_value != 0 && value_ > max() / other_value)
             {
                 throw std::overflow_error{ 
-                    to_string(value_) + " * " + to_string(other_value) };
+                    std::to_string(value_) + " * " + 
+                    std::to_string(other_value) 
+                };
             }
 
             return checked<T>{ value_ * other_value };
@@ -300,12 +315,10 @@ namespace dice
          */
         auto operator/(const T& other_value) const
         {
-            using namespace std;
-
             if (other_value == 0)
             {
                 throw std::overflow_error{ "Division by zero: " + 
-                    to_string(value_) + " / 0" };
+                    std::to_string(value_) + " / 0" };
             }
 
             return checked<T>{ value_ / other_value };
@@ -317,11 +330,9 @@ namespace dice
          */
         auto operator-() const
         {
-            using namespace std;
-
             if (value_ != 0)
             {
-                throw std::underflow_error{ "-" + to_string(value_) };
+                throw std::underflow_error{ "-" + std::to_string(value_) };
             }
             return checked<T>{ 0 };
         }
