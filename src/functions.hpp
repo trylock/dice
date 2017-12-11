@@ -1,3 +1,6 @@
+#ifndef DICE_FUNCTIONS_HPP_
+#define DICE_FUNCTIONS_HPP_
+
 #include <memory>
 #include <vector>
 #include <functional>
@@ -132,3 +135,5 @@ namespace dice
         std::vector<type_id> arg_types_;
     };
 }
+
+#endif // DICE_FUNCTIONS_HPP_

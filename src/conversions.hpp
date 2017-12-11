@@ -1,3 +1,6 @@
+#ifndef DICE_CONVERSIONS_HPP_
+#define DICE_CONVERSIONS_HPP_
+
 #include <memory>
 #include <unordered_map>
 #include <functional>
@@ -57,3 +60,5 @@ namespace dice
         type_id result_type_;
     };
 }
+
+#endif // DICE_CONVERSIONS_HPP_
