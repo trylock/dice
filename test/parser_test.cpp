@@ -20,7 +20,7 @@ public:
 
     dice::lexer_location location()
     {
-        return dice::lexer_location{ 0, 0 };
+        return dice::lexer_location{ 0, static_cast<int>(pos_) };
     }
 private:
     std::vector<dice::symbol> tokens_;
@@ -67,6 +67,10 @@ public:
 
     value_type add(value_type&& lhs, value_type&& rhs)
     {
+        if (lhs == "OVERFLOW" || rhs == "OVERFLOW")
+        {
+            throw dice::compiler_error("OVERFLOW");
+        }
         return "(" + lhs + "+" + rhs + ")";
     }
 
@@ -82,11 +86,19 @@ public:
 
     value_type div(value_type&& lhs, value_type&& rhs)
     {
+        if (rhs == "ZERO")
+        {
+            throw dice::compiler_error("DIVIDE BY ZERO");
+        }
         return "(" + lhs + "/" + rhs + ")";
     }
 
     value_type unary_minus(value_type&& value)
     {
+        if (value == "OVERFLOW")
+        {
+            throw dice::compiler_error("OVERFLOW");
+        }
         return "(-" + value + ")";
     }
 
@@ -104,6 +116,10 @@ public:
 
     value_type roll(value_type&& lhs, value_type&& rhs)
     {
+        if (lhs == "OVERFLOW" || rhs == "OVERFLOW")
+        {
+            throw dice::compiler_error("OVERFLOW");
+        }
         return "(" + lhs + "d" + rhs + ")";
     }
 
@@ -462,6 +478,8 @@ TEST_CASE("Use default value instead of a nonexistent variable name", "[parser]"
     REQUIRE(result.values[0] == "<DEFAULT>");
 
     REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 0);
     REQUIRE(result.errors[0].message == "Unknown variable 'E'");
 }
 
@@ -501,6 +519,8 @@ TEST_CASE("If an error occurs during a function call, use default value and prov
     REQUIRE(result.values[0] == "<DEFAULT>");
     
     REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 0);
     REQUIRE(result.errors[0].message == "Unknown function 'E'");
 }
 
@@ -567,4 +587,83 @@ TEST_CASE("Handle exceptions in assignment", "[parser]")
 
     REQUIRE(result.errors.size() == 1);
     REQUIRE(result.errors[0].message == "Variable 'x' redefinition.");
+}
+
+TEST_CASE("Report errors in addition", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::id, "OVERFLOW" },
+        { symbol_type::plus },
+        { symbol_type::id, "OVERFLOW" },
+    };
+    auto result = parse(to_vector(input));
+    
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+    
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "OVERFLOW");
+}
+
+TEST_CASE("Report errors in division", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
+        { symbol_type::divide },
+        { symbol_type::id, "ZERO" },
+    };
+    auto result = parse(to_vector(input));
+    
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+    
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "DIVIDE BY ZERO");
+}
+
+TEST_CASE("Report errors in dice roll operator", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
+        { symbol_type::roll_op },
+        { symbol_type::id, "OVERFLOW" },
+    };
+    auto result = parse(to_vector(input));
+    
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+    
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "OVERFLOW");
+}
+
+TEST_CASE("Report errors in unary minus", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::minus },
+        { symbol_type::id, "OVERFLOW" },
+    };
+    auto result = parse(to_vector(input));
+    
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+    
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 0);
+    REQUIRE(result.errors[0].message == "OVERFLOW");
 }

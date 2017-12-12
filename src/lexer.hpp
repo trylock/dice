@@ -38,11 +38,30 @@ namespace dice
         lexer& operator=(lexer&&) = default;
 
         /** Read token at current location.
-         * Decode a sequance of characters as a token and 
-         * advance in the input stream.
+         * Decode a sequance of characters as a token and advance in the input 
+         * stream. Skip all whitespace characters after the token (that is
+         * location after calling read_token points to the beginning of the 
+         * next token)
          * @return token at current position
          */
         symbol read_token()
+        {
+            auto token = read_token_internal();
+            skip_space();
+            return token;
+        }
+
+        // Return current location of the lexer in the input stream
+        inline const lexer_location& location() const 
+        {
+            return location_; 
+        }
+    private:
+        std::istream* input_;
+        Logger* log_;
+        lexer_location location_;
+
+        auto read_token_internal()
         {
             for (;;)
             {
@@ -142,16 +161,6 @@ namespace dice
                     std::string(1, digits[current & 0xF])  + ").");
             }
         }
-
-        // Return current location of the lexer in the input stream
-        inline const lexer_location& location() const 
-        {
-            return location_; 
-        }
-    private:
-        std::istream* input_;
-        Logger* log_;
-        lexer_location location_;
 
         symbol parse_number(char current_char)
         {

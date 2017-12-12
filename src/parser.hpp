@@ -144,6 +144,7 @@ namespace dice
         Logger* log_;
         Interpreter* int_;
         symbol lookahead_;
+        lexer_location lookahead_location_;
 
         /** Parse statements and return their results.
          * Production: stmts -> stmts; stmt;
@@ -308,6 +309,8 @@ namespace dice
             auto result = mult();
             for (;;)
             {
+                auto op_location = lookahead_location_;
+
                 // decide on the next operation
                 if (lookahead_.type == symbol_type::plus)
                 {
@@ -336,13 +339,14 @@ namespace dice
                     }
                     catch (compiler_error& err)
                     {
-                        error(err.what());
+                        error(err.what(), op_location);
                         result = int_->make_default();
                     }
                 }
                 else // otherwise, ignore the operator
                 {
-                    error("Invalid operand for binary operator " + op);
+                    error("Invalid operand for binary operator " + op, 
+                        op_location);
                 }
             }
             return std::move(result);
@@ -360,6 +364,8 @@ namespace dice
             auto result = dice_roll();
             for (;;)
             {
+                auto op_location = lookahead_location_;
+
                 // decide on the next operation
                 if (lookahead_.type == symbol_type::times)
                 {
@@ -388,13 +394,14 @@ namespace dice
                     }
                     catch (compiler_error& err)
                     {
-                        error(err.what());
+                        error(err.what(), op_location);
                         result = int_->make_default();
                     }
                 }
                 else // otherwise, ignore the operator
                 {
-                    error("Invalid operand for binary operator " + op);
+                    error("Invalid operand for binary operator " + op, 
+                        op_location);
                 }
             }
             return std::move(result);
@@ -409,6 +416,8 @@ namespace dice
          */
         attr_type dice_roll()
         {
+            auto unary_minus_location = lookahead_location_;
+
             // determine the sign
             int count = 0;
             for (;;)
@@ -430,6 +439,7 @@ namespace dice
             {
                 if (lookahead_.type == symbol_type::roll_op)
                 {
+                    auto op_location = lookahead_location_;
                     eat(symbol_type::roll_op);
 
                     // only use the factor production if there won't be any 
@@ -442,14 +452,14 @@ namespace dice
                         }
                         catch (compiler_error& err)
                         {
-                            error(err.what());
+                            error(err.what(), op_location);
                             result = int_->make_default();
                         }
                     }
                     else // otherwise, ignore the operator 
                     {
                         error("Invalid operand for binary operator "  
-                            "D (dice roll)");
+                            "D (dice roll)", op_location);
                     }
                 }
                 else 
@@ -467,7 +477,7 @@ namespace dice
                 }
                 catch (compiler_error& err)
                 {
-                    error(err.what());
+                    error(err.what(), unary_minus_location);
                     result = int_->make_default();
                 }
             }
@@ -488,6 +498,8 @@ namespace dice
             {
                 eat(symbol_type::left_paren);
                 
+                auto loc = lookahead_location_;
+
                 attr_type result;
                 if (check<nonterminal_type::expr>())
                 {
@@ -497,7 +509,7 @@ namespace dice
                 {
                     error(
                         "Invalid expression. "
-                        "Using the default value instead.");
+                        "Using the default value instead.", loc);
                     result = int_->make_default();
                 }
                 
@@ -513,6 +525,7 @@ namespace dice
             else if (lookahead_.type == symbol_type::func_id)
             {
                 // function call
+                auto loc = lookahead_location_;
                 auto id = std::move(lookahead_);
                 eat(symbol_type::func_id);
                 eat(symbol_type::left_paren);
@@ -525,13 +538,14 @@ namespace dice
                 }
                 catch (compiler_error& err)
                 {
-                    error(err.what());
+                    error(err.what(), loc);
                     return int_->make_default();
                 }
             }
             else if (lookahead_.type == symbol_type::id)
             {
                 // variable
+                auto loc = lookahead_location_;
                 auto id = std::move(lookahead_);
                 eat(symbol_type::id);
                 try 
@@ -540,7 +554,7 @@ namespace dice
                 }
                 catch (compiler_error& err)
                 {
-                    error(err.what());
+                    error(err.what(), loc);
                     return int_->make_default();
                 }
             }
@@ -578,6 +592,7 @@ namespace dice
             std::size_t number = 0;
             for (;;)
             {
+                auto loc = lookahead_location_;
                 if (check<nonterminal_type::expr>())
                 {
                     args.emplace_back(expr());
@@ -586,7 +601,7 @@ namespace dice
                 {
                     error("Invalid function parameter " + 
                         std::to_string(number) + ". " +
-                        "Using the default value instead.");
+                        "Using the default value instead.", loc);
                     args.emplace_back(int_->make_default());
                 }
         
@@ -646,7 +661,7 @@ namespace dice
             {
                 error("Invalid token at the beginning of " + 
                     std::string(nonterminal<type>::name) + ": " + 
-                    to_string(lookahead_));
+                    to_string(lookahead_), lookahead_location_);
                 eat(lookahead_.type);
             }
             return in_first<type>();
@@ -669,6 +684,7 @@ namespace dice
             }
             else 
             {
+                lookahead_location_ = lexer_->location();
                 lookahead_ = lexer_->read_token();
             }
         }
@@ -678,9 +694,18 @@ namespace dice
          */
         void error(const std::string& message)
         {
+            error(message, lexer_->location());
+        }
+
+        /** Report a parsing error.
+         * @param error message
+         * @param error location
+         */
+        void error(const std::string& message, const lexer_location& loc)
+        {
             log_->error(
-                lexer_->location().line, 
-                lexer_->location().col, 
+                loc.line, 
+                loc.col, 
                 message);
         }
     };
