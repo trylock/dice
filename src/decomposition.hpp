@@ -35,6 +35,7 @@ namespace dice
     public:
         using var_type = random_variable<ValueType, ProbabilityType>;
         using value_type = ValueType;
+        using probability_type = ProbabilityType;
         using probability_iterator = 
             decomposition_iterator<ValueType, ProbabilityType>;
 
@@ -273,7 +274,8 @@ namespace dice
             ProbabilityType expectation = 0;
             for (auto it = begin(); it != end(); ++it)
             {
-                expectation += it->first * it->second;
+                auto value = static_cast<probability_type>(it->first);
+                expectation += value * it->second;
             }
             return expectation;
         }
@@ -287,8 +289,9 @@ namespace dice
             ProbabilityType sum = 0;
             for (auto it = begin(); it != end(); ++it)
             {
-                sum_sq += it->first * it->first * it->second;
-                sum += it->first * it->second;
+                auto value = static_cast<probability_type>(it->first);
+                sum_sq += value * value * it->second;
+                sum += value * it->second;
             }
             return sum_sq - sum * sum;
         }

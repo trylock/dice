@@ -47,7 +47,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = dice::checked<typename T::value_type>::make(a) + b;
+        a = a + b;
         return std::move(context.raw_arg(0));
     }
 
@@ -56,7 +56,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = dice::checked<typename T::value_type>::make(a) - b;
+        a = a - b;
         return std::move(context.raw_arg(0));
     }
 
@@ -65,7 +65,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = dice::checked<typename T::value_type>::make(a) * b;
+        a = a * b;
         return std::move(context.raw_arg(0));
     }
 
@@ -74,7 +74,7 @@ namespace
     {
         auto& a = context.arg<T>(0)->data();
         auto& b = context.arg<T>(1)->data();
-        a = dice::checked<typename T::value_type>::make(a) / b;
+        a = a / b;
         return std::move(context.raw_arg(0));
     }
 
@@ -82,7 +82,7 @@ namespace
     fn::return_type dice_unary_minus(fn::context_type& context)
     {
         auto& a = context.arg<T>(0)->data();
-        a = -dice::checked<typename T::value_type>::make(a);
+        a = -a;
         return std::move(context.raw_arg(0));
     }
 
@@ -458,12 +458,9 @@ fn::return_type dice::environment::call_prepared(
     {
         return (*min_func)(context);
     }
-    catch (std::overflow_error& error)
+    catch (safe_int_error& error)
     {
-        throw compiler_error(std::string{ "Overflow: " } + error.what());
-    }
-    catch (std::underflow_error& error)
-    {
-        throw compiler_error(std::string{ "Underflow: " } + error.what());
+        throw compiler_error{
+            is_overflow_error(error) ? "Overflow" : "Division by Zero" };
     }
 }

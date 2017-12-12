@@ -10,8 +10,6 @@
 #include <unordered_map>
 #include <map>
 
-#include "checked.hpp"
-
 #ifdef min
 #undef min
 #endif // min
@@ -133,7 +131,8 @@ namespace dice
             probability_type exp = 0;
             for (auto&& pair : probability_)
             {
-                exp += pair.first * pair.second;
+                auto value = static_cast<probability_type>(pair.first);
+                exp += value * pair.second;
             }
             return exp;
         }
@@ -147,8 +146,9 @@ namespace dice
             probability_type sum = 0;
             for (auto&& pair : probability_)
             {
-                sum_sq += pair.first * pair.first * pair.second;
-                sum += pair.first * pair.second;
+                auto value = static_cast<probability_type>(pair.first);
+                sum_sq += value * value * pair.second;
+                sum += value * pair.second;
             }
             return sum_sq - sum * sum;
         }
@@ -244,10 +244,6 @@ namespace dice
          */
         auto operator+(const random_variable& other) const 
         {
-            // check for arithmetic errors
-            checked<value_type>::make(max_value()) + other.max_value();
-            checked<value_type>::make(min_value()) + other.min_value();
-
             return combine(other, [](auto&& a, auto&& b) 
             {
                 return a + b;
@@ -261,10 +257,6 @@ namespace dice
          */
         auto operator-(const random_variable& other) const
         {
-            // check for arithmetic errors
-            checked<value_type>::make(min_value()) - other.max_value();
-            checked<value_type>::make(max_value()) - other.min_value();
-
             return combine(other, [](auto&& a, auto&& b) 
             {
                 return a - b;
@@ -280,7 +272,7 @@ namespace dice
         {
             return combine(other, [](auto&& a, auto&& b) 
             {
-                return checked<value_type>::make(a) * b;
+                return a * b;
             });
         }
 
@@ -294,7 +286,7 @@ namespace dice
         {
             return combine(other, [](auto&& a, auto&& b)
             {
-                return checked<value_type>::make(a) / b; 
+                return a / b; 
             });
         }
 
@@ -387,9 +379,6 @@ namespace dice
          */
         auto operator-() const 
         {
-            -checked<value_type>::make(min_value());
-            -checked<value_type>::make(max_value());
-
             random_variable result;
             for (auto&& pair : probability_)
             {
@@ -484,10 +473,6 @@ namespace dice
 
             // find maximal number of dice and faces
             auto max_dice = num_dice.max_value();
-            auto max_faces = num_faces.max_value();
-
-            // check for arithmetic errors
-            checked<value_type>::make(max_dice) * max_faces + 1;
     
             // compute distribution for each possible number of faces
             random_variable dist;

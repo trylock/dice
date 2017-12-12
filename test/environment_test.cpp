@@ -1,7 +1,9 @@
 #include "catch.hpp"
 #include "environment.hpp"
 
-using freq_list = dice::random_variable<int, double>::frequency_list;
+using freq_list = dice::random_variable<
+    dice::storage::int_type, 
+    dice::storage::double_type>::frequency_list;
 
 TEST_CASE("Call operator + on integers", "[environment]")
 {
@@ -12,7 +14,7 @@ TEST_CASE("Call operator + on integers", "[environment]")
     REQUIRE(result->type() == dice::type_int::id());
 
     auto int_result = dynamic_cast<dice::type_int*>(result.get());
-    REQUIRE(int_result->data() == 3);
+    REQUIRE((int_result->data() == 3));
 }
 
 TEST_CASE("Call operator + on random variables", "[environment]")
@@ -85,7 +87,7 @@ TEST_CASE("Call function using vector as arguments", "[environment]")
     REQUIRE(result->type() == dice::type_int::id());
 
     auto int_result = dynamic_cast<dice::type_int*>(result.get());
-    REQUIRE(int_result->data() == 8);
+    REQUIRE((int_result->data() == 8));
 }
 
 TEST_CASE("Call unary - function on int", "[environment]")
@@ -95,7 +97,7 @@ TEST_CASE("Call unary - function on int", "[environment]")
     REQUIRE(result->type() == dice::type_int::id());
 
     auto int_type = dynamic_cast<dice::type_int*>(result.get());
-    REQUIRE(int_type->data() == -5);
+    REQUIRE((int_type->data() == -5));
 }
 
 TEST_CASE("Call unary - function on double", "[environment]")
@@ -197,7 +199,7 @@ TEST_CASE("Set value of unknown variable", "[environment]")
     env.set_var("test", dice::make<dice::type_int>(14));
 
     auto value = env.get_var("test");
-    REQUIRE(dynamic_cast<dice::type_int*>(value)->data() == 14);
+    REQUIRE((dynamic_cast<dice::type_int*>(value)->data() == 14));
 }
 
 TEST_CASE("Overwrite value of set variable", "[environment]")
@@ -208,7 +210,7 @@ TEST_CASE("Overwrite value of set variable", "[environment]")
     env.set_var("test", dice::make<dice::type_int>(41));
 
     auto value = env.get_var("test");
-    REQUIRE(dynamic_cast<dice::type_int*>(value)->data() == 41);
+    REQUIRE((dynamic_cast<dice::type_int*>(value)->data() == 41));
 }
 
 TEST_CASE("Get unknown variable", "[environment]")

@@ -58,7 +58,7 @@ TEST_CASE("Use correct visitor method", "[value]")
 
     dice::type_int value_int{ 2 };
     dice::type_double value_double{ 3.0 };
-    dice::type_rand_var value_rand_var(dice::decomposition<int, double>(
+    dice::type_rand_var value_rand_var(dice::storage::random_variable_type(
          dice::constant_tag{}, 5 
     ));
     value_int.accept(&visitor);

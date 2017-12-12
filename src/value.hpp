@@ -5,11 +5,20 @@
 #include <string>
 #include <typeinfo>
 
+#include "safe.hpp"
 #include "random_variable.hpp"
 #include "decomposition.hpp"
 
 namespace dice 
 {
+    // Define type of a storage of a dice value
+    namespace storage
+    {
+        using int_type = safe<int>;
+        using double_type = double;
+        using random_variable_type = decomposition<int_type, double_type>;
+    }
+
     // Type identifier of a value in a dice expression
     enum class type_id
     {
@@ -23,13 +32,19 @@ namespace dice
     type_id get_type_id();
 
     template<>
-    inline type_id get_type_id<int>() { return type_id::integer; }
+    inline type_id get_type_id<storage::int_type>() 
+    { 
+        return type_id::integer; 
+    }
     
     template<>
-    inline type_id get_type_id<double>() { return type_id::floating_point; }
+    inline type_id get_type_id<storage::double_type>() 
+    { 
+        return type_id::floating_point; 
+    }
 
     template<>
-    inline type_id get_type_id<decomposition<int, double>>()
+    inline type_id get_type_id<storage::random_variable_type>()
     {
         return type_id::random_variable;
     } 
@@ -63,9 +78,9 @@ namespace dice
     public:
         virtual ~value_visitor() {}
 
-        virtual void visit(typed_value<int>* value) = 0;
-        virtual void visit(typed_value<double>* value) = 0;
-        virtual void visit(typed_value<decomposition<int, double>>* value) = 0;
+        virtual void visit(typed_value<storage::int_type>*) = 0;
+        virtual void visit(typed_value<storage::double_type>*) = 0;
+        virtual void visit(typed_value<storage::random_variable_type>*) = 0;
     };
 
     // Parent of all value types that are used in dice expressions
@@ -124,7 +139,7 @@ namespace dice
         explicit typed_value(const value_type& value) : value_(value) {}
         explicit typed_value(value_type&& value) : value_(std::move(value)) {}
 
-        // disallow copy (use the clone function instead to explicitly copy the value)
+        // disallow copy (use the clone function to explicitly copy the value)
         typed_value(const typed_value&) = delete;
         void operator=(const typed_value&) = delete;
 
@@ -164,9 +179,9 @@ namespace dice
     };
 
     // used data types
-    using type_int = typed_value<int>;
-    using type_double = typed_value<double>;
-    using type_rand_var = typed_value<decomposition<int, double>>;
+    using type_int = typed_value<storage::int_type>;
+    using type_double = typed_value<storage::double_type>;
+    using type_rand_var = typed_value<storage::random_variable_type>;
 
     template<typename T, typename... Value>
     std::unique_ptr<T> make(Value&&... data)

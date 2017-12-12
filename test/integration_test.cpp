@@ -6,77 +6,81 @@
 #include "environment.hpp"
 #include "value.hpp"
 
+#include <memory>
 #include <sstream>
 #include <string>
 
-using value_list = std::vector<std::unique_ptr<dice::base_value>>;
-
-struct interpreter_result 
+namespace 
 {
-    // computed values
-    value_list values;
+    using value_list = std::vector<std::unique_ptr<dice::base_value>>;
 
-    // parser and lexer errors
-    std::stringstream errors;
-
-    void assert_no_error()
+    struct interpreter_result 
     {
-        REQUIRE(errors.peek() == EOF);
-    }
+        // computed values
+        value_list values;
 
-    void assert_error(const std::string& expected_msg) 
+        // parser and lexer errors
+        std::stringstream errors;
+
+        void assert_no_error()
+        {
+            REQUIRE(errors.peek() == EOF);
+        }
+
+        void assert_error(const std::string& expected_msg) 
+        {
+            std::string actual_msg; 
+            std::getline(errors, actual_msg);
+            REQUIRE(actual_msg.size() > 0);
+            REQUIRE(actual_msg == expected_msg);
+        }
+    };
+
+    // Helper function to setup a parser and parse given expression
+    interpreter_result interpret(const std::string& expr)
     {
-        std::string actual_msg; 
-        std::getline(errors, actual_msg);
-        REQUIRE(actual_msg.size() > 0);
-        REQUIRE(actual_msg == expected_msg);
+        interpreter_result result;
+
+        std::stringstream input{ expr };
+        std::stringstream output;
+
+        dice::logger log{ &result.errors, true };
+        dice::lexer<dice::logger> lexer{ &input, &log };
+        dice::environment env;
+        
+        // functions used in some tests
+        env.add_function("one", dice::function_definition([](auto&&) 
+        { 
+            return dice::make<dice::type_int>(1); 
+        }));
+
+        env.add_function("add", dice::function_definition(
+            [](dice::execution_context& context) 
+            { 
+                auto&& a = context.arg<dice::type_int>(0)->data();
+                auto&& b = context.arg<dice::type_int>(1)->data();
+                a = a + b;
+                return std::move(context.raw_arg(0));
+            }, { dice::type_int::id(), dice::type_int::id() }
+        ));
+        
+        env.add_function("add", dice::function_definition(
+            [](dice::execution_context& context) 
+            { 
+                auto&& a = context.arg<dice::type_rand_var>(0)->data();
+                auto&& b = context.arg<dice::type_rand_var>(1)->data();
+                a = a + b;
+                return std::move(context.raw_arg(0));
+            }, { dice::type_rand_var::id(), dice::type_rand_var::id() }
+        ));
+
+        dice::direct_interpreter<dice::environment> interpret{ &env };
+
+        auto parser = dice::make_parser(&lexer, &log, &interpret);
+
+        result.values = parser.parse();
+        return result;
     }
-};
-
-// Helper function to setup a parser and parse given expression
-static interpreter_result interpret(const std::string& expr)
-{
-    interpreter_result result;
-
-    std::stringstream input{ expr };
-	std::stringstream output;
-
-    dice::logger log{ &result.errors, true };
-    dice::lexer<dice::logger> lexer{ &input, &log };
-    dice::environment env;
-    
-    // functions used in some tests
-    env.add_function("one", dice::function_definition([](auto&&) 
-    { 
-        return dice::make<dice::type_int>(1); 
-    }));
-
-    env.add_function("add", dice::function_definition(
-        [](dice::execution_context& context) 
-        { 
-            auto&& a = context.arg<dice::type_int>(0)->data();
-            auto&& b = context.arg<dice::type_int>(1)->data();
-            a = a + b;
-            return std::move(context.raw_arg(0));
-        }, { dice::type_int::id(), dice::type_int::id() }
-    ));
-    
-    env.add_function("add", dice::function_definition(
-        [](dice::execution_context& context) 
-        { 
-            auto&& a = context.arg<dice::type_rand_var>(0)->data();
-            auto&& b = context.arg<dice::type_rand_var>(1)->data();
-            a = a + b;
-            return std::move(context.raw_arg(0));
-        }, { dice::type_rand_var::id(), dice::type_rand_var::id() }
-    ));
-
-    dice::direct_interpreter<dice::environment> interpret{ &env };
-
-    auto parser = dice::make_parser(&lexer, &log, &interpret);
-
-    result.values = parser.parse();
-    return result;
 }
 
 TEST_CASE("Interpret an empty expression", "[dice]")
@@ -96,7 +100,7 @@ TEST_CASE("Interpret a single integer value", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
     
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 42);
+    REQUIRE((data == 42));
 }
 
 TEST_CASE("Interpret a single double value", "[dice]")
@@ -141,7 +145,7 @@ TEST_CASE("Skip unknown characters", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 4);
+    REQUIRE((data == 4));
 }
 
 TEST_CASE("Interpret an arithmetic expression", "[dice]")
@@ -155,7 +159,7 @@ TEST_CASE("Interpret an arithmetic expression", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
 
     auto&& data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == -3);
+    REQUIRE((data == -3));
 }
 
 TEST_CASE("Interpret a dice roll expression", "[dice]")
@@ -207,7 +211,7 @@ TEST_CASE("Interpret an expression even if it starts with invalid symbols", "[di
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 7);
+    REQUIRE((data == 7));
 
 }
 
@@ -374,7 +378,7 @@ TEST_CASE("Don't interpret relational operator if the second operand is invalid"
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 1);
+    REQUIRE((data == 1));
 }
 
 TEST_CASE("Resume interpreting relational operator after finding a sync symbol", "[dice]")
@@ -406,7 +410,7 @@ TEST_CASE("Don't interpret the + operator if the second operand is invalid", "[d
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 2);
+    REQUIRE((data == 2));
 }
 
 TEST_CASE("Resume interpreting the + operator if we find a sync symbol", "[dice]")
@@ -421,7 +425,7 @@ TEST_CASE("Resume interpreting the + operator if we find a sync symbol", "[dice]
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 5);
+    REQUIRE((data == 5));
 }
 
 TEST_CASE("Don't interpret the * operator if the second operand is invalid", "[dice]")
@@ -437,7 +441,7 @@ TEST_CASE("Don't interpret the * operator if the second operand is invalid", "[d
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 2);
+    REQUIRE((data == 2));
 }
 
 TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]")
@@ -452,7 +456,7 @@ TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 8);
+    REQUIRE((data == 8));
 }
 
 TEST_CASE("Interpret arithmetic expressing with doubles and ints", "[dice]")
@@ -479,7 +483,7 @@ TEST_CASE("Interpret a function with no arguments", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 2);
+    REQUIRE((data == 2));
 }
 
 TEST_CASE("Interpret a function with invalid first argument", "[dice]")
@@ -494,7 +498,7 @@ TEST_CASE("Interpret a function with invalid first argument", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 1); // 0 + 1 
+    REQUIRE((data == 1)); // 0 + 1 
 }
 
 TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[dice]")
@@ -510,7 +514,7 @@ TEST_CASE("Don't interpret the dice roll operator if its operand is invalid", "[
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 1);
+    REQUIRE((data == 1));
 }
 
 TEST_CASE("Resume interpreting the dice roll operator if we find a sync symbol", "[dice]")
@@ -671,7 +675,7 @@ TEST_CASE("Call to an unknown function will provide a readable error message", "
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 0); // use default value
+    REQUIRE((data == 0)); // use default value
 }
 
 TEST_CASE("Call to a function with incompatible arguments", "[dice]")
@@ -686,7 +690,7 @@ TEST_CASE("Call to a function with incompatible arguments", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
 
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 0); // use default value
+    REQUIRE((data == 0)); // use default value
 }
 
 TEST_CASE("Compute result of expression with complex dependencies", "[dice]")
@@ -755,7 +759,7 @@ TEST_CASE("Interpret quantile function call", "[dice]")
     REQUIRE(value->type() == dice::type_int::id());
     
     auto data = dynamic_cast<dice::type_int&>(*value).data();
-    REQUIRE(data == 2);
+    REQUIRE((data == 2));
 }
 
 TEST_CASE("Interpret variable names in dice roll operator", "[dice]")
