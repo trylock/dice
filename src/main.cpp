@@ -87,11 +87,14 @@ struct options
     std::istream* input;
     // Should we print the executed script?
     bool verbose;
+    // File path if input is a file, "<arguments>" otherwise
+    std::string input_name;
 
     options(int argc, char** argv) : 
         args(argv, argv + argc), 
         input(nullptr),
-        verbose(false)
+        verbose(false),
+        input_name("<arguments>")
     {
         parse();
     }
@@ -110,7 +113,8 @@ private:
             {
                 assert(it + 1 != args.end());
                 ++it;
-                input_file_.open(*it);
+                input_name = *it;
+                input_file_.open(input_name);
                 input = &input_file_;
                 load_from_file = true;
             }
@@ -142,6 +146,12 @@ int main(int argc, char** argv)
 
     if (opt.input != nullptr)
     {
+        if (opt.input->fail())
+        {
+            std::cerr << "File not found: " << opt.input_name << std::endl;
+            return 1;
+        }
+
         // parse and interpret the expression
         dice::logger log;
         dice::environment env;
@@ -152,7 +162,8 @@ int main(int argc, char** argv)
         auto start = std::chrono::high_resolution_clock::now();
         auto result = parser.parse(); 
         auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
+            end - start).count();
         
         formatting_visitor format;
         for (auto&& value : result)
@@ -162,7 +173,11 @@ int main(int argc, char** argv)
             value->accept(&format);
         }
 
-        std::cout << "Evaluated in " << duration << " ms" << std::endl;
+        if (opt.verbose)
+        {
+            std::cout << "Evaluated in " << duration << " ms" << std::endl;
+        }
+
         if (!log.empty())
             return 1;
     }
