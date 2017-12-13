@@ -1,6 +1,8 @@
 #ifndef DICE_SAFE_HPP_
 #define DICE_SAFE_HPP_
 
+#include <limits>
+
 #include <SafeInt3.hpp>
 
 namespace dice
@@ -106,6 +108,81 @@ namespace std
     {
         return to_string(static_cast<T>(value));
     }
+
+    // Numeric limits for safe types
+    template<typename T>
+    class numeric_limits<dice::safe<T>>
+    {
+    public:
+        static constexpr auto is_specialized = numeric_limits<T>::is_specialized;
+        static constexpr auto is_signed = numeric_limits<T>::is_signed;
+        static constexpr auto is_integer = numeric_limits<T>::is_integer;
+        static constexpr auto is_exact = numeric_limits<T>::is_exact;
+        static constexpr auto has_infinity = numeric_limits<T>::has_infinity;
+        static constexpr auto has_quiet_NaN = numeric_limits<T>::has_quiet_NaN;
+        static constexpr auto has_signaling_NaN = numeric_limits<T>::has_signaling_NaN;
+        static constexpr auto has_denorm = numeric_limits<T>::has_denorm;
+        static constexpr auto has_denorm_loss = numeric_limits<T>::has_denorm_loss;
+        static constexpr auto round_style = numeric_limits<T>::round_style;
+        static constexpr auto is_iec559 = numeric_limits<T>::is_iec559;
+        static constexpr auto is_bounded = numeric_limits<T>::is_bounded;
+        static constexpr auto is_modulo = numeric_limits<T>::is_modulo;
+        static constexpr auto digits = numeric_limits<T>::digits;
+        static constexpr auto digits10 = numeric_limits<T>::digits10;
+        static constexpr auto max_digits10 = numeric_limits<T>::max_digits10;
+        static constexpr auto radix = numeric_limits<T>::radix;
+        static constexpr auto min_exponent = numeric_limits<T>::min_exponent;
+        static constexpr auto min_exponent10 = numeric_limits<T>::min_exponent10;
+        static constexpr auto max_exponent = numeric_limits<T>::max_exponent;
+        static constexpr auto max_exponent10 = numeric_limits<T>::max_exponent10;
+        static constexpr auto traps = numeric_limits<T>::traps;
+        static constexpr auto tinyness_before = numeric_limits<T>::tinyness_before;
+
+        static constexpr dice::safe<T> lowest()
+        {
+            return numeric_limits<T>::lowest();
+        }
+        
+        static constexpr dice::safe<T> min()
+        {
+            return numeric_limits<T>::min();
+        }
+        
+        static constexpr dice::safe<T> max()
+        {
+            return numeric_limits<T>::max();
+        }
+        
+        static constexpr dice::safe<T> epsilon()
+        {
+            return numeric_limits<T>::epsilon();
+        }
+        
+        static constexpr auto round_error()
+        {
+            return numeric_limits<T>::round_error();
+        }
+        
+        static constexpr dice::safe<T> infinity()
+        {
+            return numeric_limits<T>::infinity();
+        }
+        
+        static constexpr dice::safe<T> quiet_NaN()
+        {
+            return numeric_limits<T>::quiet_NaN();
+        }
+        
+        static constexpr dice::safe<T> signaling_NaN()
+        {
+            return numeric_limits<T>::signaling_NaN();
+        }
+        
+        static constexpr dice::safe<T> denorm_min()
+        {
+            return numeric_limits<T>::denorm_min();
+        }
+    };
 }
 
 #endif // DICE_SAFE_HPP_
