@@ -72,6 +72,21 @@ namespace dice
                     return symbol{ symbol_type::end };
 
                 auto next = static_cast<char>(input_->peek());
+
+                // skip comments
+                if (current == '/' && next == '/')
+                {
+                    for (;;)
+                    {
+                        auto value = get_char();
+                        if (value == '\n' || input_->fail())
+                        {
+                            break;
+                        }
+                    }
+                    continue; // start parsing next token
+                }
+
                 if (current == '+')
                     return symbol{ symbol_type::plus };
                 if (current == '-')

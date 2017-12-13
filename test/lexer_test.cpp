@@ -349,3 +349,35 @@ TEST_CASE("Parse overflown double", "[lexer]")
     
     REQUIRE(token.type == dice::symbol_type::number);
 }
+
+TEST_CASE("Parse an empty comment", "[lexer]")
+{
+    auto lex = make_lexer("//");
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+}
+
+TEST_CASE("Parse just a comment", "[lexer]")
+{
+    auto lex = make_lexer("// comment");
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+}
+
+TEST_CASE("Parse comment after statement", "[lexer]")
+{
+    auto lex = make_lexer("// comment // in comment\n 5 // int value§\n 1");
+
+    auto token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE((dynamic_cast<dice::type_int&>(*token.value).data() == 5));
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::number);
+    REQUIRE((dynamic_cast<dice::type_int&>(*token.value).data() == 1));
+
+    token = lex.read_token();
+    REQUIRE(token.type == dice::symbol_type::end);
+}
