@@ -782,3 +782,18 @@ TEST_CASE("Interpret variable names in dice roll operator", "[dice]")
     REQUIRE(var.probability(6) == Approx(1 / 4.0));
     REQUIRE(var.probability(8) == Approx(1 / 8.0));
 }
+
+TEST_CASE("Interpret division by zero", "[dice]")
+{
+    auto result = interpret("20 / (1d6 - 1)");
+    
+    REQUIRE(result.values.size() == 1);
+    result.assert_error("Division by Zero");
+    result.assert_no_error();
+    
+    auto value = std::move(result.values[0]);
+    REQUIRE(value->type() == dice::type_int::id());
+    
+    auto data = dynamic_cast<dice::type_int&>(*value).data();
+    REQUIRE((data == 0));
+}
