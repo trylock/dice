@@ -364,3 +364,41 @@ TEST_CASE("Construct a random variable from a list of value frequencies", "[rand
     REQUIRE(var.probability(2) == Approx(1 / 4.0));
     REQUIRE(var.probability(3) == Approx(1 / 4.0));
 }
+
+TEST_CASE("Find minimal value in an empty random variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var;
+
+    REQUIRE(var.min_value() == std::numeric_limits<int>::max());
+}
+
+TEST_CASE("Find minimal value in a random variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var{ freq_list{
+        std::make_pair(2, 1),
+        std::make_pair(3, 1),
+        std::make_pair(1, 1),
+        std::make_pair(4, 1),
+    } };
+
+    REQUIRE(var.min_value() == 1);
+}
+
+TEST_CASE("Find maximal value in an empty random variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var;
+
+    REQUIRE(var.max_value() == std::numeric_limits<int>::lowest());
+}
+
+TEST_CASE("Find maximal value in a random variable", "[random_variable]")
+{
+    dice::random_variable<int, double> var{ freq_list{
+        std::make_pair(2, 1),
+        std::make_pair(4, 1),
+        std::make_pair(3, 1),
+        std::make_pair(1, 1),
+    } };
+
+    REQUIRE(var.max_value() == 4);
+}

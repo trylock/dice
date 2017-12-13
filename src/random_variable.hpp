@@ -101,7 +101,7 @@ namespace dice
          */
         auto max_value() const
         {
-            auto value = std::numeric_limits<value_type>::min();
+            auto value = std::numeric_limits<value_type>::lowest();
             for (auto&& pair : probability_)
             {
                 value = std::max(value, pair.first);
