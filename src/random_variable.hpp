@@ -36,7 +36,7 @@ namespace dice
         using probability_type = ProbabilityType;
         using frequency_list = std::vector<std::pair<value_type, std::size_t>>;
         using probability_list = std::vector<
-			std::pair<value_type, probability_type>>;
+            std::pair<value_type, probability_type>>;
 
         // create an impossible event
         random_variable() {}
@@ -66,7 +66,7 @@ namespace dice
         /** Compute probabilities from list of value frequencies.
          * @param list of (value, frequency) pairs (values can repeat)
          */
-        explicit random_variable(frequency_list&& list)
+        explicit random_variable(const frequency_list& list)
         {
             probability_type sum = 0;
             for (auto&& item : list)
@@ -198,7 +198,7 @@ namespace dice
 
         /** Return first value s.t. P(X <= value) >= prob.
          * Unlike the quantile method, values are not copied nor sorted.
-         * @param probability
+         * @param random probability between 0 and 1
          * @return value
          */
         auto random_value(probability_type prob) const
@@ -433,7 +433,7 @@ namespace dice
          * 
          * @param number of dice X (independent of Y)
          *        Each value has to be a positive integer
-         * @param number of faces of each dice Y (independent of X)
+         * @param number of faces of each die Y (independent of X)
          *        Each value has to be a positive integer
          * @return distribution of XdY
          */
