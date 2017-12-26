@@ -3,6 +3,14 @@
 
 #include <SafeInt3.hpp>
 
+#ifdef max
+#undef max
+#endif // max
+
+#ifdef min
+#undef min
+#endif // min
+
 namespace dice
 {
     template<typename T>
