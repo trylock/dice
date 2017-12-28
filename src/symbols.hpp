@@ -40,7 +40,7 @@ namespace dice
 
         inline bool operator==(const symbol& other) const
         {
-            return type == other.type && lexeme == other.lexeme;
+            return type == other.type && lexeme == other.lexeme && value == other.value;
         }
 
         inline bool operator!=(const symbol& other) const
