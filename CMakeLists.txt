@@ -15,6 +15,7 @@ set(dice_headers
     ${SRC_DIR}/value.hpp
     ${SRC_DIR}/lexer.hpp
     ${SRC_DIR}/parser.hpp
+    ${SRC_DIR}/safe.hpp
     ${SRC_DIR}/symbols.hpp
     ${SRC_DIR}/functions.hpp
     ${SRC_DIR}/conversions.hpp
