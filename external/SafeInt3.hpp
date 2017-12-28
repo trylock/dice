@@ -145,14 +145,9 @@ Please read the leading comments before using the class.
     #endif
 #endif
 
-/* 
-// All our target compilers have to support nullptr.
-// nullptr is not NULL (defining it NULL can break other code)
-
 #if NEEDS_NULLPTR_DEFINED
 #define nullptr NULL
 #endif
-*/
 
 #ifndef C_ASSERT
 #define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]

@@ -1,6 +1,7 @@
 #ifndef DICE_SAFE_HPP_
 #define DICE_SAFE_HPP_
 
+#define NEEDS_NULLPTR_DEFINED 0
 #include <SafeInt3.hpp>
 
 #ifdef max
