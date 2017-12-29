@@ -1,0 +1,12 @@
+// Input
+var roll = max(1d20, 1d20);
+
+// Value computation
+var isCrit = roll == 20;
+var isHitButNotCrit = roll in [10, 19];
+var value = isCrit * 4d8 + isHitButNotCrit * 2d8;
+
+// Print result
+value >= 10;
+
+value;
