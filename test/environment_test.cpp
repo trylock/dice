@@ -222,3 +222,65 @@ TEST_CASE("Get unknown variable", "[environment]")
     REQUIRE(env.get_var("tesT") == nullptr);
     REQUIRE(env.get_var("unknown") == nullptr);
 }
+
+TEST_CASE("Roll function throws an error for impossible events", "[environment]")
+{
+    dice::environment env;
+    dice::decomposition<
+        dice::storage::int_type, 
+        dice::storage::double_type> num_dice, num_faces;
+
+    auto a = dice::make<dice::type_rand_var>(num_dice);
+    auto b = dice::make<dice::type_rand_var>(num_faces);
+    REQUIRE_THROWS_AS(env.call("roll_op", std::move(a), std::move(b)), dice::compiler_error);
+}
+
+TEST_CASE("Roll function throws an error if dice count is an impossible event", "[environment]")
+{
+    dice::environment env;
+    dice::decomposition<
+        dice::storage::int_type, 
+        dice::storage::double_type> num_dice, num_faces{ dice::constant_tag{}, 1 };
+
+    auto a = dice::make<dice::type_rand_var>(num_dice);
+    auto b = dice::make<dice::type_rand_var>(num_faces);
+    REQUIRE_THROWS_AS(env.call("roll_op", std::move(a), std::move(b)), dice::compiler_error);
+}
+
+TEST_CASE("Roll function throws an error if face count is an impossible event", "[environment]")
+{
+    dice::environment env;
+    dice::decomposition<
+        dice::storage::int_type, 
+        dice::storage::double_type> num_dice{ dice::constant_tag{}, 1 }, num_faces;
+
+    auto a = dice::make<dice::type_rand_var>(num_dice);
+    auto b = dice::make<dice::type_rand_var>(num_faces);
+    REQUIRE_THROWS_AS(env.call("roll_op", std::move(a), std::move(b)), dice::compiler_error);
+}
+
+TEST_CASE("Roll function throws an error if dice count is not positive integer", "[environment]")
+{
+    dice::environment env;
+    dice::decomposition<
+        dice::storage::int_type, 
+        dice::storage::double_type> num_dice{ dice::constant_tag{}, 0 }, 
+                                    num_faces{ dice::constant_tag{}, 1 };
+
+    auto a = dice::make<dice::type_rand_var>(num_dice);
+    auto b = dice::make<dice::type_rand_var>(num_faces);
+    REQUIRE_THROWS_AS(env.call("roll_op", std::move(a), std::move(b)), dice::compiler_error);
+}
+
+TEST_CASE("Roll function throws an error if face count is not positive integer", "[environment]")
+{
+    dice::environment env;
+    dice::decomposition<
+        dice::storage::int_type, 
+        dice::storage::double_type> num_dice{ dice::constant_tag{}, 1 }, 
+                                    num_faces{ dice::constant_tag{}, 0 };
+
+    auto a = dice::make<dice::type_rand_var>(num_dice);
+    auto b = dice::make<dice::type_rand_var>(num_faces);
+    REQUIRE_THROWS_AS(env.call("roll_op", std::move(a), std::move(b)), dice::compiler_error);
+}

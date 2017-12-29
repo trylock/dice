@@ -89,9 +89,42 @@ namespace
     fn::return_type dice_roll_op(fn::context_type& context)
     {
         using namespace dice;
-        auto& a = context.arg<type_rand_var>(0)->data();
-        auto& b = context.arg<type_rand_var>(1)->data();
-        a = roll(a, b);
+        auto& dice_count = context.arg<type_rand_var>(0)->data();
+        auto& dice_faces = context.arg<type_rand_var>(1)->data();
+
+        if (dice_count.size() == 0)
+        {
+            throw compiler_error{ "No value for dice count" };
+        }
+        
+        if (dice_faces.size() == 0)
+        {
+            throw compiler_error{ "No value for faces count" };
+        }
+
+        // check whether the arguments are valid
+        for (auto&& pair : dice_count)
+        {
+            if (pair.first <= 0)
+            {
+                throw compiler_error{ 
+                    "Number of dice has to be a positive integer, got " + 
+                    std::to_string(pair.first) };
+            }
+        }
+
+        for (auto&& pair : dice_faces)
+        {
+            if (pair.first <= 0)
+            {
+                throw compiler_error{ 
+                    "Number of dice faces has to be a positive integer, got " + 
+                    std::to_string(pair.first) };
+            }
+        }
+
+        // calculate the roll
+        dice_count = roll(dice_count, dice_faces);
         return std::move(context.raw_arg(0));
     }
 
