@@ -517,7 +517,7 @@ namespace dice
                         probability[i] = probability[i - 1] + probability[i];
                     }
 
-                    // For computation of the probability of the sum of i, 
+                    // For computation of the probability of the sum of i
                     // we only need values j < i. By iterating backwards we 
                     // don't overwrite those values.
                     for (auto i = faces_count * dice_count; i >= dice_count; --i)
@@ -531,21 +531,26 @@ namespace dice
                         // array is a prefix sum of the probabilities but it
                         // will be restored in the next iteration.
                         probability[i] = prob_i;
-    
-                        // save the probability
-                        auto num_rolls = num_dice.probability_.find(dice_count);
-                        if (num_rolls != num_dice.probability_.end())
-                        {
-                            auto rolls_prob = num_rolls->second;
-                            auto prob = prob_i * faces_prob * rolls_prob;
-                            dist.add_probability(i, prob);
-                        }
                     }
 
                     // zero out probabilities of lower values
                     for (value_type i = 1; i < dice_count; ++i)
                     {
                         probability[i] = 0;
+                    }
+
+                    // check whether dice_count is a valid number of dice
+                    auto rolls_it = num_dice.probability_.find(dice_count);
+                    if (rolls_it == num_dice.probability_.end())
+                    {
+                        continue;
+                    }
+
+                    // save the probability 
+                    auto rolls_prob = rolls_it->second;
+                    for (auto i = dice_count; i <= faces_count * dice_count; ++i)
+                    {
+                        dist.add_probability(i, probability[i] * rolls_prob * faces_prob);
                     }
                 }
             }
