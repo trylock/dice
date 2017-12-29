@@ -715,6 +715,14 @@ namespace dice
             return &current_value_;
         }
 
+        /** Access current value.
+         * @return current value reference
+         */
+        value_type& operator*()
+        {
+            return current_value_;
+        }
+
         /** Compare 2 iterators.
          * @param other iterator
          * @return true iff both point at the same value in the same variable
