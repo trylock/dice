@@ -1,9 +1,16 @@
 #ifndef DICE_SAFE_HPP_
 #define DICE_SAFE_HPP_
 
-#include <limits>
-
+#define NEEDS_NULLPTR_DEFINED 0
 #include <SafeInt3.hpp>
+
+#ifdef max
+#undef max
+#endif // max
+
+#ifdef min
+#undef min
+#endif // min
 
 namespace dice
 {
@@ -13,21 +20,21 @@ namespace dice
     using safe_int_error = SafeIntException;
 
     /** Check whether given exception is an overflow error.
-     * @param safe_int_error
+     * @param error object
      * @return true iff given exception is an overflow error
      */
-    inline bool is_overflow_error(const safe_int_error& err)
+    inline bool is_overflow_error(const safe_int_error& error)
     {
-        return err.m_code == SafeIntArithmeticOverflow;
+        return error.m_code == SafeIntArithmeticOverflow;
     }
 
     /** Check whether given exception is an divide by zero error.
-     * @param safe_int_error
+     * @param error object
      * @return true iff given exception is an divide by zero error
      */
-    inline bool is_divide_by_zero_error(const safe_int_error& err)
+    inline bool is_divide_by_zero_error(const safe_int_error& error)
     {
-        return err.m_code == SafeIntDivideByZero;
+        return error.m_code == SafeIntDivideByZero;
     }
 }
 

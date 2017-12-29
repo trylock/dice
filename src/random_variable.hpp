@@ -36,7 +36,7 @@ namespace dice
         using probability_type = ProbabilityType;
         using frequency_list = std::vector<std::pair<value_type, std::size_t>>;
         using probability_list = std::vector<
-			std::pair<value_type, probability_type>>;
+            std::pair<value_type, probability_type>>;
 
         // create an impossible event
         random_variable() {}
@@ -66,7 +66,7 @@ namespace dice
         /** Compute probabilities from list of value frequencies.
          * @param list of (value, frequency) pairs (values can repeat)
          */
-        explicit random_variable(frequency_list&& list)
+        explicit random_variable(const frequency_list& list)
         {
             probability_type sum = 0;
             for (auto&& item : list)
@@ -165,10 +165,10 @@ namespace dice
          * Def.: Quantile(p) = min{ x : P(X <= x) >= p} 
          * Note: complexity of this operation is linearithmic with the size of
          *       the variable as we have to sort the values.
-         * @param requested probability
+         * @param probability between 0 and 1
          * @return quantile
          */
-        auto quantile(probability_type prob) const
+        auto quantile(probability_type probability) const
         {
             if (probability_.empty())
                 throw std::runtime_error(
@@ -186,7 +186,7 @@ namespace dice
             probability_type prob_sum = 0;
             for (auto&& value : list)
             {
-                if (prob_sum >= prob)
+                if (prob_sum >= probability)
                 {
                     break;
                 }
@@ -198,15 +198,15 @@ namespace dice
 
         /** Return first value s.t. P(X <= value) >= prob.
          * Unlike the quantile method, values are not copied nor sorted.
-         * @param probability
+         * @param probability (a random number between 0 and 1)
          * @return value
          */
-        auto random_value(probability_type prob) const
+        auto random_value(probability_type probability) const
         {
             probability_type sum = 0;
             for (auto&& pair : probability_)
             {
-                if (sum + pair.second >= prob)
+                if (sum + pair.second >= probability)
                 {
                     return pair.first;
                 }
@@ -216,8 +216,8 @@ namespace dice
         }
 
         /** Calculate indicator that X (this r.v.) is in given interval
-         * @param lower bound of the interval
-         * @param upper bound of the interval
+         * @param lower_bound of the interval
+         * @param upper_bound of the interval
          * @return r.v. Y with a Bernoulli distribution 
          *         Y = 1 <=> X is in the [lower_bound, upper_bound] interval
          *         Y = 0 otherwise
@@ -431,9 +431,9 @@ namespace dice
          * the probability that we roll k - n with X - 1 throws of a Y sided
          * die and then roll n on the last die for n = 1 to Y.
          * 
-         * @param number of dice X (independent of Y)
+         * @param num_dice number of dice X (independent of Y)
          *        Each value has to be a positive integer
-         * @param number of faces of each dice Y (independent of X)
+         * @param num_faces number of faces of each die Y (independent of X)
          *        Each value has to be a positive integer
          * @return distribution of XdY
          */
@@ -483,10 +483,10 @@ namespace dice
                 auto base_prob = 1 / static_cast<probability_type>(faces_count);
                 
                 // save the probability of 1 roll
-                auto num_rolls = num_dice.probability_.find(1);
-                if (num_rolls != num_dice.probability_.end())
+                auto one_roll = num_dice.probability_.find(1);
+                if (one_roll != num_dice.probability_.end())
                 {
-                    auto rolls_prob = num_rolls->second;
+                    auto rolls_prob = one_roll->second;
                     auto prob = base_prob * faces_prob * rolls_prob;
                     for (value_type i = 1; i <= faces_count; ++i)
                     {
@@ -517,7 +517,7 @@ namespace dice
                         probability[i] = probability[i - 1] + probability[i];
                     }
 
-                    // For computation of the probability of the sum of i, 
+                    // For computation of the probability of the sum of i
                     // we only need values j < i. By iterating backwards we 
                     // don't overwrite those values.
                     for (auto i = faces_count * dice_count; i >= dice_count; --i)
@@ -531,21 +531,26 @@ namespace dice
                         // array is a prefix sum of the probabilities but it
                         // will be restored in the next iteration.
                         probability[i] = prob_i;
-    
-                        // save the probability
-                        auto num_rolls = num_dice.probability_.find(dice_count);
-                        if (num_rolls != num_dice.probability_.end())
-                        {
-                            auto rolls_prob = num_rolls->second;
-                            auto prob = prob_i * faces_prob * rolls_prob;
-                            dist.add_probability(i, prob);
-                        }
                     }
 
                     // zero out probabilities of lower values
                     for (value_type i = 1; i < dice_count; ++i)
                     {
                         probability[i] = 0;
+                    }
+
+                    // check whether dice_count is a valid number of dice
+                    auto rolls_it = num_dice.probability_.find(dice_count);
+                    if (rolls_it == num_dice.probability_.end())
+                    {
+                        continue;
+                    }
+
+                    // save the probability 
+                    auto rolls_prob = rolls_it->second;
+                    for (auto i = dice_count; i <= faces_count * dice_count; ++i)
+                    {
+                        dist.add_probability(i, probability[i] * rolls_prob * faces_prob);
                     }
                 }
             }
@@ -558,8 +563,10 @@ namespace dice
          * @param combination function of X and Y
          * @return a new random variable that is a function of X and Y
          */
-        template<typename Func>
-        auto combine(const random_variable& other, Func&& combination) const
+        template<typename CombinationFunction>
+        auto combine(
+            const random_variable& other, 
+            CombinationFunction combination) const
         {
             random_variable dist;
             for (auto&& pair_a : probability_)
@@ -642,14 +649,15 @@ namespace dice
          * @param value
          * @param probability that whill be added
          */
-        void add_probability(value_type value, probability_type prob)
+        void add_probability(value_type value, probability_type probability)
         {
-            auto result = probability_.insert(std::make_pair(value, prob));
+            auto result = probability_.insert(
+                std::make_pair(value, probability));
             auto iter = result.first;
             auto is_inserted = result.second;
             if (!is_inserted)
             {
-                iter->second += prob;
+                iter->second += probability;
             }
         }
     };

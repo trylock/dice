@@ -340,16 +340,16 @@ dice::environment::environment()
 
 void dice::environment::add_function(
     const std::string& name, 
-    function_definition&& func)
+    function_definition function)
 {
     auto result = functions_.insert(std::make_pair(
         name, 
         std::vector<function_definition>{}
     ));
-    result.first->second.push_back(std::move(func));
+    result.first->second.push_back(std::move(function));
 }
 
-void dice::environment::set_var(const std::string& name, value_type&& value)
+void dice::environment::set_var(const std::string& name, value_type value)
 {
     auto it = variables_.find(name);
     if (it != variables_.end())

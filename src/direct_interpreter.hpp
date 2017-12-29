@@ -69,7 +69,7 @@ namespace dice
         }
 
         /** Interpret number as an int or double.
-         * @param number token
+         * @param token of the number
          * @return number's value
          */
         value_type number(symbol& token)
@@ -98,10 +98,10 @@ namespace dice
          * @param right operand
          * @return sum
          */
-        value_type add(value_type lhs, value_type rhs)
+        value_type add(value_type left, value_type right)
         {
-            process_children(lhs.get(), rhs.get());
-            return env_->call("+", std::move(lhs), std::move(rhs));
+            process_children(left.get(), right.get());
+            return env_->call("+", std::move(left), std::move(right));
         }
 
         /** Subtract right hand side from the left hand side
@@ -109,10 +109,10 @@ namespace dice
          * @param right operand
          * @return difference
          */
-        value_type sub(value_type lhs, value_type rhs)
+        value_type sub(value_type left, value_type right)
         {
-            process_children(lhs.get(), rhs.get());
-            return env_->call("-", std::move(lhs), std::move(rhs));
+            process_children(left.get(), right.get());
+            return env_->call("-", std::move(left), std::move(right));
         }
 
         /** Multiply left hand side with the right hand side
@@ -120,10 +120,10 @@ namespace dice
          * @param right operand
          * @return product
          */
-        value_type mult(value_type lhs, value_type rhs)
+        value_type mult(value_type left, value_type right)
         {
-            process_children(lhs.get(), rhs.get());
-            return env_->call("*", std::move(lhs), std::move(rhs));
+            process_children(left.get(), right.get());
+            return env_->call("*", std::move(left), std::move(right));
         }
 
         /** Divide left hand side with the right hand side
@@ -131,14 +131,14 @@ namespace dice
          * @param right operand
          * @return division
          */
-        value_type div(value_type lhs, value_type rhs)
+        value_type div(value_type left, value_type right)
         {
-            process_children(lhs.get(), rhs.get());
-            return env_->call("/", std::move(lhs), std::move(rhs));
+            process_children(left.get(), right.get());
+            return env_->call("/", std::move(left), std::move(right));
         }
 
         /** Negate value.
-         * @param original value
+         * @param value
          * @return negation of the value
          */
         value_type unary_minus(value_type value)
@@ -147,29 +147,33 @@ namespace dice
         }
 
         /** Compute a binary relational operator.
-         * @param operator name
+         * @param type of the operator (<, <=, ==, !=, >=, >)
          * @param left operand
          * @param right operand
          * @return result
          */
-        value_type rel_op(const std::string& type, value_type lhs, 
-            value_type rhs)
+        value_type rel_op(
+            const std::string& type, 
+            value_type left, 
+            value_type right)
         {
-            process_children(lhs.get(), rhs.get());
-            return env_->call(type, std::move(lhs), std::move(rhs));
+            process_children(left.get(), right.get());
+            return env_->call(type, std::move(left), std::move(right));
         }
 
         /** Compute relational in operator.
-         * @param value 
-         * @param lower bound of the interval
-         * @param upper bound of the interval
+         * @param value to test
+         * @param lower_bound of the interval
+         * @param upper_bound of the interval
          * @return result of the in operator
          */
-        value_type rel_in(value_type var, value_type lower_bound, 
+        value_type rel_in(
+            value_type value, 
+            value_type lower_bound, 
             value_type upper_bound)
         {
             return env_->call("in", 
-                std::move(var), 
+                std::move(value), 
                 std::move(lower_bound), 
                 std::move(upper_bound));
         }
@@ -179,15 +183,17 @@ namespace dice
          * @param right operand
          * @return result of the operator
          */
-        value_type roll(value_type lhs, value_type rhs)
+        value_type roll(value_type left, value_type right)
         {
-            process_children(lhs.get(), rhs.get());
-            return env_->call("roll_op", std::move(lhs), std::move(rhs));
+            process_children(left.get(), right.get());
+            return env_->call("roll_op", std::move(left), std::move(right));
         }
 
         /** Assing value to variable with given name.
-         * @param variable name
-         * @param new value of the variable
+         * If a variable with given name already exists, a compiler_error 
+         * exception will be thrown.
+         * @param name of a new variable
+         * @param value of the variable
          * @return nullptr
          */
         value_type assign(const std::string& name, value_type value)
@@ -205,18 +211,18 @@ namespace dice
         }
 
         /** Call a function with given arguments.
-         * @param function name
-         * @param argument list
+         * @param name of a function
+         * @param arguments
          * @return result of the function call
          */
-        value_type call(const std::string& name, value_list&& args)
+        value_type call(const std::string& name, value_list&& arguments)
         {
             if (is_definition_)
             {
                 // check whether there is a parameter that depends on 
                 // a random variable
                 dependencies_visitor deps;
-                for (auto&& arg : args)
+                for (auto&& arg : arguments)
                 {
                     arg->accept(&deps);
                     if (deps.count() > 0)
@@ -228,14 +234,14 @@ namespace dice
                 if (deps.count() > 0)
                 {
                     decomposition_visitor decomp;
-                    for (auto&& arg : args)
+                    for (auto&& arg : arguments)
                     {
                         arg->accept(&decomp);
                     }
                 }
             }
 
-            return env_->call_var(name, args.begin(), args.end());
+            return env_->call_var(name, arguments.begin(), arguments.end());
         }
 
     private:
@@ -243,23 +249,23 @@ namespace dice
         bool is_definition_ = false;
 
         /** Process children of a binary node. 
-         * @param left child
-         * @param right child
+         * @param left operand
+         * @param right operand
          */
-        void process_children(base_value* lhs, base_value* rhs)
+        void process_children(base_value* left, base_value* right)
         {
             // don't convert random variables if we're not in a name definition
             if (!is_definition_)
                 return;
 
             dependencies_visitor deps;
-            lhs->accept(&deps);
-            rhs->accept(&deps);
+            left->accept(&deps);
+            right->accept(&deps);
             if (deps.count() > 0)
             {
                 decomposition_visitor decomp;
-                lhs->accept(&decomp);
-                rhs->accept(&decomp);
+                left->accept(&decomp);
+                right->accept(&decomp);
             }
         }
     };

@@ -38,7 +38,7 @@ namespace dice
          * @param name of a variable
          * @param value of the variable
          */
-        void set_var(const std::string& name, value_type&& value);
+        void set_var(const std::string& name, value_type value);
 
         /** Get value of a variable.
          * @param name of a variable
@@ -56,16 +56,17 @@ namespace dice
 
         /** Add a function to the environment.
          * Added function will be available in dice expressions.
-         * @param function name
+         * @param name of the function
          * @param function implementation and metadata
          */
-        void add_function(const std::string& name, function_definition&& func);
+        void add_function(const std::string& name, function_definition function);
 
         /** Call a function with the same arguments.
          * All functions can throw a compiler_error indicating a critical error
          * that the caller has to handle.
-         * @param function name
-         * @param arguments passed to the function
+         * @param name of the function
+         * @param first_arg first argument
+         * @param rest of the arguments passed to the function
          * @return computed value
          */
         template<typename Arg, typename ...Args>
@@ -86,7 +87,7 @@ namespace dice
         }
 
         /** Call a function with arguments in a list.
-         * @param function name
+         * @param name of the function
          * @param first argument iterator
          * @param last argument iterator
          * @return computed value
@@ -114,8 +115,8 @@ namespace dice
         std::vector<fn::value_type> args_;
 
         /** Call a function with prepared context.
-         * @param function name
-         * @param execution context of this call
+         * @param name of the function
+         * @param context of execution of this call
          * @return computed value
          */
         fn::return_type call_prepared(

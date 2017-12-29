@@ -20,21 +20,21 @@ namespace dice
         // cost of an impossible conversion
         static const cost_type max_cost;
 
-        /** Find conversion cost from type <from> to type <to>
-         * @param id of the <from> type
-         * @param id of the <to> type
+        /** Find conversion cost from type \p from to type \p to
+         * @param from type id
+         * @param to type id
          * @return cost of the conversion 
          *         0 => no conversion needed,
          *         max_cost => the conversion is not supported
          */
         cost_type cost(type_id from, type_id to) const;
 
-        /** Convert value to type <to>
-         * @param id of the <to> type
+        /** Convert value to type \p to
+         * @param to type id
          * @param value to convert
          * @return converted value
          */ 
-        value_type convert(type_id to, value_type&& value) const;
+        value_type convert(type_id to, value_type value) const;
     };
 
     class conversion_visitor : public value_visitor
@@ -42,7 +42,7 @@ namespace dice
     public:
         using value_type = std::unique_ptr<base_value>;
 
-        conversion_visitor(type_id result_type) : result_type_(result_type) {}
+        explicit conversion_visitor(type_id result_type) : result_type_(result_type) {}
 
         // convert int to the result type
         void visit(type_int* value) override;

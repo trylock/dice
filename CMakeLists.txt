@@ -6,12 +6,16 @@ set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(TESTS_DIR ${PROJECT_SOURCE_DIR}/test)
 set(EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/external)
 
+# Remove the Release (without debug info) option from Visual Studio build configurations
+set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo CACHE TYPE INTERNAL FORCE)
+
 set(dice_headers
     ${SRC_DIR}/utils.hpp
     ${SRC_DIR}/logger.hpp
     ${SRC_DIR}/value.hpp
     ${SRC_DIR}/lexer.hpp
     ${SRC_DIR}/parser.hpp
+    ${SRC_DIR}/safe.hpp
     ${SRC_DIR}/symbols.hpp
     ${SRC_DIR}/functions.hpp
     ${SRC_DIR}/conversions.hpp

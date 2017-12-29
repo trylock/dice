@@ -40,7 +40,7 @@ namespace dice
 
         inline bool operator==(const symbol& other) const
         {
-            return type == other.type && lexeme == other.lexeme;
+            return type == other.type && lexeme == other.lexeme && value == other.value;
         }
 
         inline bool operator!=(const symbol& other) const
@@ -50,14 +50,14 @@ namespace dice
     };
 
     /** Convert given symbol to string
-     * @param a symbol
+     * @param symbol 
      * @return string representation of the symbol 
      *         for debugging and error messages
      */
     std::string to_string(const symbol& symbol);
 
     /** Convert given symbol type to string
-     * @param symbol type (terminal or non-terminal)
+     * @param type of a symbol
      * @return string representation of the symbol type 
      *         for debugging and error messages 
      */
