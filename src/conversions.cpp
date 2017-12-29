@@ -21,7 +21,7 @@ dice::conversions::cost_type dice::conversions::cost(
 
 dice::conversions::value_type dice::conversions::convert(
     type_id to, 
-    value_type&& value) const 
+    value_type value) const 
 {
     auto from = value->type();
     if (from == to)

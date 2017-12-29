@@ -29,20 +29,20 @@ namespace dice
          * @param index of an argument
          * @return value of the argument
          */
-        value_type& raw_arg(std::size_t i)
+        value_type& raw_arg(std::size_t index)
         {
-            assert(i < argc());
-            return *(first_ + i);
+            assert(index < argc());
+            return *(first_ + index);
         }
         
         /** Get a raw value of ith argument of current function.
          * @param index of an argument
          * @return value of the argument
          */
-        const value_type& raw_arg(std::size_t i) const
+        const value_type& raw_arg(std::size_t index) const
         {
-            assert(i < argc());
-            return *(first_ + i);
+            assert(index < argc());
+            return *(first_ + index);
         }
 
         /** Convert ith argument to given type and return the pointer.
@@ -50,9 +50,9 @@ namespace dice
          * @return converted ith argument
          */
         template<typename ExpectedType>
-        ExpectedType* arg(std::size_t i)
+        ExpectedType* arg(std::size_t index)
         {
-            auto result = dynamic_cast<ExpectedType*>(raw_arg(i).get());
+            auto result = dynamic_cast<ExpectedType*>(raw_arg(index).get());
             if (result == nullptr)
                 throw std::runtime_error(
                     std::string("Invalid argument type. Expected ") + 
@@ -64,9 +64,9 @@ namespace dice
          * @param index of an argument
          * @return argument type
          */
-        type_id arg_type(std::size_t i) const
+        type_id arg_type(std::size_t index) const
         {
-            return raw_arg(i)->type();
+            return raw_arg(index)->type();
         }
 
         /** Number of arguments of this function.
@@ -104,8 +104,7 @@ namespace dice
         function_definition& operator=(function_definition&&) = default;
 
         /** Call this user function with given arguments 
-         * @param argument iterator pointing at the first argument
-         * @param argument iterator pointing at the last argument
+         * @param context of execution of this call
          * @return result of the call 
          */
         inline fn::return_type operator()(fn::context_type& context) const
@@ -117,10 +116,10 @@ namespace dice
          * @param index of an argument
          * @return type of the argument
          */
-        inline type_id arg_type(std::size_t i) const 
+        inline type_id arg_type(std::size_t index) const 
         {
-            assert(i < argc());
-            return arg_types_[i]; 
+            assert(index < argc());
+            return arg_types_[index]; 
         }
 
         /** Get number of function arguments.

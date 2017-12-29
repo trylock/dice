@@ -50,7 +50,7 @@ namespace dice
     } 
     
     /** Convert type id to human readable string.
-     * @param type id
+     * @param tid id of a type
      * @return name of the type
      */
     inline std::string to_string(type_id tid)

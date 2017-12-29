@@ -22,9 +22,9 @@ namespace dice
 
     /** Compute union of sorted lists A and B.
      * Both lists have to be sorted by given comparer.
-     * @param sorted list A
-     * @param sorted list B
-     * @param comparer (use operator < by default)
+     * @param a sorted list A
+     * @param b sorted list B
+     * @param is_less comparer (use operator < by default)
      * @return sorted union of lists A and B
      */
     template<typename T, typename Less = std::less<T>>

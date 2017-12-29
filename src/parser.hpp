@@ -670,7 +670,7 @@ namespace dice
         /** Read token of given type from the input.
          * If there is no such token, "add" it at current position.
          * New token is read into the lookahead_ variable.
-         * @param expected type
+         * @param type expected at current position in the input
          */
         void eat(symbol_type type)
         {
@@ -690,7 +690,7 @@ namespace dice
         }
 
         /** Report a parsing error.
-         * @param error message
+         * @param message of the error
          */
         void error(const std::string& message)
         {
@@ -698,15 +698,12 @@ namespace dice
         }
 
         /** Report a parsing error.
-         * @param error message
-         * @param error location
+         * @param message of the error
+         * @param location of the error
          */
-        void error(const std::string& message, const lexer_location& loc)
+        void error(const std::string& message, const lexer_location& location)
         {
-            log_->error(
-                loc.line, 
-                loc.col, 
-                message);
+            log_->error(location.line, location.col, message);
         }
     };
 
@@ -717,9 +714,9 @@ namespace dice
      * @return parser with those parameters
      */
     template<typename Lexer, typename Logger, typename Interpreter>
-    auto make_parser(Lexer* lex, Logger* log, Interpreter* interpret)
+    auto make_parser(Lexer* lexer, Logger* logger, Interpreter* interpreter)
     {
-        return parser<Lexer, Logger, Interpreter>{ lex, log, interpret };
+        return parser<Lexer, Logger, Interpreter>{ lexer, logger, interpreter };
     }
 }
 

@@ -79,7 +79,7 @@ namespace dice
 
         /** Compute sum of 2 random variables.
          * Random variables don't need to be indendent.
-         * @param right hand side of the operator
+         * @param other random variable (RHS of the operator)
          * @return distribution of the sum
          */
         auto operator+(const decomposition& other) const
@@ -92,7 +92,7 @@ namespace dice
         
         /** Subtract other random variable from this.
          * Random variables don't need to be indendent.
-         * @param right hand side of the operator
+         * @param other random variable (RHS of the operator)
          * @return result of the subtraction
          */
         auto operator-(const decomposition& other) const
@@ -105,7 +105,7 @@ namespace dice
         
         /** Compute product of 2 random variables.
          * Random variables don't need to be indendent.
-         * @param right hand side of the operator
+         * @param other random variable (RHS of the operator)
          * @return result of the product
          */
         auto operator*(const decomposition& other) const
@@ -118,7 +118,7 @@ namespace dice
         
         /** Divide this variable by other variable.
          * Random variables don't need to be indendent.
-         * @param right hand side of the operator
+         * @param other random variable (RHS of the operator)
          * @return result of the division
          */
         auto operator/(const decomposition& other) const
@@ -231,13 +231,13 @@ namespace dice
 
         /** Compute indicator: A in [a, b] (where A is this random variable).
          * The interval is closed.
-         * @param lower bound of the interval (a)
-         * @param upper bound of the interval (b)
+         * @param lower_bound of the interval (a)
+         * @param upper_bound of the interval (b)
          * @return indicator of A in [a, b]
          * (i.e. a random variable with a bernoulli distribution)
          */
         template<typename T>
-        auto in(T&& lower_bound, T&& upper_bound) const 
+        auto in(const T& lower_bound, const T& upper_bound) const
         {
             decomposition result;
             result.deps_ = deps_;
@@ -250,8 +250,8 @@ namespace dice
         
         /** Roll num_rolls times with a dice of num_sides.
          * Random variables have to be independent.
-         * @param number of rolls
-         * @param number of dice sides
+         * @param num_rolls number of rolls
+         * @param num_sides number of faces of each die
          * @return distribution of the dice roll
          */
         friend auto roll(
@@ -305,13 +305,13 @@ namespace dice
         }
 
         /** Compute quantile of this random variable.
-         * @param requested probability
+         * @param probability between 0 and 1 (not including 0 and 1)
          * @return quantile
          */
-        auto quantile(ProbabilityType prob) const
+        auto quantile(ProbabilityType probability) const
         {
             auto var = to_random_variable();
-            return var.quantile(prob);
+            return var.quantile(probability);
         }
 
         /** Compute function of 2 random variables: A and B.
@@ -320,10 +320,10 @@ namespace dice
          * @param combination function of 2 independent random variables
          * @return random variable that is a function of A and B
          */
-        template<typename VarCombFunc>
+        template<typename VariableCombinationFunction>
         auto combine(
             const decomposition& other, 
-            VarCombFunc combination) const
+            VariableCombinationFunction combination) const
         {
             decomposition result;
 
@@ -429,8 +429,7 @@ namespace dice
             return result;
         }
 
-        /** Check whether this decomposition has dependencies on other random 
-         * variables.
+        /** Check whether this decomposition depends on other random variables.
          * @return true iff it has at least 1 dependency
          */
         bool has_dependencies() const 
@@ -439,9 +438,9 @@ namespace dice
         }
 
         /** Compute the decomposition of this random variable.
-         * Random variables in leafs (vars_ list) are made constants (making 
-         * them independent) at the cost of adding new dependencies and thus 
-         * increasing the size.
+         * Random variables in leafs (in the vars_ list) are made constants.
+         * This makes them independent at the cost of adding new dependencies
+         * and thus increasing the size.
          * @return new decomposition
          */
         auto compute_decomposition() const
@@ -508,6 +507,8 @@ namespace dice
             return deps_ != other.deps_ || vars_ != other.vars_; 
         }
 
+        // Container interface
+
         auto begin() const
         {
             return probability_iterator{ this, false };
@@ -516,6 +517,11 @@ namespace dice
         auto end() const
         {
             return probability_iterator{ this, true };
+        }
+
+        std::size_t size() const
+        {
+            return vars_.size();
         }
 
         // for debugging only
@@ -781,10 +787,10 @@ namespace dice
      */
     template<typename ValueType, typename ProbabilityType>
     auto max(
-        const decomposition<ValueType, ProbabilityType>& a,
-        const decomposition<ValueType, ProbabilityType>& b)
+        const decomposition<ValueType, ProbabilityType>& first,
+        const decomposition<ValueType, ProbabilityType>& second)
     {
-        return a.combine(b, [](auto&& var_a, auto&& var_b) 
+        return first.combine(second, [](auto&& var_a, auto&& var_b) 
         {
             return max(var_a, var_b);
         });
@@ -798,10 +804,10 @@ namespace dice
      */
     template<typename ValueType, typename ProbabilityType>
     auto min(
-        const decomposition<ValueType, ProbabilityType>& a,
-        const decomposition<ValueType, ProbabilityType>& b)
+        const decomposition<ValueType, ProbabilityType>& first,
+        const decomposition<ValueType, ProbabilityType>& second)
     {
-        return a.combine(b, [](auto&& var_a, auto&& var_b) 
+        return first.combine(second, [](auto&& var_a, auto&& var_b) 
         {
             return min(var_a, var_b);
         });

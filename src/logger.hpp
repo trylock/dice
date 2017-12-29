@@ -23,9 +23,9 @@ namespace dice
         /** Add a new error log
          * @param line of the input at which the error occured
          * @param column in which the error occured
-         * @param error message
+         * @param message of the error
          */
-        void error(int line, int col, const std::string& message);
+        void error(int line, int column, const std::string& message);
 
         // true <=> there are no errors
         bool empty() const;

@@ -9,13 +9,13 @@ dice::logger::logger(std::ostream* output, bool print_just_message) :
     assert(output_ != nullptr);
 }
 
-void dice::logger::error(int line, int col, const std::string& message)
+void dice::logger::error(int line, int column, const std::string& message)
 {
     if (!print_just_message_)
     {
         *output_ << termcolor::bold
             << "[line: " << line << "]"
-            << "[col: " << col << "] "
+            << "[col: " << column << "] "
             << termcolor::reset;
 
         *output_ << termcolor::bold << termcolor::red
