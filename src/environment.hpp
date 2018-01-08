@@ -79,11 +79,24 @@ namespace dice
             return call(name, std::forward<Args>(rest)...);
         }
 
+        /** Call function without arguments.
+         * Note: arguments in the args_ vector are still passed to the call.
+         * @param name of the function
+         * @return computed result
+         */
         inline value_type call(const std::string& name)
         {
-            auto value = call_var(name, args_.begin(), args_.end());
-            args_.clear();
-            return value;
+            try 
+            {
+                auto value = call_var(name, args_.begin(), args_.end());
+                args_.clear();
+                return value;
+            }
+            catch (...)
+            {
+                args_.clear();
+                throw;
+            }
         }
 
         /** Call a function with arguments in a list.

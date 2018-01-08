@@ -284,3 +284,29 @@ TEST_CASE("Roll function throws an error if face count is not positive integer",
     auto b = dice::make<dice::type_rand_var>(num_faces);
     REQUIRE_THROWS_AS(env.call("roll_op", std::move(a), std::move(b)), dice::compiler_error);
 }
+
+TEST_CASE("Preserve a valid state even if user function throws an exception", "[environment]")
+{
+    using fn = dice::execution_context;
+    using namespace dice;
+
+    environment env;
+    env.add_function("throw", function_definition(
+        [](fn::context_type&) -> fn::return_type
+        { 
+            throw std::runtime_error("throw"); 
+        },
+        std::vector<type_id>{ type_int::id(), type_int::id() }
+    ));
+    
+    try
+    {
+        env.call("throw", make<type_int>(1), make<type_int>(2));
+    }
+    catch (std::runtime_error&)
+    {
+        auto result = env.call("+", make<type_int>(3), make<type_int>(4));
+        auto int_value = dynamic_cast<type_int&>(*result).data();
+        REQUIRE((int_value == 7));
+    }
+}
