@@ -198,7 +198,7 @@ namespace dice
          */
         value_type assign(const std::string& name, value_type value)
         {
-            if (env_->get_var(name) != nullptr)
+            if (!variable_redefinition_ && env_->get_var(name) != nullptr)
             {
                 throw compiler_error("Variable '" + name + "' redefinition.");
             }
@@ -244,9 +244,25 @@ namespace dice
             return env_->call_var(name, arguments.begin(), arguments.end());
         }
 
+        /** Enable/disable variable redefinition.
+         * @param value true iff the redefinition is allowed
+         */
+        void set_variable_redefinition(bool value)
+        {
+            variable_redefinition_ = value;
+        }
+
+        /** Check whether the variable redefinition is allowed.
+         * @return true iff the redefinition is allowed
+         */
+        bool get_variable_redefinition() const
+        {
+            return variable_redefinition_;
+        }
     private:
         Environment* env_;
         bool is_definition_ = false;
+        bool variable_redefinition_ = false;
 
         /** Process children of a binary node. 
          * @param left operand
