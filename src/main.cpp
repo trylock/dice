@@ -7,6 +7,8 @@
 #include <cassert>
 #include <chrono>
 
+#include <linenoise.h>
+
 #include "logger.hpp"
 #include "lexer.hpp"
 #include "parser.hpp"
@@ -140,9 +142,54 @@ private:
     }
 };
 
+struct runtime
+{
+    dice::logger log;
+    dice::environment env;
+    dice::direct_interpreter<dice::environment> interpret;
+
+    runtime() : interpret(&env) {}
+
+    auto evaluate(std::istream* input)
+    {
+        dice::lexer<dice::logger> lexer{ input, &log };
+        auto parser = dice::make_parser(&lexer, &log, &interpret);
+        return parser.parse();
+    }
+
+    void process(std::istream* input)
+    {
+        auto result = evaluate(input);
+
+        formatting_visitor format;
+        for (auto&& value : result)
+        {
+            if (value == nullptr)
+                continue;
+            value->accept(&format);
+        }
+    }
+};
+
+/** Read line from the input.
+ * @param prompt shown to the user
+ * @param out_line read line (won't be changed if the function returns false)
+ * @return ture iff we should continue reading
+ */
+bool linenoise_prompt(const char* prompt, std::string& out_line)
+{
+    auto result = linenoise(prompt);
+    if (result == nullptr)
+        return false;
+    out_line = result;
+    free(result);
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     options opt{ argc, argv };
+    runtime rt;
 
     if (opt.input != nullptr)
     {
@@ -152,50 +199,39 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        // parse and interpret the expression
-        dice::logger log;
-        dice::environment env;
-        dice::lexer<dice::logger> lexer{ opt.input, &log };
-        dice::direct_interpreter<dice::environment> interpret{ &env };
-        auto parser = dice::make_parser(&lexer, &log, &interpret);
-
-        auto start = std::chrono::high_resolution_clock::now();
-        auto result = parser.parse(); 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            end - start).count();
-        
-        formatting_visitor format;
-        for (auto&& value : result)
-        {
-            if (value == nullptr)
-                continue;
-            value->accept(&format);
-        }
-
-        if (opt.verbose)
-        {
-            std::cout << "Evaluated in " << duration << " ms" << std::endl;
-        }
-
-        if (!log.empty())
-            return 1;
+        rt.process(opt.input);
     }
     else 
     {
-        std::cerr << "Dice expressions interpreter." << std::endl 
+        rt.interpret.set_variable_redefinition(true);
+
+        std::cout 
+            << "Dice expression probability calculator (interactive mode)" 
+            << std::endl 
             << std::endl
-            << "Usage:" << std::endl 
-            << "   ./dice_cli [options] [expression]" << std::endl
-            << std::endl
-            << "   [options]:" << std::endl
-            << "      -f <file> load expression from file" << std::endl
-            << "      -v verbose output (show executed script)" << std::endl
-            << std::endl
-            << "   [expression]:" << std::endl
-            << "      A dice expression. Can be in multiple arguments." << std::endl
-            << "      The program will join them wih a space." << std::endl;
-        return 1;
+            << "Type 'exit' to exit the application." << std::endl
+            << "Type an expression to evaluate it." << std::endl
+            << std::endl;
+
+        linenoiseInstallWindowChangeHandler();
+        for (;;)
+        {
+            std::string line;
+            if (!linenoise_prompt("> ", line))
+            {
+                break;
+            }
+
+            if (line == "exit" || line == "end")
+            {
+                break;
+            }
+
+            linenoiseHistoryAdd(line.c_str());
+            std::stringstream input{ line };
+            rt.process(&input);
+        }
+        linenoiseHistoryFree();
     }
     return 0;
 }

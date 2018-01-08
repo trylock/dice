@@ -6,9 +6,6 @@ set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(TESTS_DIR ${PROJECT_SOURCE_DIR}/test)
 set(EXTERNAL_DIR ${PROJECT_SOURCE_DIR}/external)
 
-# Remove the Release (without debug info) option from Visual Studio build configurations
-set(CMAKE_CONFIGURATION_TYPES Debug RelWithDebInfo CACHE TYPE INTERNAL FORCE)
-
 set(dice_headers
     ${SRC_DIR}/utils.hpp
     ${SRC_DIR}/logger.hpp
@@ -52,6 +49,11 @@ set(all_tests
 include_directories(
     ${SRC_DIR}
 	${EXTERNAL_DIR}
+	${EXTERNAL_DIR}/linenoise-ng/include
+)
+
+link_directories(
+    ${EXTERNAL_DIR}/linenoise-ng/build
 )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") # GCC
@@ -62,7 +64,7 @@ add_library(dice ${dice_headers} ${dice_sources})
 add_executable(dice_cli ${dice_cli})
 add_executable(tests ${all_tests})
 
-target_link_libraries(dice_cli dice)
+target_link_libraries(dice_cli dice linenoise)
 target_link_libraries(tests dice)
 
 # Uncomment this to disable random number generater
