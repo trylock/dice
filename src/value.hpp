@@ -65,7 +65,7 @@ namespace dice
             return "random_variable";
         default:
             throw std::runtime_error(
-                "Unknown type id: " + static_cast<int>(tid));
+                "Unknown type id: " + std::to_string(static_cast<int>(tid)));
         }
     }
 
