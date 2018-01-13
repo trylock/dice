@@ -226,6 +226,8 @@ namespace
         std::uniform_real_distribution<ProbType> dist;
 
         dice_roll() : engine(dev()), dist(0, 1) {}
+        // create a new random engine and distribution on copy
+        dice_roll(const dice_roll&) : engine(dev()), dist(0, 1) {}
 
         fn::return_type operator()(fn::context_type& context)
         {
