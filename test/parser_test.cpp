@@ -54,6 +54,7 @@ public:
             return std::to_string(double_value->data());
         }
         assert(false && "Number has to have an int or a double value.");
+        return "";
     }
 
     value_type variable(const std::string& name)
