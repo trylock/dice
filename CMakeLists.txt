@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(DICE)
+project(dice)
 
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(TESTS_DIR ${PROJECT_SOURCE_DIR}/test)
@@ -20,6 +20,7 @@ set(dice_headers
     ${SRC_DIR}/direct_interpreter.hpp
     ${SRC_DIR}/random_variable.hpp
     ${SRC_DIR}/decomposition.hpp
+    ${SRC_DIR}/calculator.hpp
 )
 
 set(dice_sources
@@ -28,6 +29,7 @@ set(dice_sources
     ${SRC_DIR}/symbols.cpp
     ${SRC_DIR}/conversions.cpp
     ${SRC_DIR}/environment.cpp
+    ${SRC_DIR}/calculator.cpp
 )
 
 set(dice_cli ${SRC_DIR}/main.cpp)
@@ -49,6 +51,7 @@ set(all_tests
 include_directories(
     ${SRC_DIR}
 	${EXTERNAL_DIR}
+	${EXTERNAL_DIR}/rang/include
 	${EXTERNAL_DIR}/linenoise-ng/include
 )
 
