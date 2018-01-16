@@ -8,25 +8,29 @@
 #include <chrono>
 
 #include <linenoise.h>
+#include <termcolor.hpp>
 
 #include "logger.hpp"
 #include "lexer.hpp"
 #include "parser.hpp"
 #include "environment.hpp"
 #include "direct_interpreter.hpp"
+#include "calculator.hpp"
 
-// convert double to percent string
-std::string format_probability(double prob)
+/** Format probability as a human readable string.
+ * @param probability
+ * @return probability as a formated string
+ */
+std::string format_probability(double probability)
 {
-    if (prob < 0.0001 && prob != 0)
+    if (probability < 0.0001 && probability != 0)
     {
         return "< 0.01 %";
     }
-    return std::to_string(prob * 100) + " %"; 
+    return std::to_string(probability * 100) + " %";
 }
 
-// value formatting functions
-
+// Format any value type and print it to standard output.
 class formatting_visitor : public dice::value_visitor
 {
 public:
@@ -87,15 +91,12 @@ struct options
     std::vector<std::string> args;
     // Input stream
     std::istream* input;
-    // Should we print the executed script?
-    bool verbose;
     // File path if input is a file, "<arguments>" otherwise
     std::string input_name;
 
     options(int argc, char** argv) : 
         args(argv, argv + argc), 
         input(nullptr),
-        verbose(false),
         input_name("<arguments>")
     {
         parse();
@@ -120,10 +121,6 @@ private:
                 input = &input_file_;
                 load_from_file = true;
             }
-            else if (*it == "-v")
-            {
-                verbose = true;
-            }
             else 
             {
                 break;
@@ -142,54 +139,54 @@ private:
     }
 };
 
-struct runtime
+struct command_reader
 {
-    dice::logger log;
-    dice::environment env;
-    dice::direct_interpreter<dice::environment> interpret;
-
-    runtime() : interpret(&env) {}
-
-    auto evaluate(std::istream* input)
+    command_reader()
     {
-        dice::lexer<dice::logger> lexer{ input, &log };
-        auto parser = dice::make_parser(&lexer, &log, &interpret);
-        return parser.parse();
+        linenoiseInstallWindowChangeHandler();
     }
 
-    void process(std::istream* input)
+    ~command_reader()
     {
-        auto result = evaluate(input);
+        linenoiseHistoryFree();
+    }
 
-        formatting_visitor format;
-        for (auto&& value : result)
-        {
-            if (value == nullptr)
-                continue;
-            value->accept(&format);
-        }
+    /** Read line from the input.
+     * The line is saved to history.
+     * @param out_line read line
+     * @return ture iff we should continue reading
+     */
+    bool try_read(std::string& out_line)
+    {
+        auto result = linenoise("> ");
+        if (result == nullptr)
+            return false;
+        linenoiseHistoryAdd(result);
+        out_line = result;
+        free(result);
+        return true;
     }
 };
 
-/** Read line from the input.
- * @param prompt shown to the user
- * @param out_line read line (won't be changed if the function returns false)
- * @return ture iff we should continue reading
+/** Print computed values to standard output.
+ * @param values list (result of the dice::parser::parse() method)
  */
-bool linenoise_prompt(const char* prompt, std::string& out_line)
+template<typename ValueList>
+void print_values(const ValueList& values)
 {
-    auto result = linenoise(prompt);
-    if (result == nullptr)
-        return false;
-    out_line = result;
-    free(result);
-    return true;
+    formatting_visitor format;
+    for (auto&& value : values)
+    {
+        if (value == nullptr)
+            continue;
+        value->accept(&format);
+    }
 }
 
 int main(int argc, char** argv)
 {
     options opt{ argc, argv };
-    runtime rt;
+    dice::calculator calc;
 
     if (opt.input != nullptr)
     {
@@ -199,12 +196,10 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        rt.process(opt.input);
+        print_values(calc.evaluate(opt.input));
     }
     else 
     {
-        rt.interpret.set_variable_redefinition(true);
-
         std::cout 
             << "Dice expression probability calculator (interactive mode)" 
             << std::endl 
@@ -213,11 +208,12 @@ int main(int argc, char** argv)
             << "Type an expression to evaluate it." << std::endl
             << std::endl;
 
-        linenoiseInstallWindowChangeHandler();
+        calc.enable_interactive_mode();
+        command_reader reader;
         for (;;)
         {
             std::string line;
-            if (!linenoise_prompt("> ", line))
+            if (!reader.try_read(line))
             {
                 break;
             }
@@ -227,11 +223,8 @@ int main(int argc, char** argv)
                 break;
             }
 
-            linenoiseHistoryAdd(line.c_str());
-            std::stringstream input{ line };
-            rt.process(&input);
+            print_values(calc.evaluate(line));
         }
-        linenoiseHistoryFree();
     }
     return 0;
 }
