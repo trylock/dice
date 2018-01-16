@@ -6,20 +6,6 @@
 
 namespace dice 
 {
-    template<typename T, typename U>
-    struct pair_hash
-    {
-        using value_type = std::pair<T, U>;
-
-        std::hash<T> t_hash;
-        std::hash<U> u_hash;
-
-        std::size_t operator()(const value_type& value) const 
-        {
-            return t_hash(value.first) ^ ~u_hash(value.second); 
-        }
-    };
-
     /** Compute union of sorted lists A and B.
      * Both lists have to be sorted by given comparer.
      * @param a sorted list A
