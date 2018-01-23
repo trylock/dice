@@ -100,7 +100,7 @@ namespace dice
          */
         value_type add(value_type left, value_type right)
         {
-            process_children(left.get(), right.get());
+            prepare_operands(left.get(), right.get());
             return env_->call("+", std::move(left), std::move(right));
         }
 
@@ -111,7 +111,7 @@ namespace dice
          */
         value_type sub(value_type left, value_type right)
         {
-            process_children(left.get(), right.get());
+            prepare_operands(left.get(), right.get());
             return env_->call("-", std::move(left), std::move(right));
         }
 
@@ -122,7 +122,7 @@ namespace dice
          */
         value_type mult(value_type left, value_type right)
         {
-            process_children(left.get(), right.get());
+            prepare_operands(left.get(), right.get());
             return env_->call("*", std::move(left), std::move(right));
         }
 
@@ -133,7 +133,7 @@ namespace dice
          */
         value_type div(value_type left, value_type right)
         {
-            process_children(left.get(), right.get());
+            prepare_operands(left.get(), right.get());
             return env_->call("/", std::move(left), std::move(right));
         }
 
@@ -157,7 +157,7 @@ namespace dice
             value_type left, 
             value_type right)
         {
-            process_children(left.get(), right.get());
+            prepare_operands(left.get(), right.get());
             return env_->call(type, std::move(left), std::move(right));
         }
 
@@ -185,7 +185,7 @@ namespace dice
          */
         value_type roll(value_type left, value_type right)
         {
-            process_children(left.get(), right.get());
+            prepare_operands(left.get(), right.get());
             return env_->call("roll_op", std::move(left), std::move(right));
         }
 
@@ -264,11 +264,12 @@ namespace dice
         bool is_definition_ = false;
         bool variable_redefinition_ = false;
 
-        /** Process children of a binary node. 
+        /** Prepare operands of a binary operator.
+         * It computes deomposition for random variables.
          * @param left operand
          * @param right operand
          */
-        void process_children(base_value* left, base_value* right)
+        void prepare_operands(base_value* left, base_value* right) const
         {
             // don't convert random variables if we're not in a name definition
             if (!is_definition_)
