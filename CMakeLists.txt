@@ -56,6 +56,7 @@ include_directories(
 )
 
 link_directories(
+    ${EXTERNAL_DIR}/linenoise-ng/build/$(ConfigurationName)
     ${EXTERNAL_DIR}/linenoise-ng/build
 )
 
