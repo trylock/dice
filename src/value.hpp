@@ -102,10 +102,19 @@ namespace dice
         virtual std::unique_ptr<base_value> clone() const = 0;
 
         /** Check whether this value is equal to other value.
+         * @param other value to compare with this value
+         * @return true iff both have the same type and represent the same value
+         */
+        virtual bool equals(const base_value& other) const = 0;
+
+        /** Check whether this value is equal to other value.
          * @param other value (right hand side of the == operator)
          * @return true iff both have the same type and represent the same value
          */
-        virtual bool operator==(const base_value& other) const = 0;
+        inline bool operator==(const base_value& other) const 
+        {
+            return equals(other);
+        }
 
         /** Check whether this value is not equal to other value.
          * @param other value
@@ -157,12 +166,13 @@ namespace dice
         }
 
         // copare 2 values
-        bool operator==(const base_value& other) const override
+        bool equals(const base_value& other) const override
         {
-            if (typeid(*this) != typeid(other))
+            auto other_value = dynamic_cast<const typed_value*>(
+                std::addressof(other));
+            if (other_value == nullptr)
                 return false;
-            auto&& other_value  = dynamic_cast<const typed_value&>(other);
-            return data() == other_value.data();
+            return data() == other_value->data();
         }
 
         // copy value
