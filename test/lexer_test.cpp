@@ -381,3 +381,18 @@ TEST_CASE("Parse comment after statement", "[lexer]")
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::end);
 }
+
+TEST_CASE("Lexer won't crash for any input character", "[lexer]")
+{
+    for (int i = 0; i < 256; ++i)
+    {
+        char input[2];
+        input[0] = static_cast<char>(i);
+        input[1] = 0;
+
+        auto lex = make_lexer(input);
+        lex.read_token();
+        auto token = lex.read_token();
+        REQUIRE(token.type == dice::symbol_type::end);
+    }
+}

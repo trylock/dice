@@ -67,11 +67,11 @@ namespace dice
             {
                 skip_space();
 
-                auto current = static_cast<char>(get_char());
+                auto current = get_char();
                 if (input_->fail())
                     return symbol{ symbol_type::end };
 
-                auto next = static_cast<char>(input_->peek());
+                auto next = input_->peek();
 
                 // skip comments
                 if (current == '/' && next == '/')
@@ -167,13 +167,7 @@ namespace dice
                 }
 
                 // format an error message
-                const char digits[] = { 
-                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                    'A', 'B', 'C', 'D', 'E', 'F'
-                };
-                error("Unexpected character: '" + std::string(1, current) + 
-                    "' (0x" +  std::string(1, digits[(current >> 4) & 0xF]) + 
-                    std::string(1, digits[current & 0xF])  + ").");
+                unexpected_character(current);
             }
         }
 
@@ -302,6 +296,19 @@ namespace dice
             log_->error(location_.line, location_.col, message);
         }
 
+        /** Report an unexpected character error.
+         * @param value of the character
+         */
+        void unexpected_character(char value)
+        {
+            const char digits[] = {
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F'
+            };
+            error("Unexpected character: '" + std::string(1, value) +
+                "' (0x" + std::string(1, digits[(value >> 4) & 0xF]) +
+                std::string(1, digits[value & 0xF]) + ").");
+        }
     };
 }
 
