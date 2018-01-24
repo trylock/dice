@@ -242,6 +242,7 @@ namespace dice
             auto left = add();
             if (lookahead_.type == symbol_type::in)
             {
+                auto op_location = lookahead_location_;
                 eat(symbol_type::in);
                 eat(symbol_type::left_square_bracket);
 
@@ -276,18 +277,34 @@ namespace dice
         
                 eat(symbol_type::right_square_bracket); 
         
-                return int_->rel_in(
-                    std::move(left), 
-                    std::move(lower_bound), 
-                    std::move(upper_bound));
+                try 
+                {
+                    return int_->rel_in(
+                        std::move(left), 
+                        std::move(lower_bound), 
+                        std::move(upper_bound));
+                }
+                catch (compiler_error& err)
+                {
+                    error(err.what(), op_location);
+                    return int_->make_default();
+                }
             }
             else if (lookahead_.type == symbol_type::rel_op)
             {
                 auto op = std::move(lookahead_);
+                auto op_location = lookahead_location_;
                 eat(symbol_type::rel_op);
                 if (check<nonterminal_type::add>())
                 {
-                    return int_->rel_op(op.lexeme, std::move(left), add());
+                    try 
+                    {
+                        return int_->rel_op(op.lexeme, std::move(left), add());
+                    }
+                    catch (compiler_error& err)
+                    {
+                        error(err.what(), op_location);
+                    }
                 }
                 else 
                 {

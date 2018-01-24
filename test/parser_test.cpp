@@ -77,11 +77,19 @@ public:
 
     value_type sub(value_type&& lhs, value_type&& rhs)
     {
+        if (lhs == "OVERFLOW" || rhs == "OVERFLOW")
+        {
+            throw dice::compiler_error("OVERFLOW");
+        }
         return "(" + lhs + "-" + rhs + ")";
     }
 
     value_type mult(value_type&& lhs, value_type&& rhs)
     {
+        if (lhs == "OVERFLOW" || rhs == "OVERFLOW")
+        {
+            throw dice::compiler_error("OVERFLOW");
+        }
         return "(" + lhs + "*" + rhs + ")";
     }
 
@@ -106,12 +114,20 @@ public:
     value_type rel_op(const std::string& type, value_type&& lhs, 
         value_type&& rhs)
     {
+        if (type == "E")
+        {
+            throw dice::compiler_error("ERROR");
+        }
         return "(" + lhs + type + rhs + ")";
     }
 
     value_type rel_in(value_type&& var, value_type&& lower_bound, 
         value_type&& upper_bound)
     {
+        if (var == "ERROR" || lower_bound == "ERROR" || upper_bound == "ERROR")
+        {
+            throw dice::compiler_error("ERROR");
+        }
         return "(" + var + " in[" + lower_bound + "," + upper_bound + "])";
     }
 
@@ -127,7 +143,9 @@ public:
     value_type assign(const std::string& name, value_type&& value)
     {
         if (name == "x")
+        {
             throw dice::compiler_error("Variable 'x' redefinition.");
+        }
         return "(" + name + "=" + value + ");";
     }
 
@@ -667,4 +685,89 @@ TEST_CASE("Report errors in unary minus", "[parser]")
     REQUIRE(result.errors[0].line == 0);
     REQUIRE(result.errors[0].col == 0);
     REQUIRE(result.errors[0].message == "OVERFLOW");
+}
+
+TEST_CASE("Report errors in binary minus", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::id, "OVERFLOW" },
+        { symbol_type::minus },
+        { symbol_type::id, "OVERFLOW" },
+    };
+    auto result = parse(to_vector(input));
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "OVERFLOW");
+}
+
+TEST_CASE("Report errors in multiplication operator", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::id, "OVERFLOW" },
+        { symbol_type::times },
+        { symbol_type::id, "OVERFLOW" },
+    };
+    auto result = parse(to_vector(input));
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "OVERFLOW");
+}
+
+
+TEST_CASE("Report errors in relational operator", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::number, make<type_int>(1) },
+        { symbol_type::rel_op, "E" },
+        { symbol_type::number, make<type_int>(2) }  
+    };
+    auto result = parse(to_vector(input));
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "1");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "ERROR");
+}
+
+TEST_CASE("Report errors in operator in", "[parser]")
+{
+    using namespace dice;
+
+    dice::symbol input[] = {
+        { symbol_type::id, "ERROR" },
+        { symbol_type::in },
+        { symbol_type::left_square_bracket },
+        { symbol_type::id, "ERROR" },
+        { symbol_type::param_delim },
+        { symbol_type::id, "ERROR" },
+        { symbol_type::right_square_bracket },
+    };
+    auto result = parse(to_vector(input));
+
+    REQUIRE(result.values.size() == 1);
+    REQUIRE(result.values[0] == "<DEFAULT>");
+
+    REQUIRE(result.errors.size() == 1);
+    REQUIRE(result.errors[0].line == 0);
+    REQUIRE(result.errors[0].col == 1);
+    REQUIRE(result.errors[0].message == "ERROR");
 }
