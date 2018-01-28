@@ -51,7 +51,6 @@ set(all_tests
 include_directories(
     ${SRC_DIR}
 	${EXTERNAL_DIR}
-	${EXTERNAL_DIR}/rang/include
 	${EXTERNAL_DIR}/linenoise-ng/include
 )
 
@@ -67,6 +66,11 @@ endif()
 add_library(dice ${dice_headers} ${dice_sources})
 add_executable(dice_cli ${dice_cli})
 add_executable(tests ${all_tests})
+add_library(linenoise STATIC
+    ${EXTERNAL_DIR}/linenoise-ng/src/ConvertUTF.cpp
+    ${EXTERNAL_DIR}/linenoise-ng/src/linenoise.cpp
+    ${EXTERNAL_DIR}/linenoise-ng/src/wcwidth.cpp
+)
 
 target_link_libraries(dice_cli dice linenoise)
 target_link_libraries(tests dice)
