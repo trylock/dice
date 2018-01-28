@@ -114,7 +114,11 @@ private:
         {
             if (*it == "-f") // input file
             {
-                assert(it + 1 != args.end());
+                if (it + 1 == args.end())
+                {
+                    throw std::invalid_argument{ 
+                        "Missing argument (file name) for the -f option." };
+                }
                 ++it;
                 input_name = *it;
                 input_file_.open(input_name);
@@ -185,46 +189,54 @@ void print_values(const ValueList& values)
 
 int main(int argc, char** argv)
 {
-    options opt{ argc, argv };
-    dice::calculator calc;
-
-    if (opt.input != nullptr)
+    try
     {
-        if (opt.input->fail())
-        {
-            std::cerr << "File not found: " << opt.input_name << std::endl;
-            return 1;
-        }
+        options opt{ argc, argv };
+        dice::calculator calc;
 
-        print_values(calc.evaluate(opt.input));
+        if (opt.input != nullptr)
+        {
+            if (opt.input->fail())
+            {
+                std::cerr << "File not found: " << opt.input_name << std::endl;
+                return 1;
+            }
+
+            print_values(calc.evaluate(opt.input));
+        }
+        else
+        {
+            std::cout
+                << "Dice expression probability calculator (interactive mode)"
+                << std::endl
+                << std::endl
+                << "Type 'exit' to exit the application." << std::endl
+                << "Type an expression to evaluate it." << std::endl
+                << std::endl;
+
+            calc.enable_interactive_mode();
+            command_reader reader;
+            for (;;)
+            {
+                std::string line;
+                if (!reader.try_read(line))
+                {
+                    break;
+                }
+
+                if (line == "exit" || line == "end")
+                {
+                    break;
+                }
+
+                print_values(calc.evaluate(line));
+            }
+        }
     }
-    else 
+    catch (std::invalid_argument& error)
     {
-        std::cout 
-            << "Dice expression probability calculator (interactive mode)" 
-            << std::endl 
-            << std::endl
-            << "Type 'exit' to exit the application." << std::endl
-            << "Type an expression to evaluate it." << std::endl
-            << std::endl;
-
-        calc.enable_interactive_mode();
-        command_reader reader;
-        for (;;)
-        {
-            std::string line;
-            if (!reader.try_read(line))
-            {
-                break;
-            }
-
-            if (line == "exit" || line == "end")
-            {
-                break;
-            }
-
-            print_values(calc.evaluate(line));
-        }
+        std::cerr << error.what() << std::endl;
+        return 1;
     }
     return 0;
 }
