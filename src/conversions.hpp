@@ -47,8 +47,8 @@ namespace dice
         // convert int to the result type
         void visit(type_int* value) override;
 
-        // there is no implicit conversion from a double
-        void visit(type_double*) override {}
+        // there is no implicit conversion from a real
+        void visit(type_real*) override {}
 
         // there is no implicit conversion from a random variable
         void visit(type_rand_var*) override {}

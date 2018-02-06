@@ -15,15 +15,15 @@ namespace dice
     namespace storage
     {
         using int_type = safe<int>;
-        using double_type = double;
-        using random_variable_type = decomposition<int_type, double_type>;
+        using real_type = double;
+        using random_variable_type = decomposition<int_type, real_type>;
     }
 
     // Type identifier of a value in a dice expression
     enum class type_id
     {
         integer,
-        floating_point,
+        real,
         random_variable
     };
 
@@ -38,9 +38,9 @@ namespace dice
     }
     
     template<>
-    inline type_id get_type_id<storage::double_type>() 
+    inline type_id get_type_id<storage::real_type>() 
     { 
-        return type_id::floating_point; 
+        return type_id::real; 
     }
 
     template<>
@@ -59,8 +59,8 @@ namespace dice
         {
         case type_id::integer:
             return "int";
-        case type_id::floating_point:
-            return "double";
+        case type_id::real:
+            return "real";
         case type_id::random_variable:
             return "random_variable";
         default:
@@ -79,7 +79,7 @@ namespace dice
         virtual ~value_visitor() {}
 
         virtual void visit(typed_value<storage::int_type>*) = 0;
-        virtual void visit(typed_value<storage::double_type>*) = 0;
+        virtual void visit(typed_value<storage::real_type>*) = 0;
         virtual void visit(typed_value<storage::random_variable_type>*) = 0;
     };
 
@@ -190,7 +190,7 @@ namespace dice
 
     // used data types
     using type_int = typed_value<storage::int_type>;
-    using type_double = typed_value<storage::double_type>;
+    using type_real = typed_value<storage::real_type>;
     using type_rand_var = typed_value<storage::random_variable_type>;
 
     template<typename T, typename... Value>

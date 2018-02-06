@@ -18,23 +18,23 @@ In all of these examples I assume that dice rolls are independent discrete (inte
 
 ## Pitfalls
 - **independence**: The program works with random variables. **Each operation on them assumes their independence**. This assumption is quite limiting. Consider following expression: `2 * (1d20 == 19) + 3 * (1d20 == 20)`. Some misguided assumption clould be that this expression is equal to 2 if we roll a 19 and 3 if we roll a 20. This is *not* the case. Both subexpressions `1d20` are independent - they are completely different rolls. In this example, we can get 0, 2, 3 or 5. You can use variables to resolve this issue: `var X = 1d20; 2 * (X == 19) + 3 * (X == 20)`
-- **int vs double**: The program can work only with integer random variables (that is, value of a variable can only be an integer). Therefore it is invalid to use operands on random variables in conjunction with floating point numbers. For example: `1d6 * 2.5` or even `1d6 + 2.0` are invalid.
+- **int vs real**: The program can work only with integer random variables (that is, value of a variable can only be an integer). Therefore it is invalid to use operands on random variables in conjunction with real numbers. For example: `1d6 * 2.5` or even `1d6 + 2.0` are invalid.
 
 ## Reference
 
 ### Types
-The program internally works with 3 basic types: `int` (a signed integer value), `double` (a 64-bit floating point number) and `rand_var` (a discrete integer random variable). Numbers without a decimal part are treated as `int`. The program will automatically convert between `int` and `double` or `rand_var` in function calls and operators but not vice versa (it can't convert `double` to `int` implicitly). 
+The program internally works with 3 basic types: `int` (a signed integer value), `real` (a 64-bit floating point number) and `rand_var` (a discrete integer random variable). Numbers without a decimal part are treated as `int`. The program will automatically convert between `int` and `real` or `rand_var` in function calls and operators but not vice versa (it can't convert `real` to `int` implicitly). 
 
 ### Functions in dice expressions
-These functions are provided with this implementation. There is a mechanism to add new functions implemented in C++ (see the `add_function` method in the `environment` class). Special type `any` in this list means that you can use it with any type as long as you substitute the same type for all occurances of `any`.
+Current implementation will automatically add functions in the following list. There is a mechanism to add new functions implemented in C++ (see the `add_function` method in the `environment` class). Special type `any` in this list means that you can use it with any type as long as you substitute the same type for all occurances of `any`.
 
-- `double expectation(rand_var)`: takes a random variable and computes its expected value
-- `double variance(rand_var)`: takes a random variable and computes its variance
-- `double deviation(rand_var)`: takes a random variable and computes its standard deviation
+- `real expectation(rand_var)`: takes a random variable and computes its expected value
+- `real variance(rand_var)`: takes a random variable and computes its variance
+- `real deviation(rand_var)`: takes a random variable and computes its standard deviation
 - `int roll(rand_var)`: generate a random number from given distribution
 - `any max(any, any)`: takes 2 values and computes the maximum (it can be a random variable if `any` is `rand_var`)
 - `any min(any, any)`: takes 2 values and computes the minimum (it can be a random variable if `any` is `rand_var`)
-- `int quantile(rand_var, double)`: takes a random varialbe, a probability and computes a quantile (denote `X` a random varialbe, `quantile(X, p) = min{ k : P(X <= k) >= p}`)
+- `int quantile(rand_var, real)`: takes a random varialbe, a probability and computes a quantile (denote `X` a random varialbe, `quantile(X, p) = min{ k : P(X <= k) >= p}`)
 
 ## Operators
 Operators in this list are sorted by precedence from lowest to highest. All operators are left-associative unless stated otherwise:

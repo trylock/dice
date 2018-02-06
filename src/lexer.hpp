@@ -247,7 +247,7 @@ namespace dice
                 {
                     return symbol{
                         symbol_type::number,
-                        make<type_double>(std::stod(value))
+                        make<type_real>(std::stod(value))
                     };
                 }
                 catch (std::out_of_range&)
@@ -255,7 +255,7 @@ namespace dice
                     error("Value out of range: '" + value + "'");
                     return symbol{
                         symbol_type::number,
-                        make<type_double>(0.0)
+                        make<type_real>(0.0)
                     };
                 }
             }

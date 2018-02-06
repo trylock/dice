@@ -3,7 +3,7 @@
 
 using freq_list = dice::random_variable<
     dice::storage::int_type, 
-    dice::storage::double_type>::frequency_list;
+    dice::storage::real_type>::frequency_list;
 
 TEST_CASE("Call operator + on integers", "[environment]")
 {
@@ -100,13 +100,13 @@ TEST_CASE("Call unary - function on int", "[environment]")
     REQUIRE((int_type->data() == -5));
 }
 
-TEST_CASE("Call unary - function on double", "[environment]")
+TEST_CASE("Call unary - function on real", "[environment]")
 {
     dice::environment env;
-    auto result = env.call("unary-", dice::make<dice::type_double>(3.14));
-    REQUIRE(result->type() == dice::type_double::id());
+    auto result = env.call("unary-", dice::make<dice::type_real>(3.14));
+    REQUIRE(result->type() == dice::type_real::id());
 
-    auto int_type = dynamic_cast<dice::type_double*>(result.get());
+    auto int_type = dynamic_cast<dice::type_real*>(result.get());
     REQUIRE(int_type->data() == -3.14);
 }
 
@@ -128,10 +128,10 @@ TEST_CASE("Call the variance function on a random variable", "[environment]")
     dice::environment env;
     auto value = dice::make<dice::type_rand_var>(dice::bernoulli_tag{}, 0.4);
     auto result = env.call("variance", std::move(value));
-    REQUIRE(result->type() == dice::type_double::id());
+    REQUIRE(result->type() == dice::type_real::id());
 
-    auto double_type = dynamic_cast<dice::type_double*>(result.get());
-    REQUIRE(double_type->data() == Approx(0.4 * 0.6));
+    auto real_type = dynamic_cast<dice::type_real*>(result.get());
+    REQUIRE(real_type->data() == Approx(0.4 * 0.6));
 }
 
 TEST_CASE("Call the expectation function on a random variable", "[environment]")
@@ -139,10 +139,10 @@ TEST_CASE("Call the expectation function on a random variable", "[environment]")
     dice::environment env;
     auto value = dice::make<dice::type_rand_var>(dice::bernoulli_tag{}, 0.4);
     auto result = env.call("expectation", std::move(value));
-    REQUIRE(result->type() == dice::type_double::id());
+    REQUIRE(result->type() == dice::type_real::id());
 
-    auto double_type = dynamic_cast<dice::type_double*>(result.get());
-    REQUIRE(double_type->data() == Approx(0.4));
+    auto real_type = dynamic_cast<dice::type_real*>(result.get());
+    REQUIRE(real_type->data() == Approx(0.4));
 }
 
 TEST_CASE("Call in operator on a random variable and int interval", "[environment]")
@@ -228,7 +228,7 @@ TEST_CASE("Roll function throws an error for impossible events", "[environment]"
     dice::environment env;
     dice::decomposition<
         dice::storage::int_type, 
-        dice::storage::double_type> num_dice, num_faces;
+        dice::storage::real_type> num_dice, num_faces;
 
     auto a = dice::make<dice::type_rand_var>(num_dice);
     auto b = dice::make<dice::type_rand_var>(num_faces);
@@ -240,7 +240,7 @@ TEST_CASE("Roll function throws an error if dice count is an impossible event", 
     dice::environment env;
     dice::decomposition<
         dice::storage::int_type, 
-        dice::storage::double_type> num_dice, num_faces{ dice::constant_tag{}, 1 };
+        dice::storage::real_type> num_dice, num_faces{ dice::constant_tag{}, 1 };
 
     auto a = dice::make<dice::type_rand_var>(num_dice);
     auto b = dice::make<dice::type_rand_var>(num_faces);
@@ -252,7 +252,7 @@ TEST_CASE("Roll function throws an error if face count is an impossible event", 
     dice::environment env;
     dice::decomposition<
         dice::storage::int_type, 
-        dice::storage::double_type> num_dice{ dice::constant_tag{}, 1 }, num_faces;
+        dice::storage::real_type> num_dice{ dice::constant_tag{}, 1 }, num_faces;
 
     auto a = dice::make<dice::type_rand_var>(num_dice);
     auto b = dice::make<dice::type_rand_var>(num_faces);
@@ -264,7 +264,7 @@ TEST_CASE("Roll function throws an error if dice count is not positive integer",
     dice::environment env;
     dice::decomposition<
         dice::storage::int_type, 
-        dice::storage::double_type> num_dice{ dice::constant_tag{}, 0 }, 
+        dice::storage::real_type> num_dice{ dice::constant_tag{}, 0 }, 
                                     num_faces{ dice::constant_tag{}, 1 };
 
     auto a = dice::make<dice::type_rand_var>(num_dice);
@@ -277,7 +277,7 @@ TEST_CASE("Roll function throws an error if face count is not positive integer",
     dice::environment env;
     dice::decomposition<
         dice::storage::int_type, 
-        dice::storage::double_type> num_dice{ dice::constant_tag{}, 1 }, 
+        dice::storage::real_type> num_dice{ dice::constant_tag{}, 1 }, 
                                     num_faces{ dice::constant_tag{}, 0 };
 
     auto a = dice::make<dice::type_rand_var>(num_dice);

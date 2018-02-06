@@ -21,7 +21,7 @@
  * @param probability
  * @return probability as a formated string
  */
-std::string format_probability(double probability)
+std::string format_probability(dice::storage::real_type probability)
 {
     if (probability < 0.0001 && probability != 0)
     {
@@ -39,7 +39,7 @@ public:
         std::cout << value->data() << std::endl;
     }
     
-    void visit(dice::type_double* value) override
+    void visit(dice::type_real* value) override
     {
         std::cout << value->data() << std::endl;
     }
@@ -59,7 +59,7 @@ public:
     
         // sort PMF by value
         auto var = value->data().to_random_variable();
-        dice::random_variable<int, double>::probability_list values{
+        dice::storage::random_variable_type::probability_list values{
             var.begin(),
             var.end()
         };
@@ -72,7 +72,7 @@ public:
         if (values.empty())
             return;
         
-        double sum = 0;
+        dice::storage::real_type sum = 0;
         for (auto it = values.begin(); it != values.end(); ++it)
         {
             sum += it->second;

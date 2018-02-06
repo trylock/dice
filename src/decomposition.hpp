@@ -34,10 +34,14 @@ namespace dice
         friend class decomposition_iterator<ValueType, ProbabilityType>;
     public:
         using var_type = random_variable<ValueType, ProbabilityType>;
-        using value_type = ValueType;
-        using probability_type = ProbabilityType;
         using probability_iterator = 
             decomposition_iterator<ValueType, ProbabilityType>;
+
+        // Random variable typedefs
+        using value_type = ValueType;
+        using probability_type = ProbabilityType;
+        using frequency_list = typename var_type::frequency_list;
+        using probability_list = typename var_type::probability_list;
 
         decomposition() {}
 

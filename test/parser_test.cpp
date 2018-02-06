@@ -44,16 +44,16 @@ public:
     value_type number(dice::symbol& token)
     {    
         auto int_value = dynamic_cast<dice::type_int*>(token.value.get());
-        auto double_value = dynamic_cast<dice::type_double*>(token.value.get());
+        auto real_value = dynamic_cast<dice::type_real*>(token.value.get());
         if (int_value != nullptr)
         {
             return std::to_string(int_value->data());
         }
-        else if (double_value != nullptr)
+        else if (real_value != nullptr)
         {
-            return std::to_string(double_value->data());
+            return std::to_string(real_value->data());
         }
-        assert(false && "Number has to have an int or a double value.");
+        assert(false && "Number has to have an int or a real value.");
         return "";
     }
 

@@ -17,7 +17,7 @@ namespace dice
     {
     public:
         inline void visit(type_int*) override {}
-        inline void visit(type_double*) override {}
+        inline void visit(type_real*) override {}
         inline void visit(type_rand_var* var) override 
         {
             var->data() = var->data().compute_decomposition();
@@ -29,7 +29,7 @@ namespace dice
     {
     public:
         inline void visit(type_int*) override {}
-        inline void visit(type_double*) override {}
+        inline void visit(type_real*) override {}
         inline void visit(type_rand_var* var) override 
         {
             if (var->data().has_dependencies())
@@ -68,7 +68,7 @@ namespace dice
             return make<type_int>(0);
         }
 
-        /** Interpret number as an int or double.
+        /** Interpret number as an int or real.
          * @param token of the number
          * @return number's value
          */

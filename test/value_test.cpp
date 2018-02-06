@@ -24,7 +24,7 @@ TEST_CASE("Compare 2 same values of the same type", "[value]")
 TEST_CASE("Compare 2 values of different types", "[value]")
 {
     dice::type_int value_a{ 6 };
-    dice::type_double value_b{ 6.0 };
+    dice::type_real value_b{ 6.0 };
     REQUIRE_FALSE(value_a == value_b);
     REQUIRE_FALSE(value_b == value_a);
     REQUIRE(value_a != value_b);
@@ -41,7 +41,7 @@ public:
         sum += value->data();
     }
 
-    void visit(dice::type_double* value) override
+    void visit(dice::type_real* value) override
     {
         sum += static_cast<int>(value->data());
     }
@@ -57,12 +57,12 @@ TEST_CASE("Use correct visitor method", "[value]")
     visitor_mock visitor;
 
     dice::type_int value_int{ 2 };
-    dice::type_double value_double{ 3.0 };
+    dice::type_real value_real{ 3.0 };
     dice::type_rand_var value_rand_var(dice::storage::random_variable_type(
          dice::constant_tag{}, 5 
     ));
     value_int.accept(&visitor);
-    value_double.accept(&visitor);
+    value_real.accept(&visitor);
     value_rand_var.accept(&visitor);
     REQUIRE(visitor.sum == 10);
 }
@@ -70,6 +70,6 @@ TEST_CASE("Use correct visitor method", "[value]")
 TEST_CASE("Convert type_id to string", "[type]")
 {
     REQUIRE(dice::to_string(dice::type_id::integer) == "int");
-    REQUIRE(dice::to_string(dice::type_id::floating_point) == "double");
+    REQUIRE(dice::to_string(dice::type_id::real) == "real");
     REQUIRE(dice::to_string(dice::type_id::random_variable) == "random_variable");
 }

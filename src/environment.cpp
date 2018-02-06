@@ -9,7 +9,7 @@ namespace
     fn::return_type dice_expectation(fn::context_type& context)
     {
         using namespace dice;
-        return make<type_double>(
+        return make<type_real>(
             context.arg<type_rand_var>(0)->data().expected_value()
         );
     }
@@ -17,7 +17,7 @@ namespace
     fn::return_type dice_variance(fn::context_type& context)
     {
         using namespace dice;
-        return dice::make<type_double>(
+        return dice::make<type_real>(
             context.arg<type_rand_var>(0)->data().variance()
         );
     }
@@ -25,7 +25,7 @@ namespace
     fn::return_type dice_deviation(fn::context_type& context)
     {
         using namespace dice;
-        return make<type_double>(
+        return make<type_real>(
             context.arg<type_rand_var>(0)->data().deviation()
         );
     }
@@ -34,7 +34,7 @@ namespace
     {
         using namespace dice;
         auto prob = dice::clamp(
-            context.arg<type_double>(1)->data(), 0.0, 1.0);
+            context.arg<type_real>(1)->data(), 0.0, 1.0);
         return dice::make<type_int>(
             context.arg<type_rand_var>(0)->data().quantile(prob)
         );
@@ -219,7 +219,7 @@ namespace
 
     std::random_device dev;
 
-    template<typename ProbType = double>
+    template<typename ProbType = dice::storage::real_type>
     struct dice_roll 
     {
         std::default_random_engine engine;
@@ -252,7 +252,7 @@ dice::environment::environment()
         dice_add<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("+", {
-        dice_add<type_double>, { type_double::id(), type_double::id() }
+        dice_add<type_real>, { type_real::id(), type_real::id() }
     });
     add_function("+", {
         dice_add<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
@@ -261,7 +261,7 @@ dice::environment::environment()
         dice_sub<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("-", {
-        dice_sub<type_double>, { type_double::id(), type_double::id() }
+        dice_sub<type_real>, { type_real::id(), type_real::id() }
     });
     add_function("-", {
         dice_sub<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
@@ -270,7 +270,7 @@ dice::environment::environment()
         dice_mult<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("*", {
-        dice_mult<type_double>, { type_double::id(), type_double::id() }
+        dice_mult<type_real>, { type_real::id(), type_real::id() }
     });
     add_function("*", {
         dice_mult<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
@@ -279,7 +279,7 @@ dice::environment::environment()
         dice_div<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("/", {
-        dice_div<type_double>, { type_double::id(), type_double::id() }
+        dice_div<type_real>, { type_real::id(), type_real::id() }
     });
     add_function("/", {
         dice_div<type_rand_var>, { type_rand_var::id(), type_rand_var::id() }
@@ -288,7 +288,7 @@ dice::environment::environment()
         dice_unary_minus<type_int>, { type_int::id() }
     });
     add_function("unary-", {
-        dice_unary_minus<type_double>, { type_double::id() }
+        dice_unary_minus<type_real>, { type_real::id() }
     });
     add_function("unary-", {
         dice_unary_minus<type_rand_var>, { type_rand_var::id() }
@@ -297,10 +297,10 @@ dice::environment::environment()
         dice_roll_op, { type_rand_var::id(), type_rand_var::id() }
     });
     add_function("in", {
-        dice_rand_var_in<type_double>, { 
+        dice_rand_var_in<type_real>, { 
             type_rand_var::id(), 
-            type_double::id(), 
-            type_double::id() }
+            type_real::id(), 
+            type_real::id() }
     });
     add_function("in", {
         dice_rand_var_in<type_int>, { 
@@ -341,12 +341,12 @@ dice::environment::environment()
         dice_variance, { type_rand_var::id() }
     });
     add_function("quantile", {
-        dice_quantile, { type_rand_var::id(), type_double::id() }
+        dice_quantile, { type_rand_var::id(), type_real::id() }
     });
 
 #ifndef DISABLE_RNG
     add_function("roll", {
-        dice_roll<double>{}, { type_rand_var::id() }
+        dice_roll<dice::storage::real_type>{}, { type_rand_var::id() }
     });
 #endif // DISABLE_RNG
 
@@ -358,7 +358,7 @@ dice::environment::environment()
         dice_min<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("min", {
-        dice_min<type_double>, { type_double::id(), type_double::id() }
+        dice_min<type_real>, { type_real::id(), type_real::id() }
     });
     
     // Compute maximum of 2 values
@@ -369,7 +369,7 @@ dice::environment::environment()
         dice_max<type_int>, { type_int::id(), type_int::id() }
     });
     add_function("max", {
-        dice_max<type_double>, { type_double::id(), type_double::id() }
+        dice_max<type_real>, { type_real::id(), type_real::id() }
     });
 }
 

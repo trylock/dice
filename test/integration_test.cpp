@@ -103,7 +103,7 @@ TEST_CASE("Interpret a single integer value", "[dice]")
     REQUIRE((data == 42));
 }
 
-TEST_CASE("Interpret a single double value", "[dice]")
+TEST_CASE("Interpret a single real value", "[dice]")
 {
     auto result = interpret("3.1415");
 
@@ -111,13 +111,13 @@ TEST_CASE("Interpret a single double value", "[dice]")
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
-    REQUIRE(value->type() == dice::type_double::id());
+    REQUIRE(value->type() == dice::type_real::id());
 
-    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    auto data = dynamic_cast<dice::type_real&>(*value).data();
     REQUIRE(data == Approx(3.1415));
 }
 
-TEST_CASE("Interpret an invalid double value", "[dice]")
+TEST_CASE("Interpret an invalid real value", "[dice]")
 {
     auto result = interpret("3.");
 
@@ -126,9 +126,9 @@ TEST_CASE("Interpret an invalid double value", "[dice]")
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
-    REQUIRE(value->type() == dice::type_double::id());
+    REQUIRE(value->type() == dice::type_real::id());
 
-    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    auto data = dynamic_cast<dice::type_real&>(*value).data();
     REQUIRE(data == Approx(3.0));
 }
 
@@ -192,9 +192,9 @@ TEST_CASE("Interpret a function call", "[dice]")
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
-    REQUIRE(value->type() == dice::type_double::id());
+    REQUIRE(value->type() == dice::type_real::id());
 
-    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    auto data = dynamic_cast<dice::type_real&>(*value).data();
     REQUIRE(data == Approx(3.5));
 }
 
@@ -459,7 +459,7 @@ TEST_CASE("Resume interpreting the * operator if we find a sync symbol", "[dice]
     REQUIRE((data == 8));
 }
 
-TEST_CASE("Interpret arithmetic expressing with doubles and ints", "[dice]")
+TEST_CASE("Interpret arithmetic expressing with reals and ints", "[dice]")
 {
     auto result = interpret("1.5 * 2 + 3 - 0.5");
 
@@ -467,9 +467,9 @@ TEST_CASE("Interpret arithmetic expressing with doubles and ints", "[dice]")
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
-    REQUIRE(value->type() == dice::type_double::id());
+    REQUIRE(value->type() == dice::type_real::id());
 
-    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    auto data = dynamic_cast<dice::type_real&>(*value).data();
     REQUIRE(data == Approx(5.5));
 }
 
@@ -545,9 +545,9 @@ TEST_CASE("Resume interpreting an expression in function arguments after finding
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
-    REQUIRE(value->type() == dice::type_double::id());
+    REQUIRE(value->type() == dice::type_real::id());
 
-    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    auto data = dynamic_cast<dice::type_real&>(*value).data();
     REQUIRE(data == Approx(5 / 2.0));
 }
 
@@ -683,7 +683,7 @@ TEST_CASE("Call to a function with incompatible arguments", "[dice]")
     auto result = interpret("variance(2, 1d4, 2.5)");
 
     REQUIRE(result.values.size() == 1);
-    result.assert_error("No matching function for: variance(int, random_variable, double)");
+    result.assert_error("No matching function for: variance(int, random_variable, real)");
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
@@ -742,9 +742,9 @@ TEST_CASE("Interpret deviation function call", "[dice]")
     result.assert_no_error();
 
     auto value = std::move(result.values[0]);
-    REQUIRE(value->type() == dice::type_double::id());
+    REQUIRE(value->type() == dice::type_real::id());
 
-    auto data = dynamic_cast<dice::type_double&>(*value).data();
+    auto data = dynamic_cast<dice::type_real&>(*value).data();
     REQUIRE(data == Approx(std::sqrt(5 / 4.0)));
 }
 

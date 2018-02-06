@@ -38,10 +38,10 @@ dice::conversions::value_type dice::conversions::convert(
 
 void dice::conversion_visitor::visit(type_int* value) 
 {
-    if (result_type_ == type_id::floating_point)
+    if (result_type_ == type_id::real)
     {
-        converted_value_ = make<type_double>(
-            static_cast<double>(value->data())
+        converted_value_ = make<type_real>(
+            static_cast<storage::real_type>(value->data())
         );
     }
     else if (result_type_ == type_id::random_variable)

@@ -145,17 +145,17 @@ TEST_CASE("Find a number", "[lexer]")
     REQUIRE(lex.errors().empty());
 }
 
-TEST_CASE("Find an integer and a double", "[lexer]")
+TEST_CASE("Find an integer and a real", "[lexer]")
 {
     auto lex = make_lexer("0.45 14.0 14 1.001");
 
     auto token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE((dynamic_cast<dice::type_double&>(*token.value).data() == 0.45));
+    REQUIRE((dynamic_cast<dice::type_real&>(*token.value).data() == 0.45));
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE((dynamic_cast<dice::type_double&>(*token.value).data() == 14.0));
+    REQUIRE((dynamic_cast<dice::type_real&>(*token.value).data() == 14.0));
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
@@ -163,7 +163,7 @@ TEST_CASE("Find an integer and a double", "[lexer]")
     
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE((dynamic_cast<dice::type_double&>(*token.value).data() == 1.001));
+    REQUIRE((dynamic_cast<dice::type_real&>(*token.value).data() == 1.001));
 
     token = lex.read_token();
     REQUIRE(token.type == dice::symbol_type::end);
@@ -298,7 +298,7 @@ TEST_CASE("Multiple decimal parts in one number", "[lexer]")
     REQUIRE(lex.errors()[0].message == "Malformed number: '1.2.3'");
 
     REQUIRE(token.type == dice::symbol_type::number);
-    REQUIRE((dynamic_cast<dice::type_double&>(*token.value).data() == 1.2));
+    REQUIRE((dynamic_cast<dice::type_real&>(*token.value).data() == 1.2));
 }
 
 TEST_CASE("Missing decimal part of a number", "[lexer]")
@@ -310,7 +310,7 @@ TEST_CASE("Missing decimal part of a number", "[lexer]")
     REQUIRE(lex.errors().size() == 1);
     REQUIRE(lex.errors()[0].message == "Malformed number: '3.'");
 
-    REQUIRE((dynamic_cast<dice::type_double&>(*token.value).data() == 3.0));
+    REQUIRE((dynamic_cast<dice::type_real&>(*token.value).data() == 3.0));
     REQUIRE(token.type == dice::symbol_type::number);
 }
 
@@ -337,13 +337,13 @@ TEST_CASE("Parse integer at the overflow boundary", "[lexer]")
     REQUIRE((dynamic_cast<dice::type_int&>(*token.value).data() == max_int));
 }
 
-TEST_CASE("Parse overflown double", "[lexer]")
+TEST_CASE("Parse overflown real", "[lexer]")
 {
-    auto huge_number = "1" + std::to_string(std::numeric_limits<double>::max());
+    auto huge_number = "1" + std::to_string(std::numeric_limits<dice::storage::real_type>::max());
     auto lex = make_lexer(huge_number);
 
     auto token = lex.read_token();
-    auto data = dynamic_cast<dice::type_double&>(*token.value).data();
+    auto data = dynamic_cast<dice::type_real&>(*token.value).data();
     REQUIRE(lex.errors().size() == 1);
     REQUIRE(lex.errors()[0].message == "Value out of range: '" + huge_number + "'");
     
