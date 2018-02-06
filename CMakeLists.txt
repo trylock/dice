@@ -60,7 +60,7 @@ link_directories(
 )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") # GCC
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -std=c++14 -g --coverage")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -std=gnu++14 -g --coverage")
 endif()
 
 add_library(dice ${dice_headers} ${dice_sources})
