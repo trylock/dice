@@ -12,38 +12,12 @@
 
 namespace dice 
 {
-    // compute decomposition of a random variable
-    class decomposition_visitor : public value_visitor
-    {
-    public:
-        inline void visit(type_int*) override {}
-        inline void visit(type_real*) override {}
-        inline void visit(type_rand_var* var) override 
-        {
-            var->data() = var->data().compute_decomposition();
-        }
-    };
-
-    // count random variables with dependencies
-    class dependencies_visitor : public value_visitor
-    {
-    public:
-        inline void visit(type_int*) override {}
-        inline void visit(type_real*) override {}
-        inline void visit(type_rand_var* var) override 
-        {
-            if (var->data().has_dependencies())
-                ++counter_;
-        }
-
-        inline std::size_t count() const { return counter_; }
-    private:
-        std::size_t counter_ = 0;
-    };
-
-    /** Direct interpreter is a dice expressions interpreter that evaluates
-     * expressions as soon as they are parsed. It does not use any itermediate
-     * representation.
+    /** @brief This interpreter evaluates expressions as soon as they are 
+     *         parsed.
+     * 
+     * It does not use any itermediate representation.
+     * 
+     * @tparam Environment environment type
      */
     template<typename Environment>
     class direct_interpreter
@@ -59,27 +33,36 @@ namespace dice
             is_definition_ = true;
         }
 
-        /** Create a new default value.
+        /** @brief Create a new default value.
+         *
          * This is used when there is a parsing error.
+         * This will create a new value every time it is called.
+         * 
          * @return default value
          */
-        value_type make_default()
+        value_type make_default() const
         {
             return make<type_int>(0);
         }
 
-        /** Interpret number as an int or real.
+        /** @brief Interpret number as an int or real.
+         *
          * @param token of the number
+         * 
          * @return number's value
          */
-        value_type number(symbol& token)
+        value_type number(symbol& token) const
         {
             assert(token.type == symbol_type::number);
             return std::move(token.value);
         }
 
-        /** Interpret a variable name.
+        /** @brief Interpret a variable name.
+         *
+         * It will find the variable in environment.
+         *
          * @param name of a variable
+         * 
          * @return value of the variable or nullptr if it does not exist
          */
         value_type variable(const std::string& name)
@@ -93,10 +76,17 @@ namespace dice
             return value->clone();
         }
 
-        /** Add left hand side to the right hand side
+        /** @brief Add left hand side to the right hand side
+         *
+         * It will call the +(left, right) function in environment.
+         *
          * @param left operand
          * @param right operand
+         * 
          * @return sum
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type add(value_type left, value_type right)
         {
@@ -104,10 +94,17 @@ namespace dice
             return env_->call("+", std::move(left), std::move(right));
         }
 
-        /** Subtract right hand side from the left hand side
+        /** @brief Subtract right hand side from the left hand side.
+         *
+         * It will call the -(left, right) function in environment.
+         *
          * @param left operand
          * @param right operand
+         * 
          * @return difference
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type sub(value_type left, value_type right)
         {
@@ -115,10 +112,17 @@ namespace dice
             return env_->call("-", std::move(left), std::move(right));
         }
 
-        /** Multiply left hand side with the right hand side
+        /** @brief Multiply left hand side with the right hand side
+         *
+         * It will call the *(left, right) function in environment.
+         *
          * @param left operand
          * @param right operand
+         * 
          * @return product
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type mult(value_type left, value_type right)
         {
@@ -126,10 +130,17 @@ namespace dice
             return env_->call("*", std::move(left), std::move(right));
         }
 
-        /** Divide left hand side with the right hand side
+        /** @brief Divide left hand side with the right hand side
+         *
+         * It will call the /(left, right) function in environment.
+         *
          * @param left operand
          * @param right operand
+         * 
          * @return division
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type div(value_type left, value_type right)
         {
@@ -137,20 +148,35 @@ namespace dice
             return env_->call("/", std::move(left), std::move(right));
         }
 
-        /** Negate value.
+        /** @brief Negate value.
+         *
+         * It will call the unary-(value) function in environment.
+         *
          * @param value
+         * 
          * @return negation of the value
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type unary_minus(value_type value)
         {
             return env_->call("unary-", std::move(value));
         }
 
-        /** Compute a binary relational operator.
+        /** @brief Compute a binary relational operator.
+         *
+         * It will call the <(left, right), <=(left, right), etc. function in 
+         * environment.
+         *
          * @param type of the operator (<, <=, ==, !=, >=, >)
          * @param left operand
          * @param right operand
+         * 
          * @return result
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type rel_op(
             const std::string& type, 
@@ -161,11 +187,19 @@ namespace dice
             return env_->call(type, std::move(left), std::move(right));
         }
 
-        /** Compute relational in operator.
+        /** @brief Compute relational in operator.
+         *
+         * It will call the in(value, lower_bound, upper_bound) function in 
+         * environment.
+         *
          * @param value to test
          * @param lower_bound of the interval
          * @param upper_bound of the interval
+         * 
          * @return result of the in operator
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type rel_in(
             value_type value, 
@@ -178,10 +212,17 @@ namespace dice
                 std::move(upper_bound));
         }
 
-        /** Compute a roll operator.
+        /** @brief Compute a roll operator.
+         *
+         * It will call the roll_op(left, right) function in environment.
+         *
          * @param left operand
          * @param right operand
+         * 
          * @return result of the operator
+         * 
+         * @throws compiler_error if argument types are invalid or an error 
+         *                        occured during the computation.
          */
         value_type roll(value_type left, value_type right)
         {
@@ -189,12 +230,19 @@ namespace dice
             return env_->call("roll_op", std::move(left), std::move(right));
         }
 
-        /** Assing value to variable with given name.
+        /** @brief Assing value to variable with given name.
+         *
          * If a variable with given name already exists, a compiler_error 
          * exception will be thrown.
+         * 
          * @param name of a new variable
          * @param value of the variable
+         * 
          * @return nullptr
+         * 
+         * @throws compiler_error if the variable already exists and variable 
+         *                        redefinition is disabled (see the 
+         *                        set_variable_redefinition function)
          */
         value_type assign(const std::string& name, value_type value)
         {
@@ -210,10 +258,18 @@ namespace dice
             return nullptr;
         }
 
-        /** Call a function with given arguments.
+        /** @brief Call a function with given arguments.
+         *
+         * It will invoke function with the same name and arguments in 
+         * environment.
+         *
          * @param name of a function
          * @param arguments
+         * 
          * @return result of the function call
+         * 
+         * @throws compiler_error if there is no such function or an error 
+         *                        occured during the call.
          */
         value_type call(const std::string& name, value_list&& arguments)
         {
@@ -244,7 +300,8 @@ namespace dice
             return env_->call_var(name, arguments.begin(), arguments.end());
         }
 
-        /** Enable/disable variable redefinition.
+        /** @brief Enable/disable variable redefinition.
+         *
          * @param value true iff the redefinition is allowed
          */
         void set_variable_redefinition(bool value)
@@ -252,7 +309,8 @@ namespace dice
             variable_redefinition_ = value;
         }
 
-        /** Check whether the variable redefinition is allowed.
+        /** @brief Check whether the variable redefinition is allowed.
+         *
          * @return true iff the redefinition is allowed
          */
         bool get_variable_redefinition() const
@@ -264,8 +322,41 @@ namespace dice
         bool is_definition_ = false;
         bool variable_redefinition_ = false;
 
-        /** Prepare operands of a binary operator.
+        // compute decomposition of a random variable
+        class decomposition_visitor : public value_visitor
+        {
+        public:
+            inline void visit(type_int*) override {}
+            inline void visit(type_real*) override {}
+            inline void visit(type_rand_var* var) override
+            {
+                var->data() = var->data().compute_decomposition();
+            }
+        };
+
+        // count random variables with dependencies
+        class dependencies_visitor : public value_visitor
+        {
+        public:
+            inline void visit(type_int*) override {}
+            inline void visit(type_real*) override {}
+            inline void visit(type_rand_var* var) override
+            {
+                if (var->data().has_dependencies())
+                    ++counter_;
+            }
+
+            inline std::size_t count() const { return counter_; }
+        private:
+            std::size_t counter_ = 0;
+        };
+
+        /** @brief Prepare operands of a binary operator.
+         *
          * It computes deomposition for random variables.
+         * It is doesn't do anything if we are not in variable definition or 
+         * given values are not random variables.
+         * 
          * @param left operand
          * @param right operand
          */

@@ -107,11 +107,22 @@ namespace dice
         static const std::array<symbol_type, 2> follow;
     };
 
-    // dice expression parser
+    /** @brief Dice expression parser
+     *
+     * @tparam Lexer the lexer type 
+     * @tparam Logger the logger type
+     * @tparam Interpreter the direct_interpreter type
+     * 
+     * @attention It is possible to use custom types of lexer, logger or 
+     *            interpreter but it is recommended to use the default 
+     *            implementations of these types. Other types are used mainly 
+     *            for testing.
+     */
     template<typename Lexer, typename Logger, typename Interpreter>
     class parser
     {
     public:
+        /** Type of attributes of nonterminals */
         using attr_type = typename Interpreter::value_type;
 
         parser(Lexer* reader, Logger* log, Interpreter* inter) : 
@@ -119,8 +130,10 @@ namespace dice
             log_(log),
             int_(inter) {}
 
-        /** Parse expression provided by the lexer.
+        /** @brief Parse expression provided by the lexer.
+         *
          * Operators are left associative unless stated otherwise.
+         * 
          * List of operators (from lowest to highest precedence): 
          * -#  = (assignment, non-associative)
          * -#  <, <=, !=, ==, >=, >, in (relational operators, non-assosiative)
@@ -128,6 +141,7 @@ namespace dice
          * -#  * (multiply), / (divide) 
          * -#  - (unary minus)
          * -#  D|d (roll dice)
+         * 
          * @return computed values
          */
         auto parse()

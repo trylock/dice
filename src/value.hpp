@@ -11,7 +11,7 @@
 
 namespace dice 
 {
-    // Define type of a storage of a dice value
+    // C++ types used to store dice types
     namespace storage
     {
         using int_type = safe<int>;
@@ -19,7 +19,7 @@ namespace dice
         using random_variable_type = decomposition<int_type, real_type>;
     }
 
-    // Type identifier of a value in a dice expression
+    /** @brief Type identifier of a value in a dice expression */
     enum class type_id
     {
         integer,
@@ -27,7 +27,7 @@ namespace dice
         random_variable
     };
 
-    // Translate C++ types to type_id
+    /** @brief Translate C++ types to type_id */
     template<typename ValueType>
     type_id get_type_id();
 
@@ -49,8 +49,10 @@ namespace dice
         return type_id::random_variable;
     } 
     
-    /** Convert type id to human readable string.
+    /** @brief Convert type id to a human readable string.
+     *
      * @param tid id of a type
+     * 
      * @return name of the type
      */
     inline std::string to_string(type_id tid)
@@ -72,7 +74,7 @@ namespace dice
     template<typename T>
     class typed_value;
 
-    // Visitor of a dice value
+    /** @brief Visitor of a dice value */
     class value_visitor
     {
     public:
@@ -83,32 +85,40 @@ namespace dice
         virtual void visit(typed_value<storage::random_variable_type>*) = 0;
     };
 
-    // Parent of all value types that are used in dice expressions
+    /** @brief Parent of all value types that are used in dice expressions */
     class base_value 
     {
     public:
         virtual ~base_value() {}
 
-        /** Get type of this value.
+        /** @brief Get type of this value.
+         *
          * It has to be unique for each type.
          * It has to be the same for the same type 
          * (i.e. multiple values of the same type will return the same type id)
+         * 
+         * @return type id of the type of this value
          */
         virtual type_id type() const = 0;
 
-        /** Create a copy of this value.
+        /** @brief Create a copy of this value.
+         *
          * @return copied value 
          */
         virtual std::unique_ptr<base_value> clone() const = 0;
 
-        /** Check whether this value is equal to other value.
+        /** @brief Check whether this value is equal to other value.
+         *
          * @param other value to compare with this value
+         * 
          * @return true iff both have the same type and represent the same value
          */
         virtual bool equals(const base_value& other) const = 0;
 
-        /** Check whether this value is equal to other value.
+        /** @brief Check whether this value is equal to other value.
+         *
          * @param other value (right hand side of the == operator)
+         * 
          * @return true iff both have the same type and represent the same value
          */
         inline bool operator==(const base_value& other) const 
@@ -116,8 +126,10 @@ namespace dice
             return equals(other);
         }
 
-        /** Check whether this value is not equal to other value.
+        /** @brief Check whether this value is not equal to other value.
+         *
          * @param other value
+         * 
          * @return ture iff values are different 
          *         That is, values or types are different
          */
@@ -126,13 +138,14 @@ namespace dice
             return !operator==(other);
         }
 
-        /** Visit this value using given visitor.
+        /** @brief Visit this value using given visitor.
+         *
          * @param visitor
          */
         virtual void accept(value_visitor* visitor) = 0;
     };
 
-    // Value with data
+    /** @brief Value with data */
     template<typename T>
     class typed_value : public base_value
     {
@@ -145,7 +158,18 @@ namespace dice
         }
 
         typed_value() {}
+        ~typed_value() override = default;
+
+        /** @brief Create value from data.
+         *
+         * @param value that will be copied 
+         */
         explicit typed_value(const value_type& value) : value_(value) {}
+
+        /** @brief Create value from data.
+         *
+         * @param value that will be moved
+         */
         explicit typed_value(value_type&& value) : value_(std::move(value)) {}
 
         // disallow copy (use the clone function to explicitly copy the value)
@@ -156,16 +180,27 @@ namespace dice
         typed_value(typed_value&&) = default;
         typed_value& operator=(typed_value&&) = default;
 
-        // get type id
+        /** @brief Get type id of this type
+         *
+         * @return type id of this type (get_type_id<T>())
+         */
         type_id type() const override { return id(); }
 
-        // visit this value
+        /** @brief Visit this value with given visitor
+         *
+         * @param visitor
+         */
         void accept(value_visitor* visitor) override
         {
             visitor->visit(this);
         }
 
-        // copare 2 values
+        /** @brief Compare 2 values.
+         *
+         * @param other value
+         * @return true iff both values have the same type and represent 
+         *         the same value (data() == other.data())
+         */
         bool equals(const base_value& other) const override
         {
             auto other_value = dynamic_cast<const typed_value*>(
@@ -175,7 +210,10 @@ namespace dice
             return data() == other_value->data();
         }
 
-        // copy value
+        /** @brief Create a copy of this value
+         *
+         * @return copied value
+         */
         std::unique_ptr<base_value> clone() const override
         {
             return std::make_unique<typed_value>(data());
@@ -193,6 +231,18 @@ namespace dice
     using type_real = typed_value<storage::real_type>;
     using type_rand_var = typed_value<storage::random_variable_type>;
 
+    /** @brief Create a value used in dice expressions.
+     *
+     * @tparam T type of the value. It has to be derived from base_value. 
+     *           T::value_type has to be defined and the type T has to have 
+     *           a constructor with T::value_type as its argumnet.
+     * @tparam Value types of argumnets passed to the construction of 
+     *               T::value_type.
+     * 
+     * @param data argumnets forwarded to the constructor of T::value_type.
+     * 
+     * @return new value (pointer to base_value)
+     */
     template<typename T, typename... Value>
     std::unique_ptr<T> make(Value&&... data)
     {

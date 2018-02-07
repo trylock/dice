@@ -14,7 +14,18 @@
 
 namespace dice
 {
-    // Facade for script evaluation.
+    /** @brief Facade for script evaluation.
+     *
+     * Example usage:
+     * @code
+     * calculator c;
+     * calculator::value_list result = c.evaluate("1d6");
+     * {
+     *      std::ifstrem file{ "input.dice" };
+     *      result = c.evaluate(&file);
+     * }
+     * @endcode
+     */
     struct calculator
     {
         using value_list = std::vector<std::unique_ptr<base_value>>;
@@ -25,20 +36,26 @@ namespace dice
 
         calculator() : interpret(&env) {}
 
-        /** Evaluate command in given input stream.
-        * @param input character stream
+        /** @brief Evaluate command in given input stream.
+         *
+        * @param input character stream pointer
+        * 
         * @return evaluated values
         */
         value_list evaluate(std::istream* input);
 
-        /** Process command in a string.
+        /** @brief Process command in a string.
+         *
         * @param command as a string
+        * 
         * @return evaluated values
         */
         value_list evaluate(const std::string& command);
 
-        /** Enable interactive mode.
+        /** @brief Enable interactive mode.
+         *
          * Interactive mode is optimized for repeated use of the environment.
+         * It allows variable redefinition.
          */
         void enable_interactive_mode();
     };

@@ -27,12 +27,6 @@ namespace dice
     class decomposition;
 
     /** @brief Discrete random variable
-     *
-     * The ValueType is used as a key in a hash table. ProbabilityType is a 
-     * value in this hash table. Probabilities of values sum up to 1.
-     * 
-     * This type is immutable. All public methods and functions which modify
-     * a variable return a new random variable.
      * 
      * @tparam ValueType type of a value of this variable. Requirements: 
      *                      - std::numeric_limits specialization
@@ -40,6 +34,12 @@ namespace dice
      *                      - std::max, std::min specialization
      *                      - convertible to ProbabilityType
      * @tparam ProbabilityType type of probability (rational number in [0, 1])
+     *
+     * The ValueType is used as a key in a hash table. ProbabilityType is a 
+     * value in this hash table. Probabilities of values sum up to 1.
+     * 
+     * This type is immutable. All public methods and functions which modify
+     * a variable return a new random variable.
      */
     template<typename ValueType, typename ProbabilityType>
     class random_variable 

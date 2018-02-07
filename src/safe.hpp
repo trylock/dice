@@ -16,13 +16,24 @@
 
 namespace dice
 {
+    /** @brief Integral type with safe arithmetic operators.
+     *
+     * For signed types, overflow, underflow and divide by zero all lead to 
+     * an undefined behaviour. This type throws an exception 
+     * (the safe_int_error type) in case of such error.
+     */
     template<typename T>
     using safe = SafeInt<T>;
 
+    /** @brief An error thrown when there is an overflow, underflow or divide 
+     *         by zero error.
+     */
     using safe_int_error = SafeIntException;
 
-    /** Check whether given exception is an overflow error.
+    /** @brief Check whether given exception is an overflow error.
+     *
      * @param error object
+     * 
      * @return true iff given exception is an overflow error
      */
     inline bool is_overflow_error(const safe_int_error& error)
@@ -30,8 +41,10 @@ namespace dice
         return error.m_code == SafeIntArithmeticOverflow;
     }
 
-    /** Check whether given exception is an divide by zero error.
+    /** @brief Check whether given exception is an divide by zero error.
+     *
      * @param error object
+     * 
      * @return true iff given exception is an divide by zero error
      */
     inline bool is_divide_by_zero_error(const safe_int_error& error)

@@ -6,11 +6,14 @@
 
 namespace dice 
 {
-    /** Compute union of sorted lists A and B.
+    /** @brief Compute union of sorted lists A and B.
+     *
      * Both lists have to be sorted by given comparer.
+     * 
      * @param a sorted list A
      * @param b sorted list B
      * @param is_less comparer (use operator < by default)
+     * 
      * @return sorted union of lists A and B
      */
     template<typename T, typename Less = std::less<T>>
@@ -54,10 +57,12 @@ namespace dice
         return result;
     }
     
-    /** Clamp a value to given range.
+    /** @brief Clamp a value to given range.
+     *
      * @param value
      * @param lower bound of the range
      * @param upper bound of the range
+     * 
      * @return lower if value < lower
      *         upper if value > upper
      *         value otherwise 

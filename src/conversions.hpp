@@ -10,7 +10,15 @@
 
 namespace dice 
 {
-    // type conversions
+    /** @brief This class manages conversions of values in dice expression.
+     *
+     * Example usage:
+     * @code
+     * conversions c;
+     * conversions::cost_type cost_int_to_real = c.cost(type_id::integer, type_id::real);
+     * conversions::value_type real_value = c.convert(type_id::real, make<type_int>(14));
+     * @endcode
+     */
     class conversions
     {
     public:
@@ -20,23 +28,28 @@ namespace dice
         // cost of an impossible conversion
         static const cost_type max_cost;
 
-        /** Find conversion cost from type \p from to type \p to
+        /** @brief Find conversion cost from type \p from to type \p to
+         *
          * @param from type id
          * @param to type id
-         * @return cost of the conversion 
+         * 
+         * @return cost of the conversion.
          *         0 => no conversion needed,
          *         max_cost => the conversion is not supported
          */
         cost_type cost(type_id from, type_id to) const;
 
-        /** Convert value to type \p to
+        /** @brief Convert value to type \p to
+         *
          * @param to type id
          * @param value to convert
+         * 
          * @return converted value
          */ 
         value_type convert(type_id to, value_type value) const;
     };
 
+    /** @internal */
     class conversion_visitor : public value_visitor
     {
     public:

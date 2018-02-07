@@ -11,16 +11,23 @@
 
 namespace dice 
 {
-    // location in the input stream
+    /** @brief Location in an input stream.
+     * 
+     * Line and column are numbered from 0.
+     */
     struct lexer_location
     {
         int line = 0;
         int col = 0;
 
-        lexer_location() {}
+        lexer_location() = default;
         lexer_location(int line, int col) : line(line), col(col) {}
     };
 
+    /** @brief Lexer of a dice script.
+     *
+     * @tparam Logger the logger type
+     */
     template<typename Logger>
     class lexer 
     {
@@ -28,6 +35,7 @@ namespace dice
         lexer(std::istream* input, Logger* log) : 
             input_(input), 
             log_(log) {}
+        ~lexer() = default;
 
         // disallow copy so that 2 lexers don't read from the same input
         lexer(const lexer&) = delete;
@@ -37,11 +45,15 @@ namespace dice
         lexer(lexer&&) = default;
         lexer& operator=(lexer&&) = default;
 
-        /** Read token at current location.
+        /** @brief Read token at current location.
+         *
          * Decode a sequance of characters as a token and advance in the input 
          * stream. Skip all whitespace characters after the token (that is
          * location after calling read_token points to the beginning of the 
-         * next token)
+         * next token).
+         * 
+         * All errors will be logged with given logger.
+         * 
          * @return token at current position
          */
         symbol read_token()
@@ -51,7 +63,10 @@ namespace dice
             return token;
         }
 
-        // Return current location of the lexer in the input stream
+        /** @brief Return current location of the lexer in the input stream
+         *
+         * @return current location of the lexer
+         */
         inline const lexer_location& location() const 
         {
             return location_; 
@@ -67,11 +82,11 @@ namespace dice
             {
                 skip_space();
 
-                auto current = get_char();
+                const auto current = get_char();
                 if (input_->fail())
                     return symbol{ symbol_type::end };
 
-                auto next = input_->peek();
+                const auto next = input_->peek();
 
                 // skip comments
                 if (current == '/' && next == '/')

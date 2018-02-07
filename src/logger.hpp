@@ -11,23 +11,44 @@
 
 namespace dice
 {
+    /** @brief This class prints all errors in given output stream.
+     *
+     * Example usage:
+     * @code
+     * logger log{ &std::cin };
+     * assert(log.empty());
+     * log.error(0, 14, "Critical error");
+     * assert(!log.empty());
+     * @endcode
+     */
     class logger
     {
     public:
-        // Use std::cerr as the output of the logger
+        /** @brief Use std::cerr as the output of the logger. */
         logger();
 
-        // Use given output stream as the output of the logger
+        /** @brief Use given output stream as the output of the logger.
+         *
+         * @param output pointer to an output stream
+         * @param print_just_message if true, the logger will only print 
+         *                           unformated error message (no error 
+         *                           location or message formatting)
+         */
         explicit logger(std::ostream* output, bool print_just_message = false);
 
-        /** Add a new error log
+        /** @brief Add a new error log
+         *
          * @param line of the input at which the error occured
          * @param column in which the error occured
+         * 
          * @param message of the error
          */
         void error(int line, int column, const std::string& message);
 
-        // true <=> there are no errors
+        /** @brief Check whether there were some errors logged.
+         *
+         * @return true IFF there were no errors
+         */
         bool empty() const;
     private:
         std::ostream* output_;

@@ -14,7 +14,10 @@ namespace dice
     template<typename ValueType, typename ProbabilityType>
     class decomposition_iterator;
 
-    /** Object representing a decomposition of a function of random variables.
+    /** @brief Object representing a decomposition of a function of random 
+     *         variables. 
+     *
+     * It is an adapter for random_variable.
      * 
      * It uses the Law of total probability to decompose varibales to 
      * conditional variables which are then treated as independent.
@@ -27,6 +30,11 @@ namespace dice
      * corresponding to its values. For example: a random variable whose values
      * are 1 or 2 whould have 2 children labeled 1 and 2. A leaf node is 
      * a random variable without children nodes.
+     * 
+     * @tparam ValueType type of a value (same as in random_variable)
+     * @tparam ProbabilityType type of probability (same as in random_variable)
+     * 
+     * @see random_variable
      */
     template<typename ValueType, typename ProbabilityType>
     class decomposition
@@ -43,13 +51,22 @@ namespace dice
         using frequency_list = typename var_type::frequency_list;
         using probability_list = typename var_type::probability_list;
 
-        decomposition() {}
+        decomposition() = default;
+        ~decomposition() = default;
 
+        /** @brief Create decomposition from random_variable
+         *
+         * @param variable random variable
+         */
         explicit decomposition(const var_type& variable)
         {
             vars_.push_back(variable);
         }
 
+        /** @brief Create decomposition from random_variable
+        *
+        * @param variable random variable
+        */
         explicit decomposition(var_type&& variable)
         {
             vars_.push_back(std::move(variable));
@@ -57,7 +74,7 @@ namespace dice
         
         // Random variable constructors
 
-        decomposition(
+        explicit decomposition(
             std::vector<std::pair<value_type, std::size_t>>&& list)
             : decomposition(var_type(std::move(list)))
         {
@@ -81,9 +98,12 @@ namespace dice
         decomposition(decomposition&&) = default;
         decomposition& operator=(decomposition&&) = default;
 
-        /** Compute sum of 2 random variables.
+        /** @brief Compute sum of 2 random variables.
+         *
          * Random variables don't need to be indendent.
+         * 
          * @param other random variable (RHS of the operator)
+         * 
          * @return distribution of the sum
          */
         auto operator+(const decomposition& other) const
@@ -94,9 +114,12 @@ namespace dice
             });
         }
         
-        /** Subtract other random variable from this.
+        /** @brief Subtract other random variable from this.
+         *
          * Random variables don't need to be indendent.
+         * 
          * @param other random variable (RHS of the operator)
+         * 
          * @return result of the subtraction
          */
         auto operator-(const decomposition& other) const
@@ -107,9 +130,12 @@ namespace dice
             });
         }
         
-        /** Compute product of 2 random variables.
+        /** @brief Compute product of 2 random variables.
+         *
          * Random variables don't need to be indendent.
+         * 
          * @param other random variable (RHS of the operator)
+         * 
          * @return result of the product
          */
         auto operator*(const decomposition& other) const
@@ -120,9 +146,12 @@ namespace dice
             });
         }
         
-        /** Divide this variable by other variable.
+        /** @brief Divide this variable by other variable.
+         *
          * Random variables don't need to be indendent.
+         * 
          * @param other random variable (RHS of the operator)
+         * 
          * @return result of the division
          */
         auto operator/(const decomposition& other) const
@@ -133,7 +162,8 @@ namespace dice
             });
         }
 
-        /** Multiply this random variable with -1.
+        /** @brief Multiply this random variable with -1.
+         *
          * @return negated random variable
          */
         auto operator-() const 
@@ -147,9 +177,12 @@ namespace dice
             return result;
         }
 
-        /** Compute indicator: A < B (where A is this random variale).
+        /** @brief Compute indicator: A < B (where A is this random variale).
+         *
          * Variables does not need to be indepedent.
+         * 
          * @param other random variable B
+         * 
          * @return indicator of A < B 
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -161,9 +194,12 @@ namespace dice
             });
         }
 
-        /** Compute indicator: A <= B (where A is this random variale).
+        /** @brief Compute indicator: A <= B (where A is this random variale).
+         *
          * Variables does not need to be indepedent.
+         * 
          * @param other random variable B
+         * 
          * @return indicator of A <= B 
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -176,9 +212,12 @@ namespace dice
             });
         }
 
-        /** Compute indicator: A = B (where A is this random variale).
+        /** @brief Compute indicator: A = B (where A is this random variale).
+         *
          * Variables does not need to be indepedent.
+         * 
          * @param other random variable B
+         * 
          * @return indicator of A = B
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -190,9 +229,12 @@ namespace dice
             });
         }
 
-        /** Compute indicator: A != B (where A is this random variale).
+        /** @brief Compute indicator: A != B (where A is this random variale).
+         *
          * Variables does not need to be indepedent.
+         * 
          * @param other random variable Y
+         * 
          * @return indicator of A != B 
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -204,9 +246,12 @@ namespace dice
             });
         }
 
-        /** Compute indicator: A > B (where A is this random variale).
+        /** @brief Compute indicator: A > B (where A is this random variale).
+         *
          * Variables does not need to be indepedent.
+         * 
          * @param other random variable B
+         * 
          * @return indicator of A > B 
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -218,9 +263,12 @@ namespace dice
             });
         }
         
-        /** Compute indicator: A >= B (where A is this random variale).
+        /** @brief Compute indicator: A >= B (where A is this random variale).
+         *
          * Variables does not need to be indepedent.
+         * 
          * @param other random variable Y
+         * 
          * @return indicator of A >= YB
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -233,10 +281,13 @@ namespace dice
             });
         }
 
-        /** Compute indicator: A in [a, b] (where A is this random variable).
+        /** @brief Compute indicator: A in [a, b] (where A is this random variable).
+         *
          * The interval is closed.
+         * 
          * @param lower_bound of the interval (a)
          * @param upper_bound of the interval (b)
+         * 
          * @return indicator of A in [a, b]
          * (i.e. a random variable with a bernoulli distribution)
          */
@@ -252,10 +303,13 @@ namespace dice
             return result;
         }
         
-        /** Roll num_rolls times with a dice of num_sides.
-         * Random variables have to be independent.
+        /** @brief Roll num_rolls times with a dice of num_sides.
+         *
+         * Random variables don't have to be independent.
+         * 
          * @param num_rolls number of rolls
          * @param num_sides number of faces of each die
+         * 
          * @return distribution of the dice roll
          */
         friend auto roll(
@@ -270,7 +324,8 @@ namespace dice
             });
         }
 
-        /** Compute expected value of this random variable.
+        /** @biref Compute expected value of this random variable.
+         *
          * @return expected value of this variable
          */
         auto expected_value() const
@@ -284,7 +339,8 @@ namespace dice
             return expectation;
         }
 
-        /** Compute variance of this random variable.
+        /** @brief Compute variance of this random variable.
+         *
          * @return variance of this variable
          */
         auto variance() const
@@ -300,7 +356,8 @@ namespace dice
             return sum_sq - sum * sum;
         }
 
-        /** Compute standard deviation of this random variable.
+        /** @brief Compute standard deviation of this random variable.
+         *
          * @return standard deviation
          */
         auto deviation() const
@@ -308,8 +365,10 @@ namespace dice
             return std::sqrt(variance());
         }
 
-        /** Compute quantile of this random variable.
+        /** @brief Compute quantile of this random variable.
+         *
          * @param probability between 0 and 1 (not including 0 and 1)
+         * 
          * @return quantile
          */
         auto quantile(ProbabilityType probability) const
@@ -318,10 +377,17 @@ namespace dice
             return var.quantile(probability);
         }
 
-        /** Compute function of 2 random variables: A and B.
+        /** @brief Compute function of 2 random variables: A and B.
+         *
          * Variables does not need to be independent. 
+         * 
+         * @tparam VariableCombinationFunction 
+         *          Combination function of 2 independent random variables.
+         *          It taks 2 random_variable types and return random_variable.
+         * 
          * @param other random variable B
          * @param combination function of 2 independent random variables
+         * 
          * @return random variable that is a function of A and B
          */
         template<typename VariableCombinationFunction>
@@ -418,9 +484,11 @@ namespace dice
             return result;
         }
 
-        /** Convert this decomposition to basic random variable.
+        /** @brief Convert this decomposition to basic random variable.
+         *
          * Notice, by performing this operation, we lose information 
          * about (in)dependence.
+         * 
          * @return plain random variable
          */
         var_type to_random_variable() const 
@@ -433,7 +501,9 @@ namespace dice
             return result;
         }
 
-        /** Check whether this decomposition depends on other random variables.
+        /** @brief Check whether this decomposition depends on other random 
+         *         variables.
+         *
          * @return true iff it has at least 1 dependency
          */
         bool has_dependencies() const 
@@ -441,10 +511,12 @@ namespace dice
             return !deps_.empty();
         }
 
-        /** Compute the decomposition of this random variable.
+        /** @brief Compute the decomposition of this random variable.
+         *
          * Random variables in leafs (in the vars_ list) are made constants.
          * This makes them independent at the cost of adding new dependencies
          * and thus increasing the size.
+         * 
          * @return new decomposition
          */
         auto compute_decomposition() const
@@ -495,9 +567,11 @@ namespace dice
             return result;
         }
 
-        /** Check whether this is exactly equal to other decomposition.
-         * Note: this test is exact and expensive. It is mainly provided so
-         *       we can use this type as a value in dice expressions.
+        /** @brief Check whether this is exactly equal to other decomposition.
+         *
+         * @attention This test is exact and expensive. It is mainly provided 
+         *            so we can use this type as a value in dice expressions.
+         *       
          * @param other random variable
          * @return true iff the values are exactly equal
          */
@@ -613,6 +687,7 @@ namespace dice
         }
 
         /** Set of variables on which this random variable depends.
+         *
          * It is kept sorted by the time it was created. This simplifies the 
          * combination algorithm as we can make some assumptions in the
          * variable index computation.
@@ -638,7 +713,8 @@ namespace dice
     template<typename T, typename U>
     std::size_t decomposition<T, U>::var_ptr::counter_ = 1;
 
-    /** Decompositon value iterator.
+    /** @brief Decompositon value iterator.
+     *
      * It will iterate through pairs (value, probability). One value can be in
      * multiple pairs. The probabilities sum up to 1.
      */
@@ -677,8 +753,10 @@ namespace dice
             precompute_value();
         }
 
-        /** Move to the next value.
+        /** @biref Move to the next value.
+         *
          * Next value is precomputed.
+         * 
          * @return this iterator
          */
         decomposition_iterator& operator++()
@@ -711,7 +789,8 @@ namespace dice
             return *this;
         }
 
-        /** Access current value.
+        /** @brief Access current value.
+         *
          * @return pointer to current value
          */
         value_type* operator->()
@@ -719,7 +798,8 @@ namespace dice
             return &current_value_;
         }
 
-        /** Access current value.
+        /** @brief Access current value.
+         *
          * @return current value reference
          */
         value_type& operator*()
@@ -727,8 +807,10 @@ namespace dice
             return current_value_;
         }
 
-        /** Compare 2 iterators.
+        /** @brief Compare 2 iterators.
+         *
          * @param other iterator
+         * 
          * @return true iff both point at the same value in the same variable
          */
         bool operator==(const decomposition_iterator& other) const
@@ -791,10 +873,13 @@ namespace dice
         }
     };
 
-    /** Compute maximum of 2 random variables.
+    /** @brief Compute maximum of 2 random variables.
+     *
      * Variables does not need to be independent.
+     * 
      * @param first random variable
      * @param second random variable
+     * 
      * @return maximum of the 2 random variables
      */
     template<typename ValueType, typename ProbabilityType>
@@ -808,10 +893,13 @@ namespace dice
         });
     }
     
-    /** Compute minimum of 2 random variables.
+    /** @brief Compute minimum of 2 random variables.
+     *
      * Variables does not need to be independent.
+     * 
      * @param first random variable
      * @param second random variable
+     * 
      * @return minimum of the 2 random variables
      */
     template<typename ValueType, typename ProbabilityType>
