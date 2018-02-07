@@ -402,3 +402,21 @@ TEST_CASE("Find maximal value in a random variable", "[random_variable]")
 
     REQUIRE(var.max_value() == 4);
 }
+
+TEST_CASE("quantile() throws std::logic_error if the random variable is empty", "[random_variable]")
+{
+    dice::random_variable<int, double> impossible;
+
+    REQUIRE_THROWS_AS(impossible.quantile(0.5), std::logic_error);
+}
+
+TEST_CASE("roll() throws std::invalid_argument if an argument contains 0 value", "[random_variable]")
+{
+    dice::random_variable<int, double> zero{ dice::constant_tag{}, 0 };
+    dice::random_variable<int, double> one{ dice::constant_tag{}, 1 };
+
+    REQUIRE_THROWS_AS(roll(zero, one), std::invalid_argument);
+    REQUIRE_THROWS_AS(roll(one, zero), std::invalid_argument);
+    REQUIRE_THROWS_AS(roll(zero, zero), std::invalid_argument);
+    REQUIRE_NOTHROW(roll(one, one));
+}
