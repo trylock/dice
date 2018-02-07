@@ -1,3 +1,8 @@
+/**
+* @file value.hpp
+*
+* Value in a dice expression.
+*/
 #ifndef DICE_VALUE_HPP_
 #define DICE_VALUE_HPP_
 

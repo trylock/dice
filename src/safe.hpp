@@ -1,3 +1,8 @@
+/**
+ * @file safe.hpp
+ * 
+ * Safe type for arithmetic operations on integral values.
+ */
 #ifndef DICE_SAFE_HPP_
 #define DICE_SAFE_HPP_
 

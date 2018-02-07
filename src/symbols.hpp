@@ -1,3 +1,8 @@
+/**
+ * @file symbols.hpp
+ * 
+ * Symbols in dice expressions (returned by lexer).
+ */
 #ifndef DICE_SYMBOLS_HPP_
 #define DICE_SYMBOLS_HPP_
 

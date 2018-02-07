@@ -1,3 +1,8 @@
+/** 
+ * @file utils.hpp
+ * 
+ * General purpose utility function templates.
+ */
 #ifndef DICE_UTILS_HPP_
 #define DICE_UTILS_HPP_
 
