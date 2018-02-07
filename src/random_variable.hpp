@@ -498,8 +498,6 @@ namespace dice
          * X times roll a Y sided dice.
          * Assumes X, Y are independent random variables.
          * 
-         * @throws std::invalid_argument if X or Y are empty.
-         * 
          * This funciton implements a simple dynamic programming algorithm.
          * The probability that we roll k with X throws of a Y sided die is
          * the probability that we roll k - n with X - 1 throws of a Y sided
@@ -511,6 +509,8 @@ namespace dice
          *        Each value has to be a positive integer.
          *        
          * @return distribution of XdY
+         * 
+         * @throws std::invalid_argument if X or Y are contain a 0 value.
          */
         friend auto roll(
             const random_variable& num_dice, 
