@@ -3,3 +3,4 @@ build
 build_*
 doc_*
 *.tmp
+!build_msvc

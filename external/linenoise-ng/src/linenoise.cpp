@@ -84,6 +84,8 @@
  *
  */
 
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #ifdef _WIN32
 
 #include <conio.h>
