@@ -1,0 +1,6 @@
+expectation(1d6);
+variance(1d6);
+deviation(1d6);
+quantile(1d6, 0.3);
+max(1d6, 1d6);
+min(1d6, 1d6);
