@@ -510,7 +510,7 @@ namespace dice
          *        
          * @return distribution of XdY
          * 
-         * @throws std::invalid_argument if X or Y are contain a 0 value.
+         * @throws std::invalid_argument if X or Y contain a 0 value.
          */
         friend auto roll(
             const random_variable& num_dice, 
