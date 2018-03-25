@@ -4,4 +4,5 @@ build_*
 doc_*
 *.tmp
 *.tlog
+*.log
 !build_msvc
