@@ -1,0 +1,202 @@
+\hypertarget{classdice_1_1typed__value}{}\section{dice\+:\+:typed\+\_\+value$<$ T $>$ Class Template Reference}
+\label{classdice_1_1typed__value}\index{dice\+::typed\+\_\+value$<$ T $>$@{dice\+::typed\+\_\+value$<$ T $>$}}
+
+
+Value with data.  
+
+
+
+
+{\ttfamily \#include $<$value.\+hpp$>$}
+
+
+
+Inheritance diagram for dice\+:\+:typed\+\_\+value$<$ T $>$\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classdice_1_1typed__value__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for dice\+:\+:typed\+\_\+value$<$ T $>$\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classdice_1_1typed__value__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_a68dd4941f8e02bb9d4a7430530256887}\label{classdice_1_1typed__value_a68dd4941f8e02bb9d4a7430530256887}} 
+using {\bfseries value\+\_\+type} = T
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdice_1_1typed__value_a44f8d5dc37013a90d605e67f71741837}{typed\+\_\+value}} (const value\+\_\+type \&value)
+\begin{DoxyCompactList}\small\item\em Create value from data. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1typed__value_a7cd2dad2087902ab85028fddf7c75c0b}{typed\+\_\+value}} (value\+\_\+type \&\&value)
+\begin{DoxyCompactList}\small\item\em Create value from data. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_a7ceb94854137f6ce6fbde9ce8d1b625a}\label{classdice_1_1typed__value_a7ceb94854137f6ce6fbde9ce8d1b625a}} 
+{\bfseries typed\+\_\+value} (const \mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} \&)=delete
+\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_a98cc3aaf7cfc64ec2cc5e64e66c8d9c0}\label{classdice_1_1typed__value_a98cc3aaf7cfc64ec2cc5e64e66c8d9c0}} 
+void {\bfseries operator=} (const \mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} \&)=delete
+\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_a3e8c1b40c238cf32e781a148baa03037}\label{classdice_1_1typed__value_a3e8c1b40c238cf32e781a148baa03037}} 
+{\bfseries typed\+\_\+value} (\mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} \&\&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_adfa842566fd143193eb0967a6b500626}\label{classdice_1_1typed__value_adfa842566fd143193eb0967a6b500626}} 
+\mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} \& {\bfseries operator=} (\mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} \&\&)=default
+\item 
+\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} \mbox{\hyperlink{classdice_1_1typed__value_aa75a4167e6d3ff2640fd2fa65442e2ed}{type}} () const override
+\begin{DoxyCompactList}\small\item\em Get type id of this type. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classdice_1_1typed__value_ae9563902b664c40a4b3d8a8cb201a194}{accept}} (\mbox{\hyperlink{classdice_1_1value__visitor}{value\+\_\+visitor}} $\ast$visitor) override
+\begin{DoxyCompactList}\small\item\em Visit this value with given visitor. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1typed__value_aeb5c87839a5e3ecb7beac6abc05e6701}{equals}} (const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&other) const override
+\begin{DoxyCompactList}\small\item\em Compare 2 values. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$ \mbox{\hyperlink{classdice_1_1typed__value_a54490141b25b17213989fd2e859b4f59}{clone}} () const override
+\begin{DoxyCompactList}\small\item\em Create a copy of this value. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_a5033e424b0ff189d40ef51253f407ba0}\label{classdice_1_1typed__value_a5033e424b0ff189d40ef51253f407ba0}} 
+value\+\_\+type \& {\bfseries data} ()
+\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_addc189e4cc5c5be60cc5dd3911ae97f9}\label{classdice_1_1typed__value_addc189e4cc5c5be60cc5dd3911ae97f9}} 
+const value\+\_\+type \& {\bfseries data} () const
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1typed__value_a8e3f3c7891feddcb9e0b7cb5727889eb}\label{classdice_1_1typed__value_a8e3f3c7891feddcb9e0b7cb5727889eb}} 
+static \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} {\bfseries id} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class dice\+::typed\+\_\+value$<$ T $>$}
+
+Value with data. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classdice_1_1typed__value_a44f8d5dc37013a90d605e67f71741837}\label{classdice_1_1typed__value_a44f8d5dc37013a90d605e67f71741837}} 
+\index{dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}!typed\+\_\+value@{typed\+\_\+value}}
+\index{typed\+\_\+value@{typed\+\_\+value}!dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}}
+\subsubsection{\texorpdfstring{typed\+\_\+value()}{typed\_value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value}}$<$ T $>$\+::\mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} (\begin{DoxyParamCaption}\item[{const value\+\_\+type \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Create value from data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & that will be copied \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1typed__value_a7cd2dad2087902ab85028fddf7c75c0b}\label{classdice_1_1typed__value_a7cd2dad2087902ab85028fddf7c75c0b}} 
+\index{dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}!typed\+\_\+value@{typed\+\_\+value}}
+\index{typed\+\_\+value@{typed\+\_\+value}!dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}}
+\subsubsection{\texorpdfstring{typed\+\_\+value()}{typed\_value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value}}$<$ T $>$\+::\mbox{\hyperlink{classdice_1_1typed__value}{typed\+\_\+value}} (\begin{DoxyParamCaption}\item[{value\+\_\+type \&\&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Create value from data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & that will be moved \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1typed__value_ae9563902b664c40a4b3d8a8cb201a194}\label{classdice_1_1typed__value_ae9563902b664c40a4b3d8a8cb201a194}} 
+\index{dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}!accept@{accept}}
+\index{accept@{accept}!dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}}
+\subsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value}}$<$ T $>$\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classdice_1_1value__visitor}{value\+\_\+visitor}} $\ast$}]{visitor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Visit this value with given visitor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classdice_1_1base__value_a8ab0acd9a7b10035a1c8f8a0f05b40b4}{dice\+::base\+\_\+value}}.
+
+\mbox{\Hypertarget{classdice_1_1typed__value_a54490141b25b17213989fd2e859b4f59}\label{classdice_1_1typed__value_a54490141b25b17213989fd2e859b4f59}} 
+\index{dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}!clone@{clone}}
+\index{clone@{clone}!dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}}
+\subsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}}$>$ \mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value}}$<$ T $>$\+::clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create a copy of this value. 
+
+\begin{DoxyReturn}{Returns}
+copied value 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classdice_1_1base__value_a58335a522dda6d97332f938ead90aa15}{dice\+::base\+\_\+value}}.
+
+\mbox{\Hypertarget{classdice_1_1typed__value_aeb5c87839a5e3ecb7beac6abc05e6701}\label{classdice_1_1typed__value_aeb5c87839a5e3ecb7beac6abc05e6701}} 
+\index{dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}!equals@{equals}}
+\index{equals@{equals}!dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}}
+\subsubsection{\texorpdfstring{equals()}{equals()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value}}$<$ T $>$\+::equals (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Compare 2 values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff both values have the same type and represent the same value (data() == other.\+data()) 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classdice_1_1base__value_a81269be4c101eeef6d48810823e1835c}{dice\+::base\+\_\+value}}.
+
+\mbox{\Hypertarget{classdice_1_1typed__value_aa75a4167e6d3ff2640fd2fa65442e2ed}\label{classdice_1_1typed__value_aa75a4167e6d3ff2640fd2fa65442e2ed}} 
+\index{dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}!type@{type}}
+\index{type@{type}!dice\+::typed\+\_\+value@{dice\+::typed\+\_\+value}}
+\subsubsection{\texorpdfstring{type()}{type()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} \mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value}}$<$ T $>$\+::type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Get type id of this type. 
+
+\begin{DoxyReturn}{Returns}
+type id of this type (\mbox{\hyperlink{value_8hpp_a7d7815802a2d6911ce76500f32b25399}{get\+\_\+type\+\_\+id$<$\+T$>$()}}) 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classdice_1_1base__value_a5125d076b0ed6a398f4f4f8fe19ef60b}{dice\+::base\+\_\+value}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/\mbox{\hyperlink{value_8hpp}{value.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,159 @@
+\hypertarget{classdice_1_1base__value}{}\section{dice\+:\+:base\+\_\+value Class Reference}
+\label{classdice_1_1base__value}\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+
+
+Parent of all value types that are used in dice expressions.  
+
+
+
+
+{\ttfamily \#include $<$value.\+hpp$>$}
+
+
+
+Inheritance diagram for dice\+:\+:base\+\_\+value\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classdice_1_1base__value__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} \mbox{\hyperlink{classdice_1_1base__value_a5125d076b0ed6a398f4f4f8fe19ef60b}{type}} () const =0
+\begin{DoxyCompactList}\small\item\em Get type of this value. \end{DoxyCompactList}\item 
+virtual std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$ \mbox{\hyperlink{classdice_1_1base__value_a58335a522dda6d97332f938ead90aa15}{clone}} () const =0
+\begin{DoxyCompactList}\small\item\em Create a copy of this value. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{classdice_1_1base__value_a81269be4c101eeef6d48810823e1835c}{equals}} (const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&other) const =0
+\begin{DoxyCompactList}\small\item\em Check whether this value is equal to other value. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1base__value_a5939b300dd577d307cf94d3a6d726210}{operator==}} (const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&other) const
+\begin{DoxyCompactList}\small\item\em Check whether this value is equal to other value. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1base__value_a6a05109afbb4b9a2c77887d76e7edbab}{operator!=}} (const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&other) const
+\begin{DoxyCompactList}\small\item\em Check whether this value is not equal to other value. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classdice_1_1base__value_a8ab0acd9a7b10035a1c8f8a0f05b40b4}{accept}} (\mbox{\hyperlink{classdice_1_1value__visitor}{value\+\_\+visitor}} $\ast$visitor)=0
+\begin{DoxyCompactList}\small\item\em Visit this value using given visitor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Parent of all value types that are used in dice expressions. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1base__value_a8ab0acd9a7b10035a1c8f8a0f05b40b4}\label{classdice_1_1base__value_a8ab0acd9a7b10035a1c8f8a0f05b40b4}} 
+\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}!accept@{accept}}
+\index{accept@{accept}!dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+\subsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily virtual void dice\+::base\+\_\+value\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classdice_1_1value__visitor}{value\+\_\+visitor}} $\ast$}]{visitor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Visit this value using given visitor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{classdice_1_1typed__value_ae9563902b664c40a4b3d8a8cb201a194}{dice\+::typed\+\_\+value$<$ T $>$}}.
+
+\mbox{\Hypertarget{classdice_1_1base__value_a58335a522dda6d97332f938ead90aa15}\label{classdice_1_1base__value_a58335a522dda6d97332f938ead90aa15}} 
+\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}!clone@{clone}}
+\index{clone@{clone}!dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+\subsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily virtual std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}}$>$ dice\+::base\+\_\+value\+::clone (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Create a copy of this value. 
+
+\begin{DoxyReturn}{Returns}
+copied value 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classdice_1_1typed__value_a54490141b25b17213989fd2e859b4f59}{dice\+::typed\+\_\+value$<$ T $>$}}.
+
+\mbox{\Hypertarget{classdice_1_1base__value_a81269be4c101eeef6d48810823e1835c}\label{classdice_1_1base__value_a81269be4c101eeef6d48810823e1835c}} 
+\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}!equals@{equals}}
+\index{equals@{equals}!dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+\subsubsection{\texorpdfstring{equals()}{equals()}}
+{\footnotesize\ttfamily virtual bool dice\+::base\+\_\+value\+::equals (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Check whether this value is equal to other value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & value to compare with this value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff both have the same type and represent the same value 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classdice_1_1typed__value_aeb5c87839a5e3ecb7beac6abc05e6701}{dice\+::typed\+\_\+value$<$ T $>$}}.
+
+\mbox{\Hypertarget{classdice_1_1base__value_a6a05109afbb4b9a2c77887d76e7edbab}\label{classdice_1_1base__value_a6a05109afbb4b9a2c77887d76e7edbab}} 
+\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+\subsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily bool dice\+::base\+\_\+value\+::operator!= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether this value is not equal to other value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ture iff values are different That is, values or types are different 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1base__value_a5939b300dd577d307cf94d3a6d726210}\label{classdice_1_1base__value_a5939b300dd577d307cf94d3a6d726210}} 
+\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}!operator==@{operator==}}
+\index{operator==@{operator==}!dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool dice\+::base\+\_\+value\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether this value is equal to other value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & value (right hand side of the == operator)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff both have the same type and represent the same value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1base__value_a5125d076b0ed6a398f4f4f8fe19ef60b}\label{classdice_1_1base__value_a5125d076b0ed6a398f4f4f8fe19ef60b}} 
+\index{dice\+::base\+\_\+value@{dice\+::base\+\_\+value}!type@{type}}
+\index{type@{type}!dice\+::base\+\_\+value@{dice\+::base\+\_\+value}}
+\subsubsection{\texorpdfstring{type()}{type()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} dice\+::base\+\_\+value\+::type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Get type of this value. 
+
+It has to be unique for each type. It has to be the same for the same type (i.\+e. multiple values of the same type will return the same type id)
+
+\begin{DoxyReturn}{Returns}
+type id of the type of this value 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classdice_1_1typed__value_aa75a4167e6d3ff2640fd2fa65442e2ed}{dice\+::typed\+\_\+value$<$ T $>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/\mbox{\hyperlink{value_8hpp}{value.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,450 @@
+\hypertarget{classdice_1_1direct__interpreter}{}\section{dice\+:\+:direct\+\_\+interpreter$<$ Environment $>$ Class Template Reference}
+\label{classdice_1_1direct__interpreter}\index{dice\+::direct\+\_\+interpreter$<$ Environment $>$@{dice\+::direct\+\_\+interpreter$<$ Environment $>$}}
+
+
+This interpreter evaluates expressions as soon as they are parsed.  
+
+
+
+
+{\ttfamily \#include $<$direct\+\_\+interpreter.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_acb63d47328233f2a180c0e210f7fa302}\label{classdice_1_1direct__interpreter_acb63d47328233f2a180c0e210f7fa302}} 
+using {\bfseries value\+\_\+type} = std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a69da4a645ada4420b22a2fa19ac1061d}\label{classdice_1_1direct__interpreter_a69da4a645ada4420b22a2fa19ac1061d}} 
+using {\bfseries value\+\_\+list} = std\+::vector$<$ value\+\_\+type $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_ad3e8036bc24b3dfbbab129b6027ed566}\label{classdice_1_1direct__interpreter_ad3e8036bc24b3dfbbab129b6027ed566}} 
+{\bfseries direct\+\_\+interpreter} (Environment $\ast$env)
+\item 
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a6c73ce83530029db99ac213d9c4cf5ce}\label{classdice_1_1direct__interpreter_a6c73ce83530029db99ac213d9c4cf5ce}} 
+void {\bfseries enter\+\_\+assign} ()
+\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_abfb079c8c3c74ea3a572051ef9b91ad5}{make\+\_\+default}} () const
+\begin{DoxyCompactList}\small\item\em Create a new default value. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a1ec4254bbc04f2893f27dba411102633}{number}} (\mbox{\hyperlink{structdice_1_1symbol}{symbol}} \&token) const
+\begin{DoxyCompactList}\small\item\em Interpret number as an int or real. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_af43cc50aa076ba0d94513b7a91b83c1f}{variable}} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Interpret a variable name. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a057b2d2b577b56077b04f223394323aa}{add}} (value\+\_\+type left, value\+\_\+type right)
+\begin{DoxyCompactList}\small\item\em Add left hand side to the right hand side. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a5b7c35ce989972138c8f1f01ccdfec03}{sub}} (value\+\_\+type left, value\+\_\+type right)
+\begin{DoxyCompactList}\small\item\em Subtract right hand side from the left hand side. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a147528647247f61f2f2fdf3fc7423cf7}{mult}} (value\+\_\+type left, value\+\_\+type right)
+\begin{DoxyCompactList}\small\item\em Multiply left hand side with the right hand side. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a69699f6f1f45355555ffd828476f1c93}{div}} (value\+\_\+type left, value\+\_\+type right)
+\begin{DoxyCompactList}\small\item\em Divide left hand side with the right hand side. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a3af601a42a6f731123331eb1862e4ccc}{unary\+\_\+minus}} (value\+\_\+type value)
+\begin{DoxyCompactList}\small\item\em Negate value. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a68034c4e3a4bf4c69286dc234a85d578}{rel\+\_\+op}} (const std\+::string \&type, value\+\_\+type left, value\+\_\+type right)
+\begin{DoxyCompactList}\small\item\em Compute a binary relational operator. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a4d0d65c115bd1775fc14be9106d6670b}{rel\+\_\+in}} (value\+\_\+type value, value\+\_\+type lower\+\_\+bound, value\+\_\+type upper\+\_\+bound)
+\begin{DoxyCompactList}\small\item\em Compute relational in operator. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a621e658b8bc5343da7e99d17486ddad6}{roll}} (value\+\_\+type left, value\+\_\+type right)
+\begin{DoxyCompactList}\small\item\em Compute a roll operator. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_a8ec5df422b6b9175987b7f93c4dd0d7b}{assign}} (const std\+::string \&name, value\+\_\+type value)
+\begin{DoxyCompactList}\small\item\em Assing value to variable with given name. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter_afc6a69ed8b3eebb61fc41bccfc7ce725}{call}} (const std\+::string \&name, value\+\_\+list \&\&arguments)
+\begin{DoxyCompactList}\small\item\em Call a function with given arguments. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classdice_1_1direct__interpreter_a41fcd7b8d6d5fd1a3ef3b90856905eae}{set\+\_\+variable\+\_\+redefinition}} (bool value)
+\begin{DoxyCompactList}\small\item\em Enable/disable variable redefinition. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1direct__interpreter_a5df6a2697cba1b1a1668a7d3f056295b}{get\+\_\+variable\+\_\+redefinition}} () const
+\begin{DoxyCompactList}\small\item\em Check whether the variable redefinition is allowed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Environment$>$\newline
+class dice\+::direct\+\_\+interpreter$<$ Environment $>$}
+
+This interpreter evaluates expressions as soon as they are parsed. 
+
+It does not use any itermediate representation.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Environment} & environment type \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a057b2d2b577b56077b04f223394323aa}\label{classdice_1_1direct__interpreter_a057b2d2b577b56077b04f223394323aa}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!add@{add}}
+\index{add@{add}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::add (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{left,  }\item[{value\+\_\+type}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Add left hand side to the right hand side. 
+
+It will call the +(left, right) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & operand \\
+\hline
+{\em right} & operand\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+sum
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a8ec5df422b6b9175987b7f93c4dd0d7b}\label{classdice_1_1direct__interpreter_a8ec5df422b6b9175987b7f93c4dd0d7b}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!assign@{assign}}
+\index{assign@{assign}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::assign (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{value\+\_\+type}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Assing value to variable with given name. 
+
+If a variable with given name already exists, a \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}} exception will be thrown.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of a new variable \\
+\hline
+{\em value} & of the variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+nullptr
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if the variable already exists and variable redefinition is disabled (see the set\+\_\+variable\+\_\+redefinition function) \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_afc6a69ed8b3eebb61fc41bccfc7ce725}\label{classdice_1_1direct__interpreter_afc6a69ed8b3eebb61fc41bccfc7ce725}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!call@{call}}
+\index{call@{call}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{call()}{call()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::call (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{value\+\_\+list \&\&}]{arguments }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Call a function with given arguments. 
+
+It will invoke function with the same name and arguments in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of a function \\
+\hline
+{\em arguments} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the function call
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if there is no such function or an error occured during the call. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a69699f6f1f45355555ffd828476f1c93}\label{classdice_1_1direct__interpreter_a69699f6f1f45355555ffd828476f1c93}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!div@{div}}
+\index{div@{div}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{div()}{div()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::div (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{left,  }\item[{value\+\_\+type}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Divide left hand side with the right hand side. 
+
+It will call the /(left, right) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & operand \\
+\hline
+{\em right} & operand\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+division
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a5df6a2697cba1b1a1668a7d3f056295b}\label{classdice_1_1direct__interpreter_a5df6a2697cba1b1a1668a7d3f056295b}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!get\+\_\+variable\+\_\+redefinition@{get\+\_\+variable\+\_\+redefinition}}
+\index{get\+\_\+variable\+\_\+redefinition@{get\+\_\+variable\+\_\+redefinition}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{get\+\_\+variable\+\_\+redefinition()}{get\_variable\_redefinition()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+bool \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::get\+\_\+variable\+\_\+redefinition (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether the variable redefinition is allowed. 
+
+\begin{DoxyReturn}{Returns}
+true iff the redefinition is allowed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_abfb079c8c3c74ea3a572051ef9b91ad5}\label{classdice_1_1direct__interpreter_abfb079c8c3c74ea3a572051ef9b91ad5}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!make\+\_\+default@{make\+\_\+default}}
+\index{make\+\_\+default@{make\+\_\+default}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{make\+\_\+default()}{make\_default()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::make\+\_\+default (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a new default value. 
+
+This is used when there is a parsing error. This will create a new value every time it is called.
+
+\begin{DoxyReturn}{Returns}
+default value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a147528647247f61f2f2fdf3fc7423cf7}\label{classdice_1_1direct__interpreter_a147528647247f61f2f2fdf3fc7423cf7}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!mult@{mult}}
+\index{mult@{mult}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{mult()}{mult()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::mult (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{left,  }\item[{value\+\_\+type}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Multiply left hand side with the right hand side. 
+
+It will call the $\ast$(left, right) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & operand \\
+\hline
+{\em right} & operand\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+product
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a1ec4254bbc04f2893f27dba411102633}\label{classdice_1_1direct__interpreter_a1ec4254bbc04f2893f27dba411102633}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!number@{number}}
+\index{number@{number}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{number()}{number()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::number (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structdice_1_1symbol}{symbol}} \&}]{token }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Interpret number as an int or real. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & of the number\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+number\textquotesingle{}s value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a4d0d65c115bd1775fc14be9106d6670b}\label{classdice_1_1direct__interpreter_a4d0d65c115bd1775fc14be9106d6670b}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!rel\+\_\+in@{rel\+\_\+in}}
+\index{rel\+\_\+in@{rel\+\_\+in}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{rel\+\_\+in()}{rel\_in()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::rel\+\_\+in (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{value,  }\item[{value\+\_\+type}]{lower\+\_\+bound,  }\item[{value\+\_\+type}]{upper\+\_\+bound }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute relational in operator. 
+
+It will call the in(value, lower\+\_\+bound, upper\+\_\+bound) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & to test \\
+\hline
+{\em lower\+\_\+bound} & of the interval \\
+\hline
+{\em upper\+\_\+bound} & of the interval\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the in operator
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a68034c4e3a4bf4c69286dc234a85d578}\label{classdice_1_1direct__interpreter_a68034c4e3a4bf4c69286dc234a85d578}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!rel\+\_\+op@{rel\+\_\+op}}
+\index{rel\+\_\+op@{rel\+\_\+op}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{rel\+\_\+op()}{rel\_op()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::rel\+\_\+op (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{type,  }\item[{value\+\_\+type}]{left,  }\item[{value\+\_\+type}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute a binary relational operator. 
+
+It will call the $<$(left, right), $<$=(left, right), etc. function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & of the operator ($<$, $<$=, ==, !=, $>$=, $>$) \\
+\hline
+{\em left} & operand \\
+\hline
+{\em right} & operand\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a621e658b8bc5343da7e99d17486ddad6}\label{classdice_1_1direct__interpreter_a621e658b8bc5343da7e99d17486ddad6}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!roll@{roll}}
+\index{roll@{roll}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{roll()}{roll()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::roll (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{left,  }\item[{value\+\_\+type}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute a roll operator. 
+
+It will call the roll\+\_\+op(left, right) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & operand \\
+\hline
+{\em right} & operand\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the operator
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a41fcd7b8d6d5fd1a3ef3b90856905eae}\label{classdice_1_1direct__interpreter_a41fcd7b8d6d5fd1a3ef3b90856905eae}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!set\+\_\+variable\+\_\+redefinition@{set\+\_\+variable\+\_\+redefinition}}
+\index{set\+\_\+variable\+\_\+redefinition@{set\+\_\+variable\+\_\+redefinition}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{set\+\_\+variable\+\_\+redefinition()}{set\_variable\_redefinition()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+void \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::set\+\_\+variable\+\_\+redefinition (\begin{DoxyParamCaption}\item[{bool}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Enable/disable variable redefinition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & true iff the redefinition is allowed \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a5b7c35ce989972138c8f1f01ccdfec03}\label{classdice_1_1direct__interpreter_a5b7c35ce989972138c8f1f01ccdfec03}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!sub@{sub}}
+\index{sub@{sub}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{sub()}{sub()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::sub (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{left,  }\item[{value\+\_\+type}]{right }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Subtract right hand side from the left hand side. 
+
+It will call the -\/(left, right) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & operand \\
+\hline
+{\em right} & operand\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+difference
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_a3af601a42a6f731123331eb1862e4ccc}\label{classdice_1_1direct__interpreter_a3af601a42a6f731123331eb1862e4ccc}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!unary\+\_\+minus@{unary\+\_\+minus}}
+\index{unary\+\_\+minus@{unary\+\_\+minus}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{unary\+\_\+minus()}{unary\_minus()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::unary\+\_\+minus (\begin{DoxyParamCaption}\item[{value\+\_\+type}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Negate value. 
+
+It will call the unary-\/(value) function in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+negation of the value
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & if argument types are invalid or an error occured during the computation. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1direct__interpreter_af43cc50aa076ba0d94513b7a91b83c1f}\label{classdice_1_1direct__interpreter_af43cc50aa076ba0d94513b7a91b83c1f}} 
+\index{dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}!variable@{variable}}
+\index{variable@{variable}!dice\+::direct\+\_\+interpreter@{dice\+::direct\+\_\+interpreter}}
+\subsubsection{\texorpdfstring{variable()}{variable()}}
+{\footnotesize\ttfamily template$<$typename Environment$>$ \\
+value\+\_\+type \mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ Environment $>$\+::variable (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Interpret a variable name. 
+
+It will find the variable in environment.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of a variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of the variable or nullptr if it does not exist 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/direct\+\_\+interpreter.\+hpp\end{DoxyCompactItemize}

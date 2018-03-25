@@ -1,0 +1,106 @@
+\hypertarget{classdice_1_1conversions}{}\section{dice\+:\+:conversions Class Reference}
+\label{classdice_1_1conversions}\index{dice\+::conversions@{dice\+::conversions}}
+
+
+This class manages conversions of values in dice expression.  
+
+
+
+
+{\ttfamily \#include $<$conversions.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1conversions_afa76a68a1fb1140608ba48da6f7bc0bd}\label{classdice_1_1conversions_afa76a68a1fb1140608ba48da6f7bc0bd}} 
+using {\bfseries value\+\_\+type} = std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1conversions_a62ec635e5e7832c05bf351dae4b135e4}\label{classdice_1_1conversions_a62ec635e5e7832c05bf351dae4b135e4}} 
+using {\bfseries cost\+\_\+type} = std\+::size\+\_\+t
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+cost\+\_\+type \mbox{\hyperlink{classdice_1_1conversions_adbc4f917f240f7ab4440cfc7d81e6250}{cost}} (\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} from, \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} to) const
+\begin{DoxyCompactList}\small\item\em Find conversion cost from type {\ttfamily from} to type {\ttfamily to}. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1conversions_ab6a95940f7c218a4e610a81b9b838291}{convert}} (\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} to, value\+\_\+type value) const
+\begin{DoxyCompactList}\small\item\em Convert value to type {\ttfamily to}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const cost\+\_\+type {\bfseries max\+\_\+cost}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class manages conversions of values in dice expression. 
+
+Example usage\+: 
+\begin{DoxyCode}
+conversions c;
+conversions::cost\_type cost\_int\_to\_real = c.cost(type\_id::integer, type\_id::real);
+conversions::value\_type real\_value = c.convert(type\_id::real, make<type\_int>(14));
+\end{DoxyCode}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1conversions_ab6a95940f7c218a4e610a81b9b838291}\label{classdice_1_1conversions_ab6a95940f7c218a4e610a81b9b838291}} 
+\index{dice\+::conversions@{dice\+::conversions}!convert@{convert}}
+\index{convert@{convert}!dice\+::conversions@{dice\+::conversions}}
+\subsubsection{\texorpdfstring{convert()}{convert()}}
+{\footnotesize\ttfamily dice\+::conversions\+::value\+\_\+type dice\+::conversions\+::convert (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}}}]{to,  }\item[{value\+\_\+type}]{value }\end{DoxyParamCaption}) const}
+
+
+
+Convert value to type {\ttfamily to}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em to} & type id \\
+\hline
+{\em value} & to convert\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+converted value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1conversions_adbc4f917f240f7ab4440cfc7d81e6250}\label{classdice_1_1conversions_adbc4f917f240f7ab4440cfc7d81e6250}} 
+\index{dice\+::conversions@{dice\+::conversions}!cost@{cost}}
+\index{cost@{cost}!dice\+::conversions@{dice\+::conversions}}
+\subsubsection{\texorpdfstring{cost()}{cost()}}
+{\footnotesize\ttfamily dice\+::conversions\+::cost\+\_\+type dice\+::conversions\+::cost (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}}}]{from,  }\item[{\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}}}]{to }\end{DoxyParamCaption}) const}
+
+
+
+Find conversion cost from type {\ttfamily from} to type {\ttfamily to}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em from} & type id \\
+\hline
+{\em to} & type id\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cost of the conversion. 0 =$>$ no conversion needed, max\+\_\+cost =$>$ the conversion is not supported 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classdice_1_1conversions_ad0c8e703408d6a936ee83f8f31e8512b}\label{classdice_1_1conversions_ad0c8e703408d6a936ee83f8f31e8512b}} 
+\index{dice\+::conversions@{dice\+::conversions}!max\+\_\+cost@{max\+\_\+cost}}
+\index{max\+\_\+cost@{max\+\_\+cost}!dice\+::conversions@{dice\+::conversions}}
+\subsubsection{\texorpdfstring{max\+\_\+cost}{max\_cost}}
+{\footnotesize\ttfamily const dice\+::conversions\+::cost\+\_\+type dice\+::conversions\+::max\+\_\+cost\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= 
+    std::numeric\_limits<dice::conversions::cost\_type>::max()
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/conversions.\+hpp\item 
+C\+:/projects/dice/src/conversions.\+cpp\end{DoxyCompactItemize}

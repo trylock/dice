@@ -1,0 +1,215 @@
+\hypertarget{classdice_1_1environment}{}\section{dice\+:\+:environment Class Reference}
+\label{classdice_1_1environment}\index{dice\+::environment@{dice\+::environment}}
+
+
+Symbol table.  
+
+
+
+
+{\ttfamily \#include $<$environment.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1environment_ac54829c038694e9919e1fa61ee5c6483}\label{classdice_1_1environment_ac54829c038694e9919e1fa61ee5c6483}} 
+using {\bfseries value\+\_\+type} = std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1environment_a3288064477909334766a0f5f37eadd24}\label{classdice_1_1environment_a3288064477909334766a0f5f37eadd24}} 
+using {\bfseries fn} = \mbox{\hyperlink{classdice_1_1execution__context}{execution\+\_\+context}}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classdice_1_1environment_a5bf1f80a5a2958ac8bb1c546535bdfde}{set\+\_\+var}} (const std\+::string \&name, value\+\_\+type value)
+\begin{DoxyCompactList}\small\item\em Set value of a variable. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $\ast$ \mbox{\hyperlink{classdice_1_1environment_abbad399163a648c24c2c7fa7bd5ce28b}{get\+\_\+var}} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Get value of a variable. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $\ast$ \mbox{\hyperlink{classdice_1_1environment_a9b94a618129c7af01958a857a703e29f}{get\+\_\+var}} (const std\+::string \&name) const
+\begin{DoxyCompactList}\small\item\em Get value of a variable. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classdice_1_1environment_aa536347c73a806f197f6f61348235b47}{add\+\_\+function}} (const std\+::string \&name, \mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}} function)
+\begin{DoxyCompactList}\small\item\em Add a function to the environment. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Arg , typename ... Args$>$ }\\value\+\_\+type \mbox{\hyperlink{classdice_1_1environment_a381055a5eb8f4064361e97236f6e80e1}{call}} (const std\+::string \&name, Arg \&\&first\+\_\+arg, Args \&\&... rest)
+\begin{DoxyCompactList}\small\item\em Call a function with the same arguments. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1environment_a5cccfa275b5e57024f532f1c5c7f2b8c}{call}} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Call function without arguments. \end{DoxyCompactList}\item 
+value\+\_\+type \mbox{\hyperlink{classdice_1_1environment_a6736fed1b36c26714c20902dbe0d3bc0}{call\+\_\+var}} (const std\+::string \&name, fn\+::arg\+\_\+iterator first, fn\+::arg\+\_\+iterator last)
+\begin{DoxyCompactList}\small\item\em Call a function with arguments in a list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Symbol table. 
+
+This class manages variables and functions.
+
+Example variable usage\+: 
+\begin{DoxyCode}
+environment e;
+e.set\_var(\textcolor{stringliteral}{"test\_var"}, make<type\_int>(4));
+\textcolor{keyword}{auto} test\_var = e.get\_var(\textcolor{stringliteral}{"test\_var"});
+\end{DoxyCode}
+
+
+Example function call\+: 
+\begin{DoxyCode}
+environment e;
+\textcolor{keyword}{auto} indicator\_in\_4\_to\_6 = e.call(
+     \textcolor{stringliteral}{"in"}, 
+     make<type\_rand\_var>(...), 
+     make<type\_int>(4), 
+     make<type\_int>(6));
+\end{DoxyCode}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1environment_aa536347c73a806f197f6f61348235b47}\label{classdice_1_1environment_aa536347c73a806f197f6f61348235b47}} 
+\index{dice\+::environment@{dice\+::environment}!add\+\_\+function@{add\+\_\+function}}
+\index{add\+\_\+function@{add\+\_\+function}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{add\+\_\+function()}{add\_function()}}
+{\footnotesize\ttfamily void dice\+::environment\+::add\+\_\+function (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{\mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}}}]{function }\end{DoxyParamCaption})}
+
+
+
+Add a function to the environment. 
+
+Added function will be available in dice expressions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the function \\
+\hline
+{\em function} & implementation and metadata \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1environment_a381055a5eb8f4064361e97236f6e80e1}\label{classdice_1_1environment_a381055a5eb8f4064361e97236f6e80e1}} 
+\index{dice\+::environment@{dice\+::environment}!call@{call}}
+\index{call@{call}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{call()}{call()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Arg , typename ... Args$>$ \\
+value\+\_\+type dice\+::environment\+::call (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{Arg \&\&}]{first\+\_\+arg,  }\item[{Args \&\&...}]{rest }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Call a function with the same arguments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the function \\
+\hline
+{\em first\+\_\+arg} & first argument \\
+\hline
+{\em rest} & of the arguments passed to the function\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+computed value
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \mbox{\hyperlink{classdice_1_1compiler__error}{compiler\+\_\+error}}} & when an error occurs during the function call \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1environment_a5cccfa275b5e57024f532f1c5c7f2b8c}\label{classdice_1_1environment_a5cccfa275b5e57024f532f1c5c7f2b8c}} 
+\index{dice\+::environment@{dice\+::environment}!call@{call}}
+\index{call@{call}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{call()}{call()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily value\+\_\+type dice\+::environment\+::call (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Call function without arguments. 
+
+It will clear the args\+\_\+ vector after the call.
+
+\begin{DoxyAttention}{Attention}
+arguments in the args\+\_\+ vector are still passed to the call
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the function\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+computed result 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1environment_a6736fed1b36c26714c20902dbe0d3bc0}\label{classdice_1_1environment_a6736fed1b36c26714c20902dbe0d3bc0}} 
+\index{dice\+::environment@{dice\+::environment}!call\+\_\+var@{call\+\_\+var}}
+\index{call\+\_\+var@{call\+\_\+var}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{call\+\_\+var()}{call\_var()}}
+{\footnotesize\ttfamily value\+\_\+type dice\+::environment\+::call\+\_\+var (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{fn\+::arg\+\_\+iterator}]{first,  }\item[{fn\+::arg\+\_\+iterator}]{last }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Call a function with arguments in a list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the function \\
+\hline
+{\em first} & argument iterator \\
+\hline
+{\em last} & argument iterator \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+computed value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1environment_abbad399163a648c24c2c7fa7bd5ce28b}\label{classdice_1_1environment_abbad399163a648c24c2c7fa7bd5ce28b}} 
+\index{dice\+::environment@{dice\+::environment}!get\+\_\+var@{get\+\_\+var}}
+\index{get\+\_\+var@{get\+\_\+var}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{get\+\_\+var()}{get\_var()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classdice_1_1base__value}{dice\+::base\+\_\+value}} $\ast$ dice\+::environment\+::get\+\_\+var (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})}
+
+
+
+Get value of a variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of a variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the value of this variable or nullptr if it does not exist 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1environment_a9b94a618129c7af01958a857a703e29f}\label{classdice_1_1environment_a9b94a618129c7af01958a857a703e29f}} 
+\index{dice\+::environment@{dice\+::environment}!get\+\_\+var@{get\+\_\+var}}
+\index{get\+\_\+var@{get\+\_\+var}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{get\+\_\+var()}{get\_var()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classdice_1_1base__value}{dice\+::base\+\_\+value}} $\ast$ dice\+::environment\+::get\+\_\+var (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption}) const}
+
+
+
+Get value of a variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of a variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+constant pointer to the value of this variable or nullptr if it does not exist 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1environment_a5bf1f80a5a2958ac8bb1c546535bdfde}\label{classdice_1_1environment_a5bf1f80a5a2958ac8bb1c546535bdfde}} 
+\index{dice\+::environment@{dice\+::environment}!set\+\_\+var@{set\+\_\+var}}
+\index{set\+\_\+var@{set\+\_\+var}!dice\+::environment@{dice\+::environment}}
+\subsubsection{\texorpdfstring{set\+\_\+var()}{set\_var()}}
+{\footnotesize\ttfamily void dice\+::environment\+::set\+\_\+var (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{value\+\_\+type}]{value }\end{DoxyParamCaption})}
+
+
+
+Set value of a variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of a variable \\
+\hline
+{\em value} & of the variable \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/environment.\+hpp\item 
+C\+:/projects/dice/src/environment.\+cpp\end{DoxyCompactItemize}

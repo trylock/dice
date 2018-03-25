@@ -1,0 +1,105 @@
+\hypertarget{classdice_1_1logger}{}\section{dice\+:\+:logger Class Reference}
+\label{classdice_1_1logger}\index{dice\+::logger@{dice\+::logger}}
+
+
+This class prints all errors in given output stream.  
+
+
+
+
+{\ttfamily \#include $<$logger.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdice_1_1logger_af96ff92a37f7376d0e96b2e3a65a0f6c}{logger}} ()
+\begin{DoxyCompactList}\small\item\em Use std\+::cerr as the output of the logger. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1logger_a945c88b202299d0fa387ffa5fe1d7bb9}{logger}} (std\+::ostream $\ast$output, bool print\+\_\+just\+\_\+message=false)
+\begin{DoxyCompactList}\small\item\em Use given output stream as the output of the logger. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classdice_1_1logger_a5fb04ac776c40a57cee18ceb4fbdae9e}{error}} (int line, int column, const std\+::string \&message)
+\begin{DoxyCompactList}\small\item\em Add a new error log. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1logger_a7323ce67ddcf4d61f33ae000ec0421ac}{empty}} () const
+\begin{DoxyCompactList}\small\item\em Check whether there were some errors logged. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class prints all errors in given output stream. 
+
+Example usage\+: 
+\begin{DoxyCode}
+\mbox{\hyperlink{classdice_1_1logger_af96ff92a37f7376d0e96b2e3a65a0f6c}{logger}} log\{ &std::cin \};
+assert(log.empty());
+log.error(0, 14, \textcolor{stringliteral}{"Critical error"});
+assert(!log.empty());
+\end{DoxyCode}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classdice_1_1logger_af96ff92a37f7376d0e96b2e3a65a0f6c}\label{classdice_1_1logger_af96ff92a37f7376d0e96b2e3a65a0f6c}} 
+\index{dice\+::logger@{dice\+::logger}!logger@{logger}}
+\index{logger@{logger}!dice\+::logger@{dice\+::logger}}
+\subsubsection{\texorpdfstring{logger()}{logger()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily dice\+::logger\+::logger (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Use std\+::cerr as the output of the logger. 
+
+\mbox{\Hypertarget{classdice_1_1logger_a945c88b202299d0fa387ffa5fe1d7bb9}\label{classdice_1_1logger_a945c88b202299d0fa387ffa5fe1d7bb9}} 
+\index{dice\+::logger@{dice\+::logger}!logger@{logger}}
+\index{logger@{logger}!dice\+::logger@{dice\+::logger}}
+\subsubsection{\texorpdfstring{logger()}{logger()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily dice\+::logger\+::logger (\begin{DoxyParamCaption}\item[{std\+::ostream $\ast$}]{output,  }\item[{bool}]{print\+\_\+just\+\_\+message = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Use given output stream as the output of the logger. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em output} & pointer to an output stream \\
+\hline
+{\em print\+\_\+just\+\_\+message} & if true, the logger will only print unformated error message (no error location or message formatting) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1logger_a7323ce67ddcf4d61f33ae000ec0421ac}\label{classdice_1_1logger_a7323ce67ddcf4d61f33ae000ec0421ac}} 
+\index{dice\+::logger@{dice\+::logger}!empty@{empty}}
+\index{empty@{empty}!dice\+::logger@{dice\+::logger}}
+\subsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily bool dice\+::logger\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Check whether there were some errors logged. 
+
+\begin{DoxyReturn}{Returns}
+true I\+FF there were no errors 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1logger_a5fb04ac776c40a57cee18ceb4fbdae9e}\label{classdice_1_1logger_a5fb04ac776c40a57cee18ceb4fbdae9e}} 
+\index{dice\+::logger@{dice\+::logger}!error@{error}}
+\index{error@{error}!dice\+::logger@{dice\+::logger}}
+\subsubsection{\texorpdfstring{error()}{error()}}
+{\footnotesize\ttfamily void dice\+::logger\+::error (\begin{DoxyParamCaption}\item[{int}]{line,  }\item[{int}]{column,  }\item[{const std\+::string \&}]{message }\end{DoxyParamCaption})}
+
+
+
+Add a new error log. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em line} & of the input at which the error occured \\
+\hline
+{\em column} & in which the error occured\\
+\hline
+{\em message} & of the error \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/logger.\+hpp\item 
+C\+:/projects/dice/src/logger.\+cpp\end{DoxyCompactItemize}

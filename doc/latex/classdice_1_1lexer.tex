@@ -1,0 +1,86 @@
+\hypertarget{classdice_1_1lexer}{}\section{dice\+:\+:lexer$<$ Logger $>$ Class Template Reference}
+\label{classdice_1_1lexer}\index{dice\+::lexer$<$ Logger $>$@{dice\+::lexer$<$ Logger $>$}}
+
+
+Lexer of a dice script.  
+
+
+
+
+{\ttfamily \#include $<$lexer.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1lexer_a3bc4744741a0ecbcb5f967d338a7ba00}\label{classdice_1_1lexer_a3bc4744741a0ecbcb5f967d338a7ba00}} 
+{\bfseries lexer} (std\+::istream $\ast$input, Logger $\ast$log)
+\item 
+\mbox{\Hypertarget{classdice_1_1lexer_af1a50cceede3c51fdb3c007df9df4c7f}\label{classdice_1_1lexer_af1a50cceede3c51fdb3c007df9df4c7f}} 
+{\bfseries lexer} (const \mbox{\hyperlink{classdice_1_1lexer}{lexer}} \&)=delete
+\item 
+\mbox{\Hypertarget{classdice_1_1lexer_afb1a3f61435f8f0d25755f493b45c852}\label{classdice_1_1lexer_afb1a3f61435f8f0d25755f493b45c852}} 
+void {\bfseries operator=} (const \mbox{\hyperlink{classdice_1_1lexer}{lexer}} \&)=delete
+\item 
+\mbox{\Hypertarget{classdice_1_1lexer_abd6e792ad9d6ad88e991544b14842e39}\label{classdice_1_1lexer_abd6e792ad9d6ad88e991544b14842e39}} 
+{\bfseries lexer} (\mbox{\hyperlink{classdice_1_1lexer}{lexer}} \&\&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1lexer_a295deda298887957f8afb659a11ead00}\label{classdice_1_1lexer_a295deda298887957f8afb659a11ead00}} 
+\mbox{\hyperlink{classdice_1_1lexer}{lexer}} \& {\bfseries operator=} (\mbox{\hyperlink{classdice_1_1lexer}{lexer}} \&\&)=default
+\item 
+\mbox{\hyperlink{structdice_1_1symbol}{symbol}} \mbox{\hyperlink{classdice_1_1lexer_a7dd396caa4bfcd3416569eb1be07ecdd}{read\+\_\+token}} ()
+\begin{DoxyCompactList}\small\item\em Read token at current location. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{structdice_1_1lexer__location}{lexer\+\_\+location}} \& \mbox{\hyperlink{classdice_1_1lexer_a1e62241846b4736d744fe9bb61385cc3}{location}} () const
+\begin{DoxyCompactList}\small\item\em Return current location of the lexer in the input stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Logger$>$\newline
+class dice\+::lexer$<$ Logger $>$}
+
+Lexer of a dice script. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Logger} & the logger type \\
+\hline
+\end{DoxyTemplParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1lexer_a1e62241846b4736d744fe9bb61385cc3}\label{classdice_1_1lexer_a1e62241846b4736d744fe9bb61385cc3}} 
+\index{dice\+::lexer@{dice\+::lexer}!location@{location}}
+\index{location@{location}!dice\+::lexer@{dice\+::lexer}}
+\subsubsection{\texorpdfstring{location()}{location()}}
+{\footnotesize\ttfamily template$<$typename Logger $>$ \\
+const \mbox{\hyperlink{structdice_1_1lexer__location}{lexer\+\_\+location}}\& \mbox{\hyperlink{classdice_1_1lexer}{dice\+::lexer}}$<$ Logger $>$\+::location (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return current location of the lexer in the input stream. 
+
+\begin{DoxyReturn}{Returns}
+current location of the lexer 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1lexer_a7dd396caa4bfcd3416569eb1be07ecdd}\label{classdice_1_1lexer_a7dd396caa4bfcd3416569eb1be07ecdd}} 
+\index{dice\+::lexer@{dice\+::lexer}!read\+\_\+token@{read\+\_\+token}}
+\index{read\+\_\+token@{read\+\_\+token}!dice\+::lexer@{dice\+::lexer}}
+\subsubsection{\texorpdfstring{read\+\_\+token()}{read\_token()}}
+{\footnotesize\ttfamily template$<$typename Logger $>$ \\
+\mbox{\hyperlink{structdice_1_1symbol}{symbol}} \mbox{\hyperlink{classdice_1_1lexer}{dice\+::lexer}}$<$ Logger $>$\+::read\+\_\+token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Read token at current location. 
+
+Decode a sequance of characters as a token and advance in the input stream. Skip all whitespace characters after the token (that is location after calling read\+\_\+token points to the beginning of the next token).
+
+All errors will be logged with given logger.
+
+\begin{DoxyReturn}{Returns}
+token at current position 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/lexer.\+hpp\end{DoxyCompactItemize}

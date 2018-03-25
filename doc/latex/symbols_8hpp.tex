@@ -1,0 +1,123 @@
+\hypertarget{symbols_8hpp}{}\section{C\+:/projects/dice/src/symbols.hpp File Reference}
+\label{symbols_8hpp}\index{C\+:/projects/dice/src/symbols.\+hpp@{C\+:/projects/dice/src/symbols.\+hpp}}
+
+
+Symbols in dice expressions (returned by lexer).  
+
+
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \#include \char`\"{}value.\+hpp\char`\"{}}\newline
+Include dependency graph for symbols.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{symbols_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{symbols_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structdice_1_1symbol}{dice\+::symbol}}
+\begin{DoxyCompactList}\small\item\em Terminal symbol returned by the lexer type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{dice\+::symbol\+\_\+type}} \{ \newline
+{\bfseries plus}, 
+{\bfseries minus}, 
+{\bfseries times}, 
+{\bfseries divide}, 
+\newline
+{\bfseries rel\+\_\+op}, 
+{\bfseries roll\+\_\+op}, 
+{\bfseries in}, 
+{\bfseries left\+\_\+paren}, 
+\newline
+{\bfseries right\+\_\+paren}, 
+{\bfseries left\+\_\+square\+\_\+bracket}, 
+{\bfseries right\+\_\+square\+\_\+bracket}, 
+{\bfseries param\+\_\+delim}, 
+\newline
+{\bfseries semicolon}, 
+{\bfseries var}, 
+{\bfseries assign}, 
+{\bfseries number}, 
+\newline
+{\bfseries func\+\_\+id}, 
+{\bfseries id}, 
+{\bfseries end}
+ \}
+\begin{DoxyCompactList}\small\item\em Type of a terminal symbol. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{symbols_8hpp_aa542a90d900a186cee459f53537bc037}{dice\+::to\+\_\+string}} (const symbol \&symbol)
+\begin{DoxyCompactList}\small\item\em Convert given symbol to string. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{symbols_8hpp_a92dc762419e41c64e4c25bf2e44e4fa2}{dice\+::to\+\_\+string}} (symbol\+\_\+type type)
+\begin{DoxyCompactList}\small\item\em Convert given symbol type to string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Symbols in dice expressions (returned by lexer). 
+
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{symbols_8hpp_file_ab0295a855bb7eadc138abd6993af3aea}\label{symbols_8hpp_file_ab0295a855bb7eadc138abd6993af3aea}} 
+\index{symbols.\+hpp@{symbols.\+hpp}!symbol\+\_\+type@{symbol\+\_\+type}}
+\index{symbol\+\_\+type@{symbol\+\_\+type}!symbols.\+hpp@{symbols.\+hpp}}
+\subsubsection{\texorpdfstring{symbol\+\_\+type}{symbol\_type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{dice\+::symbol\+\_\+type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Type of a terminal symbol. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{symbols_8hpp_file_aa542a90d900a186cee459f53537bc037}\label{symbols_8hpp_file_aa542a90d900a186cee459f53537bc037}} 
+\index{symbols.\+hpp@{symbols.\+hpp}!to\+\_\+string@{to\+\_\+string}}
+\index{to\+\_\+string@{to\+\_\+string}!symbols.\+hpp@{symbols.\+hpp}}
+\subsubsection{\texorpdfstring{to\+\_\+string()}{to\_string()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily std\+::string dice\+::to\+\_\+string (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structdice_1_1symbol}{symbol}} \&}]{symbol }\end{DoxyParamCaption})}
+
+
+
+Convert given symbol to string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em symbol} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string representation of the symbol for debugging and error messages. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symbols_8hpp_file_a92dc762419e41c64e4c25bf2e44e4fa2}\label{symbols_8hpp_file_a92dc762419e41c64e4c25bf2e44e4fa2}} 
+\index{symbols.\+hpp@{symbols.\+hpp}!to\+\_\+string@{to\+\_\+string}}
+\index{to\+\_\+string@{to\+\_\+string}!symbols.\+hpp@{symbols.\+hpp}}
+\subsubsection{\texorpdfstring{to\+\_\+string()}{to\_string()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::string dice\+::to\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}}}]{type }\end{DoxyParamCaption})}
+
+
+
+Convert given symbol type to string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & of a symbol\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string representation of the symbol type for debugging and error messages. 
+\end{DoxyReturn}

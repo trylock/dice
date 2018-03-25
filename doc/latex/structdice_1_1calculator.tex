@@ -1,0 +1,116 @@
+\hypertarget{structdice_1_1calculator}{}\section{dice\+:\+:calculator Struct Reference}
+\label{structdice_1_1calculator}\index{dice\+::calculator@{dice\+::calculator}}
+
+
+Facade for script evaluation.  
+
+
+
+
+{\ttfamily \#include $<$calculator.\+hpp$>$}
+
+
+
+Collaboration diagram for dice\+:\+:calculator\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structdice_1_1calculator__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structdice_1_1calculator_a1dd6c840953d7d7a8523b9e3637d61a0}\label{structdice_1_1calculator_a1dd6c840953d7d7a8523b9e3637d61a0}} 
+using {\bfseries value\+\_\+list} = std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$ $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+value\+\_\+list \mbox{\hyperlink{structdice_1_1calculator_a63547bad8045470c9849124502036052}{evaluate}} (std\+::istream $\ast$input)
+\begin{DoxyCompactList}\small\item\em Evaluate command in given input stream. \end{DoxyCompactList}\item 
+value\+\_\+list \mbox{\hyperlink{structdice_1_1calculator_ad1b34884dbf00d5e1e140195e9a50ecc}{evaluate}} (const std\+::string \&command)
+\begin{DoxyCompactList}\small\item\em Process command in a string. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structdice_1_1calculator_a6fe7689c86d8df71f7f312dbd7defdcf}{enable\+\_\+interactive\+\_\+mode}} ()
+\begin{DoxyCompactList}\small\item\em Enable interactive mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structdice_1_1calculator_ab9cb5e793d3db99f481b6335c155f193}\label{structdice_1_1calculator_ab9cb5e793d3db99f481b6335c155f193}} 
+\mbox{\hyperlink{classdice_1_1logger}{dice\+::logger}} {\bfseries log}
+\item 
+\mbox{\Hypertarget{structdice_1_1calculator_a88bc893a03a784dd6a5bfeb4583ce60f}\label{structdice_1_1calculator_a88bc893a03a784dd6a5bfeb4583ce60f}} 
+\mbox{\hyperlink{classdice_1_1environment}{dice\+::environment}} {\bfseries env}
+\item 
+\mbox{\Hypertarget{structdice_1_1calculator_a6e029fd9e45e36f4f4b92c7a9df8c3da}\label{structdice_1_1calculator_a6e029fd9e45e36f4f4b92c7a9df8c3da}} 
+\mbox{\hyperlink{classdice_1_1direct__interpreter}{dice\+::direct\+\_\+interpreter}}$<$ \mbox{\hyperlink{classdice_1_1environment}{dice\+::environment}} $>$ {\bfseries interpret}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Facade for script evaluation. 
+
+Example usage\+: 
+\begin{DoxyCode}
+calculator c;
+calculator::value\_list result = c.evaluate(\textcolor{stringliteral}{"1d6"});
+\{
+     std::ifstrem file\{ \textcolor{stringliteral}{"input.dice"} \};
+     result = c.evaluate(&file);
+\}
+\end{DoxyCode}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{structdice_1_1calculator_a6fe7689c86d8df71f7f312dbd7defdcf}\label{structdice_1_1calculator_a6fe7689c86d8df71f7f312dbd7defdcf}} 
+\index{dice\+::calculator@{dice\+::calculator}!enable\+\_\+interactive\+\_\+mode@{enable\+\_\+interactive\+\_\+mode}}
+\index{enable\+\_\+interactive\+\_\+mode@{enable\+\_\+interactive\+\_\+mode}!dice\+::calculator@{dice\+::calculator}}
+\subsubsection{\texorpdfstring{enable\+\_\+interactive\+\_\+mode()}{enable\_interactive\_mode()}}
+{\footnotesize\ttfamily void dice\+::calculator\+::enable\+\_\+interactive\+\_\+mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Enable interactive mode. 
+
+Interactive mode is optimized for repeated use of the environment. It allows variable redefinition. \mbox{\Hypertarget{structdice_1_1calculator_a63547bad8045470c9849124502036052}\label{structdice_1_1calculator_a63547bad8045470c9849124502036052}} 
+\index{dice\+::calculator@{dice\+::calculator}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!dice\+::calculator@{dice\+::calculator}}
+\subsubsection{\texorpdfstring{evaluate()}{evaluate()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily dice\+::calculator\+::value\+\_\+list dice\+::calculator\+::evaluate (\begin{DoxyParamCaption}\item[{std\+::istream $\ast$}]{input }\end{DoxyParamCaption})}
+
+
+
+Evaluate command in given input stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & character stream pointer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+evaluated values 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structdice_1_1calculator_ad1b34884dbf00d5e1e140195e9a50ecc}\label{structdice_1_1calculator_ad1b34884dbf00d5e1e140195e9a50ecc}} 
+\index{dice\+::calculator@{dice\+::calculator}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!dice\+::calculator@{dice\+::calculator}}
+\subsubsection{\texorpdfstring{evaluate()}{evaluate()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily dice\+::calculator\+::value\+\_\+list dice\+::calculator\+::evaluate (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{command }\end{DoxyParamCaption})}
+
+
+
+Process command in a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & as a string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+evaluated values 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/calculator.\+hpp\item 
+C\+:/projects/dice/src/calculator.\+cpp\end{DoxyCompactItemize}

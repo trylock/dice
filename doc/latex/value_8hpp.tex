@@ -1,0 +1,139 @@
+\hypertarget{value_8hpp}{}\section{C\+:/projects/dice/src/value.hpp File Reference}
+\label{value_8hpp}\index{C\+:/projects/dice/src/value.\+hpp@{C\+:/projects/dice/src/value.\+hpp}}
+
+
+Value in a dice expression.  
+
+
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$typeinfo$>$}\newline
+{\ttfamily \#include \char`\"{}safe.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}random\+\_\+variable.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}decomposition.\+hpp\char`\"{}}\newline
+Include dependency graph for value.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{value_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{value_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em Value with data. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classdice_1_1value__visitor}{dice\+::value\+\_\+visitor}}
+\begin{DoxyCompactList}\small\item\em Visitor of a dice value. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classdice_1_1base__value}{dice\+::base\+\_\+value}}
+\begin{DoxyCompactList}\small\item\em Parent of all value types that are used in dice expressions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classdice_1_1typed__value}{dice\+::typed\+\_\+value$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em Value with data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{value_8hpp_a0cee38bdc43f4a004e131e53eb579917}\label{value_8hpp_a0cee38bdc43f4a004e131e53eb579917}} 
+using {\bfseries dice\+::storage\+::int\+\_\+type} = safe$<$ int $>$
+\item 
+\mbox{\Hypertarget{value_8hpp_a84b40525b369ed2862ee37ffc78673e2}\label{value_8hpp_a84b40525b369ed2862ee37ffc78673e2}} 
+using {\bfseries dice\+::storage\+::real\+\_\+type} = double
+\item 
+\mbox{\Hypertarget{value_8hpp_a95475a7e7b6b0e8f0ac5738de5dbe59e}\label{value_8hpp_a95475a7e7b6b0e8f0ac5738de5dbe59e}} 
+using {\bfseries dice\+::storage\+::random\+\_\+variable\+\_\+type} = decomposition$<$ int\+\_\+type, real\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{value_8hpp_ae08dd7aa0330f19098bf0f1037736ffe}\label{value_8hpp_ae08dd7aa0330f19098bf0f1037736ffe}} 
+using {\bfseries dice\+::type\+\_\+int} = typed\+\_\+value$<$ storage\+::int\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{value_8hpp_a03a6944f1b609de16641192c30896552}\label{value_8hpp_a03a6944f1b609de16641192c30896552}} 
+using {\bfseries dice\+::type\+\_\+real} = typed\+\_\+value$<$ storage\+::real\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{value_8hpp_ac1a2b326ac4f73f62389ba9c351f4da5}\label{value_8hpp_ac1a2b326ac4f73f62389ba9c351f4da5}} 
+using {\bfseries dice\+::type\+\_\+rand\+\_\+var} = typed\+\_\+value$<$ storage\+::random\+\_\+variable\+\_\+type $>$
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}\label{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}} 
+enum \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{dice\+::type\+\_\+id}} \{ {\bfseries integer}, 
+{\bfseries real}, 
+{\bfseries random\+\_\+variable}
+ \}
+\begin{DoxyCompactList}\small\item\em Type identifier of a value in a dice expression. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{value_8hpp_a7d7815802a2d6911ce76500f32b25399}\label{value_8hpp_a7d7815802a2d6911ce76500f32b25399}} 
+{\footnotesize template$<$typename Value\+Type $>$ }\\type\+\_\+id \mbox{\hyperlink{value_8hpp_a7d7815802a2d6911ce76500f32b25399}{dice\+::get\+\_\+type\+\_\+id}} ()
+\begin{DoxyCompactList}\small\item\em Translate C++ types to type\+\_\+id. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{value_8hpp_afbaba9142b81828196eea597f31b2ccc}\label{value_8hpp_afbaba9142b81828196eea597f31b2ccc}} 
+{\footnotesize template$<$$>$ }\\type\+\_\+id {\bfseries dice\+::get\+\_\+type\+\_\+id$<$ storage\+::int\+\_\+type $>$} ()
+\item 
+\mbox{\Hypertarget{value_8hpp_a578498bd6f298412ad6372e04b15711e}\label{value_8hpp_a578498bd6f298412ad6372e04b15711e}} 
+{\footnotesize template$<$$>$ }\\type\+\_\+id {\bfseries dice\+::get\+\_\+type\+\_\+id$<$ storage\+::real\+\_\+type $>$} ()
+\item 
+\mbox{\Hypertarget{value_8hpp_a13f9d948fef2b5fb98782562194d8f81}\label{value_8hpp_a13f9d948fef2b5fb98782562194d8f81}} 
+{\footnotesize template$<$$>$ }\\type\+\_\+id {\bfseries dice\+::get\+\_\+type\+\_\+id$<$ storage\+::random\+\_\+variable\+\_\+type $>$} ()
+\item 
+std\+::string \mbox{\hyperlink{value_8hpp_af848a0ca9b1baba1d52fe6fbbe28e9b2}{dice\+::to\+\_\+string}} (type\+\_\+id tid)
+\begin{DoxyCompactList}\small\item\em Convert type id to a human readable string. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T , typename... Value$>$ }\\std\+::unique\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{value_8hpp_a6c2eca285fa025fbf228f56ccad8f8e8}{dice\+::make}} (Value \&\&... data)
+\begin{DoxyCompactList}\small\item\em Create a value used in dice expressions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Value in a dice expression. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{value_8hpp_file_a6c2eca285fa025fbf228f56ccad8f8e8}\label{value_8hpp_file_a6c2eca285fa025fbf228f56ccad8f8e8}} 
+\index{value.\+hpp@{value.\+hpp}!make@{make}}
+\index{make@{make}!value.\+hpp@{value.\+hpp}}
+\subsubsection{\texorpdfstring{make()}{make()}}
+{\footnotesize\ttfamily template$<$typename T , typename... Value$>$ \\
+std\+::unique\+\_\+ptr$<$T$>$ dice\+::make (\begin{DoxyParamCaption}\item[{Value \&\&...}]{data }\end{DoxyParamCaption})}
+
+
+
+Create a value used in dice expressions. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & type of the value. It has to be derived from base\+\_\+value. T\+::value\+\_\+type has to be defined and the type T has to have a constructor with T\+::value\+\_\+type as its argumnet. \\
+\hline
+{\em Value} & types of argumnets passed to the construction of T\+::value\+\_\+type.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em data} & argumnets forwarded to the constructor of T\+::value\+\_\+type.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new value (pointer to base\+\_\+value) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{value_8hpp_file_af848a0ca9b1baba1d52fe6fbbe28e9b2}\label{value_8hpp_file_af848a0ca9b1baba1d52fe6fbbe28e9b2}} 
+\index{value.\+hpp@{value.\+hpp}!to\+\_\+string@{to\+\_\+string}}
+\index{to\+\_\+string@{to\+\_\+string}!value.\+hpp@{value.\+hpp}}
+\subsubsection{\texorpdfstring{to\+\_\+string()}{to\_string()}}
+{\footnotesize\ttfamily std\+::string dice\+::to\+\_\+string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}}}]{tid }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Convert type id to a human readable string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tid} & id of a type\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+name of the type 
+\end{DoxyReturn}

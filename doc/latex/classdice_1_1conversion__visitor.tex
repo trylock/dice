@@ -1,0 +1,50 @@
+\hypertarget{classdice_1_1conversion__visitor}{}\section{dice\+:\+:conversion\+\_\+visitor Class Reference}
+\label{classdice_1_1conversion__visitor}\index{dice\+::conversion\+\_\+visitor@{dice\+::conversion\+\_\+visitor}}
+
+
+Inheritance diagram for dice\+:\+:conversion\+\_\+visitor\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classdice_1_1conversion__visitor__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for dice\+:\+:conversion\+\_\+visitor\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classdice_1_1conversion__visitor__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1conversion__visitor_ac5411140c63f70a70f216437175627c2}\label{classdice_1_1conversion__visitor_ac5411140c63f70a70f216437175627c2}} 
+using {\bfseries value\+\_\+type} = std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1conversion__visitor_a3014ecef08b8d88161ad9fb654ce6abd}\label{classdice_1_1conversion__visitor_a3014ecef08b8d88161ad9fb654ce6abd}} 
+{\bfseries conversion\+\_\+visitor} (\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} result\+\_\+type)
+\item 
+\mbox{\Hypertarget{classdice_1_1conversion__visitor_aba40c0192bb5122ea8db7abb0e79b53d}\label{classdice_1_1conversion__visitor_aba40c0192bb5122ea8db7abb0e79b53d}} 
+void {\bfseries visit} (\mbox{\hyperlink{classdice_1_1typed__value}{type\+\_\+int}} $\ast$value) override
+\item 
+\mbox{\Hypertarget{classdice_1_1conversion__visitor_a4ea9bf6bba994f6c7bcb9ea7ebfb842d}\label{classdice_1_1conversion__visitor_a4ea9bf6bba994f6c7bcb9ea7ebfb842d}} 
+void {\bfseries visit} (\mbox{\hyperlink{classdice_1_1typed__value}{type\+\_\+real}} $\ast$) override
+\item 
+\mbox{\Hypertarget{classdice_1_1conversion__visitor_a4d136c9ea1d54dba2e194fd26aa56a91}\label{classdice_1_1conversion__visitor_a4d136c9ea1d54dba2e194fd26aa56a91}} 
+void {\bfseries visit} (\mbox{\hyperlink{classdice_1_1typed__value}{type\+\_\+rand\+\_\+var}} $\ast$) override
+\item 
+\mbox{\Hypertarget{classdice_1_1conversion__visitor_ae0bbbe753e8800d5dd0b4636c8de203b}\label{classdice_1_1conversion__visitor_ae0bbbe753e8800d5dd0b4636c8de203b}} 
+value\+\_\+type {\bfseries value} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/conversions.\+hpp\item 
+C\+:/projects/dice/src/conversions.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,629 @@
+\hypertarget{classdice_1_1decomposition}{}\section{dice\+:\+:decomposition$<$ Value\+Type, Probability\+Type $>$ Class Template Reference}
+\label{classdice_1_1decomposition}\index{dice\+::decomposition$<$ Value\+Type, Probability\+Type $>$@{dice\+::decomposition$<$ Value\+Type, Probability\+Type $>$}}
+
+
+Object representing a decomposition of a function of random variables.  
+
+
+
+
+{\ttfamily \#include $<$decomposition.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a943670b415a813c050db79c9430d0955}\label{classdice_1_1decomposition_a943670b415a813c050db79c9430d0955}} 
+using {\bfseries var\+\_\+type} = \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a891387c501eb8b627b5338730f9cf60d}\label{classdice_1_1decomposition_a891387c501eb8b627b5338730f9cf60d}} 
+using {\bfseries probability\+\_\+iterator} = \mbox{\hyperlink{classdice_1_1decomposition__iterator}{decomposition\+\_\+iterator}}$<$ Value\+Type, Probability\+Type $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_aa467b1cad750472097497a3040c7eae5}\label{classdice_1_1decomposition_aa467b1cad750472097497a3040c7eae5}} 
+using {\bfseries value\+\_\+type} = Value\+Type
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a74ab5f6f91589c64a5555516ca3edf1f}\label{classdice_1_1decomposition_a74ab5f6f91589c64a5555516ca3edf1f}} 
+using {\bfseries probability\+\_\+type} = Probability\+Type
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a363def968319171903bb449262f2a4c3}\label{classdice_1_1decomposition_a363def968319171903bb449262f2a4c3}} 
+using {\bfseries frequency\+\_\+list} = typename var\+\_\+type\+::frequency\+\_\+list
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a4d441672f3a0864e416fb109f42c167b}\label{classdice_1_1decomposition_a4d441672f3a0864e416fb109f42c167b}} 
+using {\bfseries probability\+\_\+list} = typename var\+\_\+type\+::probability\+\_\+list
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdice_1_1decomposition_a0ec6a2cfb52048bd1e553d53627aec2c}{decomposition}} (const \mbox{\hyperlink{classdice_1_1random__variable}{var\+\_\+type}} \&variable)
+\begin{DoxyCompactList}\small\item\em Create decomposition from \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1decomposition_a1c0f335542198fe9f6ca6d0a0c2a4de0}{decomposition}} (\mbox{\hyperlink{classdice_1_1random__variable}{var\+\_\+type}} \&\&variable)
+\begin{DoxyCompactList}\small\item\em Create decomposition from \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_ad44e439c795cfd2c881602cea4ed99cb}\label{classdice_1_1decomposition_ad44e439c795cfd2c881602cea4ed99cb}} 
+{\bfseries decomposition} (std\+::vector$<$ std\+::pair$<$ value\+\_\+type, std\+::size\+\_\+t $>$$>$ \&\&list)
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_af0af395a0462070a80bff39ed6a8e4e5}\label{classdice_1_1decomposition_af0af395a0462070a80bff39ed6a8e4e5}} 
+{\bfseries decomposition} (\mbox{\hyperlink{classdice_1_1bernoulli__tag}{bernoulli\+\_\+tag}}, Probability\+Type success)
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a96000e52a4ac3c777ccae25eced198cf}\label{classdice_1_1decomposition_a96000e52a4ac3c777ccae25eced198cf}} 
+{\bfseries decomposition} (\mbox{\hyperlink{classdice_1_1constant__tag}{constant\+\_\+tag}}, value\+\_\+type value)
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_abe2edcf9ec724d7300cefa21132dd8c1}\label{classdice_1_1decomposition_abe2edcf9ec724d7300cefa21132dd8c1}} 
+{\bfseries decomposition} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a08552602e4e040eb8188675a886a3dd5}\label{classdice_1_1decomposition_a08552602e4e040eb8188675a886a3dd5}} 
+\mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \& {\bfseries operator=} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a7ca52a332c2a05642b24217607817236}\label{classdice_1_1decomposition_a7ca52a332c2a05642b24217607817236}} 
+{\bfseries decomposition} (\mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&\&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a40cd320a0a5ba77cca1066f298c94d97}\label{classdice_1_1decomposition_a40cd320a0a5ba77cca1066f298c94d97}} 
+\mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \& {\bfseries operator=} (\mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&\&)=default
+\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_abfd6869629c7622d95333dafd9d15cd5}{operator+}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute sum of 2 random variables. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_ae6bf072b8ba3615e85c3db38e5d78b4f}{operator-\/}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Subtract other random variable from this. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_ad9621b64c8ff2679a5a5df4e30561c31}{operator$\ast$}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute product of 2 random variables. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_ad7e95a376d87a8440ff4ebb4445b264a}{operator/}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Divide this variable by other variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a8d70dd95d1923cfb4b7b41d47dd43f33}{operator-\/}} () const
+\begin{DoxyCompactList}\small\item\em Multiply this random variable with -\/1. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a9ba902091f71d0e6beffc20e9fdcbc80}{less\+\_\+than}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A $<$ B (where A is this random variale). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a64f50038f58aafaba4c328dc07dae9ba}{less\+\_\+than\+\_\+or\+\_\+equal}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A $<$= B (where A is this random variale). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_af8a3775b00001f174b9532434a0daad1}{equal}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A = B (where A is this random variale). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a648709e5232534308779c489bc985cc9}{not\+\_\+equal}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A != B (where A is this random variale). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_abede851d76806d165ed11861c8ef33ea}{greater\+\_\+than}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A $>$ B (where A is this random variale). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a0f65f2184d050b75bc45b13e5b01b53b}{greater\+\_\+than\+\_\+or\+\_\+equal}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A $>$= B (where A is this random variale). \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\auto \mbox{\hyperlink{classdice_1_1decomposition_a39d3bb536e99cd66b2e1c8a0a7a0edc6}{in}} (const T \&lower\+\_\+bound, const T \&upper\+\_\+bound) const
+\begin{DoxyCompactList}\small\item\em Compute indicator\+: A in \mbox{[}a, b\mbox{]} (where A is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_afac577e983fb2d45591c536e1741f3d8}{expected\+\_\+value}} () const
+\begin{DoxyCompactList}\small\item\em Compute expected value of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_ac4ea31f289d9f6bc4567803fba5949ee}{variance}} () const
+\begin{DoxyCompactList}\small\item\em Compute variance of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a0266f65d4898f049792543b3d52dda86}{deviation}} () const
+\begin{DoxyCompactList}\small\item\em Compute standard deviation of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a43d4eaeae0ad22bf478025cf64bbdfe8}{quantile}} (Probability\+Type probability) const
+\begin{DoxyCompactList}\small\item\em Compute quantile of this random variable. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Variable\+Combination\+Function $>$ }\\auto \mbox{\hyperlink{classdice_1_1decomposition_a323d8d184660b6e8751970002ae850a7}{combine}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other, Variable\+Combination\+Function combination) const
+\begin{DoxyCompactList}\small\item\em Compute function of 2 random variables\+: A and B. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1random__variable}{var\+\_\+type}} \mbox{\hyperlink{classdice_1_1decomposition_a3483a1060e900dceae13fb73c927889b}{to\+\_\+random\+\_\+variable}} () const
+\begin{DoxyCompactList}\small\item\em Convert this decomposition to basic random variable. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1decomposition_aa3fe4f89f0ae6361889272ee098c02a8}{has\+\_\+dependencies}} () const
+\begin{DoxyCompactList}\small\item\em Check whether this decomposition depends on other random variables. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a0daca40a4952466df7e5ebe10f6a37b4}{compute\+\_\+decomposition}} () const
+\begin{DoxyCompactList}\small\item\em Compute the decomposition of this random variable. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1decomposition_ae3431215ee061fd0db5d578e270b0888}{operator==}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\begin{DoxyCompactList}\small\item\em Check whether this is exactly equal to other decomposition. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a32db2cb923d2f871138e4487c21d4c01}\label{classdice_1_1decomposition_a32db2cb923d2f871138e4487c21d4c01}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&other) const
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a99d601ed8bbc44e32dbdb7dcdff83408}\label{classdice_1_1decomposition_a99d601ed8bbc44e32dbdb7dcdff83408}} 
+auto {\bfseries begin} () const
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_ac5cd5b4057b2767169290e86423349a1}\label{classdice_1_1decomposition_ac5cd5b4057b2767169290e86423349a1}} 
+auto {\bfseries end} () const
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_acf86c5c07f567d3ee95407e5c8dd788a}\label{classdice_1_1decomposition_acf86c5c07f567d3ee95407e5c8dd788a}} 
+std\+::size\+\_\+t {\bfseries size} () const
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a986e5e2240ec1553cd2370d235e42a21}\label{classdice_1_1decomposition_a986e5e2240ec1553cd2370d235e42a21}} 
+auto \& {\bfseries variables\+\_\+internal} ()
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_ac68a42128dd2b20aa41a7826effd06a2}\label{classdice_1_1decomposition_ac68a42128dd2b20aa41a7826effd06a2}} 
+auto \& {\bfseries dependencies\+\_\+internal} ()
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition_a90f425f8bf994cdc21610c6926c41a92}\label{classdice_1_1decomposition_a90f425f8bf994cdc21610c6926c41a92}} 
+class {\bfseries decomposition\+\_\+iterator$<$ Value\+Type, Probability\+Type $>$}
+\item 
+auto \mbox{\hyperlink{classdice_1_1decomposition_a0c852d5e74d719a95d3056fb79e0a703}{roll}} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&num\+\_\+rolls, const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} \&num\+\_\+sides)
+\begin{DoxyCompactList}\small\item\em Roll num\+\_\+rolls times with a dice of num\+\_\+sides. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Value\+Type, typename Probability\+Type$>$\newline
+class dice\+::decomposition$<$ Value\+Type, Probability\+Type $>$}
+
+Object representing a decomposition of a function of random variables. 
+
+It is an adapter for \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}.
+
+It uses the Law of total probability to decompose varibales to conditional variables which are then treated as independent.
+
+Variables are organized in a tree structure. Only leaf nodes are stored in the vars\+\_\+ list. Inner nodes are implicitly given by the deps\+\_\+ list. Each variable in the deps\+\_\+ list corresponds to a level of this tree.
+
+An inner node in this tree is a random variable. It has children corresponding to its values. For example\+: a random variable whose values are 1 or 2 whould have 2 children labeled 1 and 2. A leaf node is a random variable without children nodes.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Value\+Type} & type of a value (same as in \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}) \\
+\hline
+{\em Probability\+Type} & type of probability (same as in \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}})\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} 
+\end{DoxySeeAlso}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classdice_1_1decomposition_a0ec6a2cfb52048bd1e553d53627aec2c}\label{classdice_1_1decomposition_a0ec6a2cfb52048bd1e553d53627aec2c}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!decomposition@{decomposition}}
+\index{decomposition@{decomposition}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{decomposition()}{decomposition()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::\mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{var\+\_\+type}} \&}]{variable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Create decomposition from \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em variable} & random variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1decomposition_a1c0f335542198fe9f6ca6d0a0c2a4de0}\label{classdice_1_1decomposition_a1c0f335542198fe9f6ca6d0a0c2a4de0}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!decomposition@{decomposition}}
+\index{decomposition@{decomposition}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{decomposition()}{decomposition()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::\mbox{\hyperlink{classdice_1_1decomposition}{decomposition}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classdice_1_1random__variable}{var\+\_\+type}} \&\&}]{variable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Create decomposition from \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em variable} & random variable \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1decomposition_a323d8d184660b6e8751970002ae850a7}\label{classdice_1_1decomposition_a323d8d184660b6e8751970002ae850a7}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!combine@{combine}}
+\index{combine@{combine}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{combine()}{combine()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+template$<$typename Variable\+Combination\+Function $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::combine (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other,  }\item[{Variable\+Combination\+Function}]{combination }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute function of 2 random variables\+: A and B. 
+
+Variables does not need to be independent.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Variable\+Combination\+Function} & Combination function of 2 independent random variables. It taks 2 \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} types and return \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable B \\
+\hline
+{\em combination} & function of 2 independent random variables\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+random variable that is a function of A and B 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a0daca40a4952466df7e5ebe10f6a37b4}\label{classdice_1_1decomposition_a0daca40a4952466df7e5ebe10f6a37b4}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!compute\+\_\+decomposition@{compute\+\_\+decomposition}}
+\index{compute\+\_\+decomposition@{compute\+\_\+decomposition}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{compute\+\_\+decomposition()}{compute\_decomposition()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::compute\+\_\+decomposition (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute the decomposition of this random variable. 
+
+Random variables in leafs (in the vars\+\_\+ list) are made constants. This makes them independent at the cost of adding new dependencies and thus increasing the size.
+
+\begin{DoxyReturn}{Returns}
+new decomposition 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a0266f65d4898f049792543b3d52dda86}\label{classdice_1_1decomposition_a0266f65d4898f049792543b3d52dda86}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!deviation@{deviation}}
+\index{deviation@{deviation}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{deviation()}{deviation()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::deviation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute standard deviation of this random variable. 
+
+\begin{DoxyReturn}{Returns}
+standard deviation 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_af8a3775b00001f174b9532434a0daad1}\label{classdice_1_1decomposition_af8a3775b00001f174b9532434a0daad1}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!equal@{equal}}
+\index{equal@{equal}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{equal()}{equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A = B (where A is this random variale). 
+
+Variables does not need to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable B\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A = B (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_afac577e983fb2d45591c536e1741f3d8}\label{classdice_1_1decomposition_afac577e983fb2d45591c536e1741f3d8}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!expected\+\_\+value@{expected\+\_\+value}}
+\index{expected\+\_\+value@{expected\+\_\+value}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{expected\+\_\+value()}{expected\_value()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::expected\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute expected value of this random variable. 
+
+\begin{DoxyReturn}{Returns}
+expected value of this variable 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_abede851d76806d165ed11861c8ef33ea}\label{classdice_1_1decomposition_abede851d76806d165ed11861c8ef33ea}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!greater\+\_\+than@{greater\+\_\+than}}
+\index{greater\+\_\+than@{greater\+\_\+than}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{greater\+\_\+than()}{greater\_than()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::greater\+\_\+than (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A $>$ B (where A is this random variale). 
+
+Variables does not need to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable B\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A $>$ B (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a0f65f2184d050b75bc45b13e5b01b53b}\label{classdice_1_1decomposition_a0f65f2184d050b75bc45b13e5b01b53b}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!greater\+\_\+than\+\_\+or\+\_\+equal@{greater\+\_\+than\+\_\+or\+\_\+equal}}
+\index{greater\+\_\+than\+\_\+or\+\_\+equal@{greater\+\_\+than\+\_\+or\+\_\+equal}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{greater\+\_\+than\+\_\+or\+\_\+equal()}{greater\_than\_or\_equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::greater\+\_\+than\+\_\+or\+\_\+equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A $>$= B (where A is this random variale). 
+
+Variables does not need to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A $>$= YB (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_aa3fe4f89f0ae6361889272ee098c02a8}\label{classdice_1_1decomposition_aa3fe4f89f0ae6361889272ee098c02a8}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!has\+\_\+dependencies@{has\+\_\+dependencies}}
+\index{has\+\_\+dependencies@{has\+\_\+dependencies}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{has\+\_\+dependencies()}{has\_dependencies()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+bool \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::has\+\_\+dependencies (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether this decomposition depends on other random variables. 
+
+\begin{DoxyReturn}{Returns}
+true iff it has at least 1 dependency 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a39d3bb536e99cd66b2e1c8a0a7a0edc6}\label{classdice_1_1decomposition_a39d3bb536e99cd66b2e1c8a0a7a0edc6}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!in@{in}}
+\index{in@{in}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{in()}{in()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+template$<$typename T $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::in (\begin{DoxyParamCaption}\item[{const T \&}]{lower\+\_\+bound,  }\item[{const T \&}]{upper\+\_\+bound }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A in \mbox{[}a, b\mbox{]} (where A is this random variable). 
+
+The interval is closed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em lower\+\_\+bound} & of the interval (a) \\
+\hline
+{\em upper\+\_\+bound} & of the interval (b)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A in \href{i.e. a random variable with a bernoulli distribution}{\tt a, b} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a9ba902091f71d0e6beffc20e9fdcbc80}\label{classdice_1_1decomposition_a9ba902091f71d0e6beffc20e9fdcbc80}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!less\+\_\+than@{less\+\_\+than}}
+\index{less\+\_\+than@{less\+\_\+than}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{less\+\_\+than()}{less\_than()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::less\+\_\+than (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A $<$ B (where A is this random variale). 
+
+Variables does not need to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable B\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A $<$ B (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a64f50038f58aafaba4c328dc07dae9ba}\label{classdice_1_1decomposition_a64f50038f58aafaba4c328dc07dae9ba}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!less\+\_\+than\+\_\+or\+\_\+equal@{less\+\_\+than\+\_\+or\+\_\+equal}}
+\index{less\+\_\+than\+\_\+or\+\_\+equal@{less\+\_\+than\+\_\+or\+\_\+equal}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{less\+\_\+than\+\_\+or\+\_\+equal()}{less\_than\_or\_equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::less\+\_\+than\+\_\+or\+\_\+equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A $<$= B (where A is this random variale). 
+
+Variables does not need to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable B\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A $<$= B (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a648709e5232534308779c489bc985cc9}\label{classdice_1_1decomposition_a648709e5232534308779c489bc985cc9}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!not\+\_\+equal@{not\+\_\+equal}}
+\index{not\+\_\+equal@{not\+\_\+equal}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{not\+\_\+equal()}{not\_equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::not\+\_\+equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator\+: A != B (where A is this random variale). 
+
+Variables does not need to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of A != B (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_ad9621b64c8ff2679a5a5df4e30561c31}\label{classdice_1_1decomposition_ad9621b64c8ff2679a5a5df4e30561c31}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{operator$\ast$()}{operator*()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::operator$\ast$ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute product of 2 random variables. 
+
+Random variables don\textquotesingle{}t need to be indendent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable (R\+HS of the operator)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the product 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_abfd6869629c7622d95333dafd9d15cd5}\label{classdice_1_1decomposition_abfd6869629c7622d95333dafd9d15cd5}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!operator+@{operator+}}
+\index{operator+@{operator+}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::operator+ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute sum of 2 random variables. 
+
+Random variables don\textquotesingle{}t need to be indendent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable (R\+HS of the operator)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of the sum 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_ae6bf072b8ba3615e85c3db38e5d78b4f}\label{classdice_1_1decomposition_ae6bf072b8ba3615e85c3db38e5d78b4f}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::operator-\/ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Subtract other random variable from this. 
+
+Random variables don\textquotesingle{}t need to be indendent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable (R\+HS of the operator)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the subtraction 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a8d70dd95d1923cfb4b7b41d47dd43f33}\label{classdice_1_1decomposition_a8d70dd95d1923cfb4b7b41d47dd43f33}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::operator-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Multiply this random variable with -\/1. 
+
+\begin{DoxyReturn}{Returns}
+negated random variable 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_ad7e95a376d87a8440ff4ebb4445b264a}\label{classdice_1_1decomposition_ad7e95a376d87a8440ff4ebb4445b264a}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!operator/@{operator/}}
+\index{operator/@{operator/}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{operator/()}{operator/()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::operator/ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Divide this variable by other variable. 
+
+Random variables don\textquotesingle{}t need to be indendent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable (R\+HS of the operator)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the division 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_ae3431215ee061fd0db5d578e270b0888}\label{classdice_1_1decomposition_ae3431215ee061fd0db5d578e270b0888}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!operator==@{operator==}}
+\index{operator==@{operator==}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+bool \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether this is exactly equal to other decomposition. 
+
+\begin{DoxyAttention}{Attention}
+This test is exact and expensive. It is mainly provided so we can use this type as a value in dice expressions.
+\end{DoxyAttention}
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff the values are exactly equal 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a43d4eaeae0ad22bf478025cf64bbdfe8}\label{classdice_1_1decomposition_a43d4eaeae0ad22bf478025cf64bbdfe8}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!quantile@{quantile}}
+\index{quantile@{quantile}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{quantile()}{quantile()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::quantile (\begin{DoxyParamCaption}\item[{Probability\+Type}]{probability }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute quantile of this random variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em probability} & between 0 and 1 (not including 0 and 1)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+quantile 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_a3483a1060e900dceae13fb73c927889b}\label{classdice_1_1decomposition_a3483a1060e900dceae13fb73c927889b}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!to\+\_\+random\+\_\+variable@{to\+\_\+random\+\_\+variable}}
+\index{to\+\_\+random\+\_\+variable@{to\+\_\+random\+\_\+variable}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{to\+\_\+random\+\_\+variable()}{to\_random\_variable()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1random__variable}{var\+\_\+type}} \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::to\+\_\+random\+\_\+variable (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Convert this decomposition to basic random variable. 
+
+Notice, by performing this operation, we lose information about (in)dependence.
+
+\begin{DoxyReturn}{Returns}
+plain random variable 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition_ac4ea31f289d9f6bc4567803fba5949ee}\label{classdice_1_1decomposition_ac4ea31f289d9f6bc4567803fba5949ee}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!variance@{variance}}
+\index{variance@{variance}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{variance()}{variance()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1decomposition}{dice\+::decomposition}}$<$ Value\+Type, Probability\+Type $>$\+::variance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute variance of this random variable. 
+
+\begin{DoxyReturn}{Returns}
+variance of this variable 
+\end{DoxyReturn}
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classdice_1_1decomposition_a0c852d5e74d719a95d3056fb79e0a703}\label{classdice_1_1decomposition_a0c852d5e74d719a95d3056fb79e0a703}} 
+\index{dice\+::decomposition@{dice\+::decomposition}!roll@{roll}}
+\index{roll@{roll}!dice\+::decomposition@{dice\+::decomposition}}
+\subsubsection{\texorpdfstring{roll}{roll}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto roll (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{num\+\_\+rolls,  }\item[{const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$ \&}]{num\+\_\+sides }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Roll num\+\_\+rolls times with a dice of num\+\_\+sides. 
+
+Random variables don\textquotesingle{}t have to be independent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+\_\+rolls} & number of rolls \\
+\hline
+{\em num\+\_\+sides} & number of faces of each die\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of the dice roll 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/decomposition.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,157 @@
+\hypertarget{classdice_1_1function__definition}{}\section{dice\+:\+:function\+\_\+definition Class Reference}
+\label{classdice_1_1function__definition}\index{dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}}
+
+
+Object representing a function callable from a dice expression.  
+
+
+
+
+{\ttfamily \#include $<$functions.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1function__definition_aa70e7d16099e2eaf30cf4c6ffb58f7e3}\label{classdice_1_1function__definition_aa70e7d16099e2eaf30cf4c6ffb58f7e3}} 
+using {\bfseries fn} = \mbox{\hyperlink{classdice_1_1execution__context}{execution\+\_\+context}}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdice_1_1function__definition_a002ceae34d8dba6d5a83da97fad28c62}{function\+\_\+definition}} (fn\+::callable\+\_\+type callable)
+\begin{DoxyCompactList}\small\item\em Create function without arguments. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1function__definition_a8722346987d1cc191032dffb5e912f6f}{function\+\_\+definition}} (fn\+::callable\+\_\+type callable, std\+::vector$<$ \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} $>$ \&\&arg\+\_\+types)
+\begin{DoxyCompactList}\small\item\em Create function with arguments. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1function__definition_a3992982ebfe549c336f118fef8d194ff}\label{classdice_1_1function__definition_a3992982ebfe549c336f118fef8d194ff}} 
+{\bfseries function\+\_\+definition} (const \mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}} \&)=delete
+\item 
+\mbox{\Hypertarget{classdice_1_1function__definition_a74d45bd0799e47a9553bf0956ee81b6e}\label{classdice_1_1function__definition_a74d45bd0799e47a9553bf0956ee81b6e}} 
+void {\bfseries operator=} (const \mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}} \&)=delete
+\item 
+\mbox{\Hypertarget{classdice_1_1function__definition_aa7ef0a9eaf695e23c8a54f8954e3535b}\label{classdice_1_1function__definition_aa7ef0a9eaf695e23c8a54f8954e3535b}} 
+{\bfseries function\+\_\+definition} (\mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}} \&\&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1function__definition_a7a06f9ea590076435ad36d0df6650aef}\label{classdice_1_1function__definition_a7a06f9ea590076435ad36d0df6650aef}} 
+\mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}} \& {\bfseries operator=} (\mbox{\hyperlink{classdice_1_1function__definition}{function\+\_\+definition}} \&\&)=default
+\item 
+fn\+::return\+\_\+type \mbox{\hyperlink{classdice_1_1function__definition_ae88e53c3dca93ccf845ecb894db7672b}{operator()}} (\mbox{\hyperlink{classdice_1_1execution__context}{fn\+::context\+\_\+type}} \&context) const
+\begin{DoxyCompactList}\small\item\em Call this user function with given arguments. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} \mbox{\hyperlink{classdice_1_1function__definition_a1aba35d197d5db50f229bc81f4f489d3}{arg\+\_\+type}} (std\+::size\+\_\+t index) const
+\begin{DoxyCompactList}\small\item\em Get type of the ith argument. \end{DoxyCompactList}\item 
+std\+::size\+\_\+t \mbox{\hyperlink{classdice_1_1function__definition_a5de84af8250e195aaf76bf84856d9aeb}{argc}} () const
+\begin{DoxyCompactList}\small\item\em Get number of function arguments. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Object representing a function callable from a dice expression. 
+
+Example -\/ function metadata\+: 
+\begin{DoxyCode}
+function\_definition func\{ ..., \{ type\_id::integer, type\_id::real \} \};
+assert(func.argc() == 2);
+assert(func.arg\_type(0) == type\_id::integer);
+assert(func.arg\_type(1) == type\_id::real);
+\end{DoxyCode}
+
+
+Example -\/ call function\+: 
+\begin{DoxyCode}
+std::vector<execution\_context::value\_type> args\{ 
+     make<type\_int>(1), 
+     make<type\_real>(3.1415) 
+\};
+execution\_context context\{ args.begin(), args.end() \};
+func(context);
+\end{DoxyCode}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classdice_1_1function__definition_a002ceae34d8dba6d5a83da97fad28c62}\label{classdice_1_1function__definition_a002ceae34d8dba6d5a83da97fad28c62}} 
+\index{dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}!function\+\_\+definition@{function\+\_\+definition}}
+\index{function\+\_\+definition@{function\+\_\+definition}!dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}}
+\subsubsection{\texorpdfstring{function\+\_\+definition()}{function\_definition()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily dice\+::function\+\_\+definition\+::function\+\_\+definition (\begin{DoxyParamCaption}\item[{fn\+::callable\+\_\+type}]{callable }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Create function without arguments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callable} & function implementation. It takes execution\+\_\+context\+::value\+\_\+type type as an argument. it returns execution\+\_\+context\+::return\+\_\+type type. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1function__definition_a8722346987d1cc191032dffb5e912f6f}\label{classdice_1_1function__definition_a8722346987d1cc191032dffb5e912f6f}} 
+\index{dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}!function\+\_\+definition@{function\+\_\+definition}}
+\index{function\+\_\+definition@{function\+\_\+definition}!dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}}
+\subsubsection{\texorpdfstring{function\+\_\+definition()}{function\_definition()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily dice\+::function\+\_\+definition\+::function\+\_\+definition (\begin{DoxyParamCaption}\item[{fn\+::callable\+\_\+type}]{callable,  }\item[{std\+::vector$<$ \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} $>$ \&\&}]{arg\+\_\+types }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create function with arguments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callable} & function implementation. It takes execution\+\_\+context\+::value\+\_\+type type as an argument. It returns execution\+\_\+context\+::return\+\_\+type type. \\
+\hline
+{\em arg\+\_\+types} & vector of argument types of this function. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1function__definition_a1aba35d197d5db50f229bc81f4f489d3}\label{classdice_1_1function__definition_a1aba35d197d5db50f229bc81f4f489d3}} 
+\index{dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}!arg\+\_\+type@{arg\+\_\+type}}
+\index{arg\+\_\+type@{arg\+\_\+type}!dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}}
+\subsubsection{\texorpdfstring{arg\+\_\+type()}{arg\_type()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} dice\+::function\+\_\+definition\+::arg\+\_\+type (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{index }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get type of the ith argument. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of an argument \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type of the argument 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1function__definition_a5de84af8250e195aaf76bf84856d9aeb}\label{classdice_1_1function__definition_a5de84af8250e195aaf76bf84856d9aeb}} 
+\index{dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}!argc@{argc}}
+\index{argc@{argc}!dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}}
+\subsubsection{\texorpdfstring{argc()}{argc()}}
+{\footnotesize\ttfamily std\+::size\+\_\+t dice\+::function\+\_\+definition\+::argc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get number of function arguments. 
+
+\begin{DoxyReturn}{Returns}
+number of arguemtns of this function 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1function__definition_ae88e53c3dca93ccf845ecb894db7672b}\label{classdice_1_1function__definition_ae88e53c3dca93ccf845ecb894db7672b}} 
+\index{dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}!operator()@{operator()}}
+\index{operator()@{operator()}!dice\+::function\+\_\+definition@{dice\+::function\+\_\+definition}}
+\subsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily fn\+::return\+\_\+type dice\+::function\+\_\+definition\+::operator() (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classdice_1_1execution__context}{fn\+::context\+\_\+type}} \&}]{context }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Call this user function with given arguments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em context} & of execution of this call\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result of the call 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/functions.\+hpp\end{DoxyCompactItemize}

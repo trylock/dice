@@ -1,0 +1,136 @@
+\hypertarget{safe_8hpp}{}\section{C\+:/projects/dice/src/safe.hpp File Reference}
+\label{safe_8hpp}\index{C\+:/projects/dice/src/safe.\+hpp@{C\+:/projects/dice/src/safe.\+hpp}}
+
+
+Safe type for arithmetic operations on integral values.  
+
+
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$Safe\+Int3.\+hpp$>$}\newline
+Include dependency graph for safe.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=210pt]{safe_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{safe_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structstd_1_1hash_3_01dice_1_1safe_3_01T_01_4_01_4}{std\+::hash$<$ dice\+::safe$<$ T $>$ $>$}}
+\item 
+class \mbox{\hyperlink{classstd_1_1numeric__limits_3_01dice_1_1safe_3_01T_01_4_01_4}{std\+::numeric\+\_\+limits$<$ dice\+::safe$<$ T $>$ $>$}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{safe_8hpp_aa92d14d6f0ddfefa47082f5cf402caa2}\label{safe_8hpp_aa92d14d6f0ddfefa47082f5cf402caa2}} 
+\#define {\bfseries N\+E\+E\+D\+S\+\_\+\+N\+U\+L\+L\+P\+T\+R\+\_\+\+D\+E\+F\+I\+N\+ED}~0
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\using \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}} = Safe\+Int$<$ T $>$
+\begin{DoxyCompactList}\small\item\em Integral type with safe arithmetic operators. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{safe_8hpp_a1f72ecd7606752bfe088742726caadcb}\label{safe_8hpp_a1f72ecd7606752bfe088742726caadcb}} 
+using \mbox{\hyperlink{safe_8hpp_a1f72ecd7606752bfe088742726caadcb}{dice\+::safe\+\_\+int\+\_\+error}} = Safe\+Int\+Exception
+\begin{DoxyCompactList}\small\item\em An error thrown when there is an overflow, underflow or divide by zero error. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{safe_8hpp_afd137ab6a0980246299511ba0f301858}{dice\+::is\+\_\+overflow\+\_\+error}} (const safe\+\_\+int\+\_\+error \&error)
+\begin{DoxyCompactList}\small\item\em Check whether given exception is an overflow error. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{safe_8hpp_a9241d0fa80c1e5596015a540a4a21b7b}{dice\+::is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error}} (const safe\+\_\+int\+\_\+error \&error)
+\begin{DoxyCompactList}\small\item\em Check whether given exception is an divide by zero error. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{safe_8hpp_aeced5832cc1fd1b848df367fcbff680a}\label{safe_8hpp_aeced5832cc1fd1b848df367fcbff680a}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ {\bfseries std\+::max} (const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&a, const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a5857b928dcee64cd9925906ae5366561}\label{safe_8hpp_a5857b928dcee64cd9925906ae5366561}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ {\bfseries std\+::max} (const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&a, const T \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a3be3da463310a7e462079dfd047d7d36}\label{safe_8hpp_a3be3da463310a7e462079dfd047d7d36}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ {\bfseries std\+::max} (const T \&a, const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a25b47f00c0fa6cb4863c86de1fed10b5}\label{safe_8hpp_a25b47f00c0fa6cb4863c86de1fed10b5}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ {\bfseries std\+::min} (const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&a, const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a38bf294087ffaf43b013bc084af3f316}\label{safe_8hpp_a38bf294087ffaf43b013bc084af3f316}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ {\bfseries std\+::min} (const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&a, const T \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a4deb6e583412717c3c3b9a6c56d3b9ed}\label{safe_8hpp_a4deb6e583412717c3c3b9a6c56d3b9ed}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ {\bfseries std\+::min} (const T \&a, const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a79cfbd3d59a6e30c672c52a142f6f782}\label{safe_8hpp_a79cfbd3d59a6e30c672c52a142f6f782}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries std\+::swap} (\mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&a, \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&b)
+\item 
+\mbox{\Hypertarget{safe_8hpp_a671172f8a5b55c6bb968c10534553ce3}\label{safe_8hpp_a671172f8a5b55c6bb968c10534553ce3}} 
+{\footnotesize template$<$typename T $>$ }\\std\+::ostream \& {\bfseries std\+::operator$<$$<$} (std\+::ostream \&output, \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&value)
+\item 
+\mbox{\Hypertarget{safe_8hpp_ac5520589dbc09972ba26ea88eea56e95}\label{safe_8hpp_ac5520589dbc09972ba26ea88eea56e95}} 
+{\footnotesize template$<$typename T $>$ }\\std\+::string {\bfseries std\+::to\+\_\+string} (const \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}}$<$ T $>$ \&value)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Safe type for arithmetic operations on integral values. 
+
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{safe_8hpp_file_acd796e346e2b746739435c4a2983edba}\label{safe_8hpp_file_acd796e346e2b746739435c4a2983edba}} 
+\index{safe.\+hpp@{safe.\+hpp}!safe@{safe}}
+\index{safe@{safe}!safe.\+hpp@{safe.\+hpp}}
+\subsubsection{\texorpdfstring{safe}{safe}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+using \mbox{\hyperlink{safe_8hpp_acd796e346e2b746739435c4a2983edba}{dice\+::safe}} = typedef Safe\+Int$<$T$>$}
+
+
+
+Integral type with safe arithmetic operators. 
+
+For signed types, overflow, underflow and divide by zero all lead to an undefined behaviour. This type throws an exception (the safe\+\_\+int\+\_\+error type) in case of such error. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{safe_8hpp_file_a9241d0fa80c1e5596015a540a4a21b7b}\label{safe_8hpp_file_a9241d0fa80c1e5596015a540a4a21b7b}} 
+\index{safe.\+hpp@{safe.\+hpp}!is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error@{is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error}}
+\index{is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error@{is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error}!safe.\+hpp@{safe.\+hpp}}
+\subsubsection{\texorpdfstring{is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error()}{is\_divide\_by\_zero\_error()}}
+{\footnotesize\ttfamily bool dice\+::is\+\_\+divide\+\_\+by\+\_\+zero\+\_\+error (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{safe_8hpp_a1f72ecd7606752bfe088742726caadcb}{safe\+\_\+int\+\_\+error}} \&}]{error }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether given exception is an divide by zero error. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em error} & object\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff given exception is an divide by zero error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{safe_8hpp_file_afd137ab6a0980246299511ba0f301858}\label{safe_8hpp_file_afd137ab6a0980246299511ba0f301858}} 
+\index{safe.\+hpp@{safe.\+hpp}!is\+\_\+overflow\+\_\+error@{is\+\_\+overflow\+\_\+error}}
+\index{is\+\_\+overflow\+\_\+error@{is\+\_\+overflow\+\_\+error}!safe.\+hpp@{safe.\+hpp}}
+\subsubsection{\texorpdfstring{is\+\_\+overflow\+\_\+error()}{is\_overflow\_error()}}
+{\footnotesize\ttfamily bool dice\+::is\+\_\+overflow\+\_\+error (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{safe_8hpp_a1f72ecd7606752bfe088742726caadcb}{safe\+\_\+int\+\_\+error}} \&}]{error }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether given exception is an overflow error. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em error} & object\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff given exception is an overflow error 
+\end{DoxyReturn}

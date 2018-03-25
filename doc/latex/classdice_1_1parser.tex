@@ -1,0 +1,79 @@
+\hypertarget{classdice_1_1parser}{}\section{dice\+:\+:parser$<$ Lexer, Logger, Interpreter $>$ Class Template Reference}
+\label{classdice_1_1parser}\index{dice\+::parser$<$ Lexer, Logger, Interpreter $>$@{dice\+::parser$<$ Lexer, Logger, Interpreter $>$}}
+
+
+Dice expression parser.  
+
+
+
+
+{\ttfamily \#include $<$parser.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1parser_ad550d010318819123ef5a028322df8eb}\label{classdice_1_1parser_ad550d010318819123ef5a028322df8eb}} 
+using \mbox{\hyperlink{classdice_1_1parser_ad550d010318819123ef5a028322df8eb}{attr\+\_\+type}} = typename Interpreter\+::value\+\_\+type
+\begin{DoxyCompactList}\small\item\em Type of attributes of nonterminals. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1parser_a09510972db249f96cc49f1bb60cde597}\label{classdice_1_1parser_a09510972db249f96cc49f1bb60cde597}} 
+{\bfseries parser} (Lexer $\ast$reader, Logger $\ast$log, Interpreter $\ast$inter)
+\item 
+auto \mbox{\hyperlink{classdice_1_1parser_a9166865af1db0974b2b372885bcc1501}{parse}} ()
+\begin{DoxyCompactList}\small\item\em Parse expression provided by the lexer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Lexer, typename Logger, typename Interpreter$>$\newline
+class dice\+::parser$<$ Lexer, Logger, Interpreter $>$}
+
+Dice expression parser. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Lexer} & the lexer type \\
+\hline
+{\em Logger} & the logger type \\
+\hline
+{\em Interpreter} & the \mbox{\hyperlink{classdice_1_1direct__interpreter}{direct\+\_\+interpreter}} type\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyAttention}{Attention}
+It is possible to use custom types of lexer, logger or interpreter but it is recommended to use the default implementations of these types. Other types are used mainly for testing. 
+\end{DoxyAttention}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1parser_a9166865af1db0974b2b372885bcc1501}\label{classdice_1_1parser_a9166865af1db0974b2b372885bcc1501}} 
+\index{dice\+::parser@{dice\+::parser}!parse@{parse}}
+\index{parse@{parse}!dice\+::parser@{dice\+::parser}}
+\subsubsection{\texorpdfstring{parse()}{parse()}}
+{\footnotesize\ttfamily template$<$typename Lexer , typename Logger , typename Interpreter $>$ \\
+auto \mbox{\hyperlink{classdice_1_1parser}{dice\+::parser}}$<$ Lexer, Logger, Interpreter $>$\+::parse (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Parse expression provided by the lexer. 
+
+Operators are left associative unless stated otherwise.
+
+List of operators (from lowest to highest precedence)\+:
+\begin{DoxyEnumerate}
+\item = (assignment, non-\/associative)
+\item $<$, $<$=, !=, ==, $>$=, $>$, in (relational operators, non-\/assosiative)
+\item + (add), -\/ (subtract)
+\item $\ast$ (multiply), / (divide)
+\item -\/ (unary minus)
+\item D$\vert$d (roll dice)
+\end{DoxyEnumerate}
+
+\begin{DoxyReturn}{Returns}
+computed values 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/parser.\+hpp\end{DoxyCompactItemize}

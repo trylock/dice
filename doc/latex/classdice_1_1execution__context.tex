@@ -1,0 +1,162 @@
+\hypertarget{classdice_1_1execution__context}{}\section{dice\+:\+:execution\+\_\+context Class Reference}
+\label{classdice_1_1execution__context}\index{dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}}
+
+
+Context of dice user function execution.  
+
+
+
+
+{\ttfamily \#include $<$functions.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1execution__context_a461c5eb10847dc8c55a628f36f5906f3}\label{classdice_1_1execution__context_a461c5eb10847dc8c55a628f36f5906f3}} 
+using {\bfseries value\+\_\+type} = std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1execution__context_ab2045c32dba1646f204d1f29210bca27}\label{classdice_1_1execution__context_ab2045c32dba1646f204d1f29210bca27}} 
+using {\bfseries return\+\_\+type} = std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1execution__context_af2fbf2afd658b470ebeda96f201922a3}\label{classdice_1_1execution__context_af2fbf2afd658b470ebeda96f201922a3}} 
+using {\bfseries context\+\_\+type} = \mbox{\hyperlink{classdice_1_1execution__context}{execution\+\_\+context}}
+\item 
+\mbox{\Hypertarget{classdice_1_1execution__context_a6694eeb2b6b828de1ab8702ab36b24ad}\label{classdice_1_1execution__context_a6694eeb2b6b828de1ab8702ab36b24ad}} 
+using {\bfseries callable\+\_\+type} = std\+::function$<$ return\+\_\+type(\mbox{\hyperlink{classdice_1_1execution__context}{context\+\_\+type}} \&)$>$
+\item 
+\mbox{\Hypertarget{classdice_1_1execution__context_a5f72a7e31cd0e61be73739469e0676e1}\label{classdice_1_1execution__context_a5f72a7e31cd0e61be73739469e0676e1}} 
+using {\bfseries arg\+\_\+iterator} = typename std\+::vector$<$ value\+\_\+type $>$\+::iterator
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1execution__context_aa42152a894a78f6b957b96fd69c3922d}\label{classdice_1_1execution__context_aa42152a894a78f6b957b96fd69c3922d}} 
+{\bfseries execution\+\_\+context} (arg\+\_\+iterator first, arg\+\_\+iterator last)
+\item 
+value\+\_\+type \& \mbox{\hyperlink{classdice_1_1execution__context_a1e5286fd9fec95590f2162699fe139ef}{raw\+\_\+arg}} (std\+::size\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Get a raw value of ith argument of current function. \end{DoxyCompactList}\item 
+const value\+\_\+type \& \mbox{\hyperlink{classdice_1_1execution__context_ac99b80fdabc62175ee5eb54968762631}{raw\+\_\+arg}} (std\+::size\+\_\+t index) const
+\begin{DoxyCompactList}\small\item\em Get a raw value of ith argument of current function. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Expected\+Type $>$ }\\Expected\+Type $\ast$ \mbox{\hyperlink{classdice_1_1execution__context_a58d8a206afcc569dd4ac813a3002ac77}{arg}} (std\+::size\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Convert ith argument to given type and return the pointer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} \mbox{\hyperlink{classdice_1_1execution__context_a346132ca9cc451ddafccca8fe67213ba}{arg\+\_\+type}} (std\+::size\+\_\+t index) const
+\begin{DoxyCompactList}\small\item\em Get type of the ith argument. \end{DoxyCompactList}\item 
+std\+::size\+\_\+t \mbox{\hyperlink{classdice_1_1execution__context_a1af91def04d331d9564f2519577b4283}{argc}} () const
+\begin{DoxyCompactList}\small\item\em Number of arguments of this function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Context of dice user function execution. 
+
+This is the only argument passed to every user function call.
+
+Example usage\+: 
+\begin{DoxyCode}
+execution\_context context\{ ... \};
+\textcolor{keyword}{auto} first\_arg = context.arg<type\_int>(0);
+\textcolor{keyword}{auto} second\_arg = context.arg<type\_rand\_var>(1);
+\end{DoxyCode}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1execution__context_a58d8a206afcc569dd4ac813a3002ac77}\label{classdice_1_1execution__context_a58d8a206afcc569dd4ac813a3002ac77}} 
+\index{dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}!arg@{arg}}
+\index{arg@{arg}!dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}}
+\subsubsection{\texorpdfstring{arg()}{arg()}}
+{\footnotesize\ttfamily template$<$typename Expected\+Type $>$ \\
+Expected\+Type$\ast$ dice\+::execution\+\_\+context\+::arg (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Convert ith argument to given type and return the pointer. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Expected\+Type} & type to which we should convert the ith argumnet. It has to be derived from the \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} type.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of an argument\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to converted ith argument
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::invalid\+\_\+argument} & if the argument is not convertible to Expected\+Type. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classdice_1_1execution__context_a346132ca9cc451ddafccca8fe67213ba}\label{classdice_1_1execution__context_a346132ca9cc451ddafccca8fe67213ba}} 
+\index{dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}!arg\+\_\+type@{arg\+\_\+type}}
+\index{arg\+\_\+type@{arg\+\_\+type}!dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}}
+\subsubsection{\texorpdfstring{arg\+\_\+type()}{arg\_type()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{value_8hpp_ab9af7d8ecc381e026ca4d07a745f23eb}{type\+\_\+id}} dice\+::execution\+\_\+context\+::arg\+\_\+type (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{index }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get type of the ith argument. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of an argument\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+argument type 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1execution__context_a1af91def04d331d9564f2519577b4283}\label{classdice_1_1execution__context_a1af91def04d331d9564f2519577b4283}} 
+\index{dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}!argc@{argc}}
+\index{argc@{argc}!dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}}
+\subsubsection{\texorpdfstring{argc()}{argc()}}
+{\footnotesize\ttfamily std\+::size\+\_\+t dice\+::execution\+\_\+context\+::argc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Number of arguments of this function. 
+
+\begin{DoxyReturn}{Returns}
+number of arguments of this function call 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1execution__context_a1e5286fd9fec95590f2162699fe139ef}\label{classdice_1_1execution__context_a1e5286fd9fec95590f2162699fe139ef}} 
+\index{dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}!raw\+\_\+arg@{raw\+\_\+arg}}
+\index{raw\+\_\+arg@{raw\+\_\+arg}!dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}}
+\subsubsection{\texorpdfstring{raw\+\_\+arg()}{raw\_arg()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily value\+\_\+type\& dice\+::execution\+\_\+context\+::raw\+\_\+arg (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a raw value of ith argument of current function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of an argument\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of the argument 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1execution__context_ac99b80fdabc62175ee5eb54968762631}\label{classdice_1_1execution__context_ac99b80fdabc62175ee5eb54968762631}} 
+\index{dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}!raw\+\_\+arg@{raw\+\_\+arg}}
+\index{raw\+\_\+arg@{raw\+\_\+arg}!dice\+::execution\+\_\+context@{dice\+::execution\+\_\+context}}
+\subsubsection{\texorpdfstring{raw\+\_\+arg()}{raw\_arg()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const value\+\_\+type\& dice\+::execution\+\_\+context\+::raw\+\_\+arg (\begin{DoxyParamCaption}\item[{std\+::size\+\_\+t}]{index }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a raw value of ith argument of current function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of an argument\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of the argument 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/functions.\+hpp\end{DoxyCompactItemize}

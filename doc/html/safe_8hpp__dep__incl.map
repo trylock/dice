@@ -1,0 +1,11 @@
+<map id="C:/projects/dice/src/safe.hpp" name="C:/projects/dice/src/safe.hpp">
+<area shape="rect" id="node2" href="$environment_8hpp_source.html" title="C:/projects/dice/src\l/environment.hpp" alt="" coords="222,273,357,315"/>
+<area shape="rect" id="node6" href="$value_8hpp.html" title="Value in a dice expression. " alt="" coords="294,95,429,136"/>
+<area shape="rect" id="node3" href="$calculator_8hpp_source.html" title="C:/projects/dice/src\l/calculator.hpp" alt="" coords="500,452,634,493"/>
+<area shape="rect" id="node4" href="$direct__interpreter_8hpp_source.html" title="C:/projects/dice/src\l/direct_interpreter.hpp" alt="" coords="328,363,476,404"/>
+<area shape="rect" id="node5" href="$parser_8hpp_source.html" title="C:/projects/dice/src\l/parser.hpp" alt="" coords="500,363,634,404"/>
+<area shape="rect" id="node7" href="$functions_8hpp_source.html" title="C:/projects/dice/src\l/functions.hpp" alt="" coords="242,184,377,225"/>
+<area shape="rect" id="node8" href="$conversions_8hpp_source.html" title="C:/projects/dice/src\l/conversions.hpp" alt="" coords="32,184,166,225"/>
+<area shape="rect" id="node9" href="$symbols_8hpp.html" title="Symbols in dice expressions (returned by lexer). " alt="" coords="504,184,638,225"/>
+<area shape="rect" id="node10" href="$lexer_8hpp_source.html" title="C:/projects/dice/src\l/lexer.hpp" alt="" coords="605,273,740,315"/>
+</map>

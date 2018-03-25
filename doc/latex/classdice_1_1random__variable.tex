@@ -1,0 +1,768 @@
+\hypertarget{classdice_1_1random__variable}{}\section{dice\+:\+:random\+\_\+variable$<$ Value\+Type, Probability\+Type $>$ Class Template Reference}
+\label{classdice_1_1random__variable}\index{dice\+::random\+\_\+variable$<$ Value\+Type, Probability\+Type $>$@{dice\+::random\+\_\+variable$<$ Value\+Type, Probability\+Type $>$}}
+
+
+Discrete random variable.  
+
+
+
+
+{\ttfamily \#include $<$random\+\_\+variable.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_ac9c699272072661cfddd880bd7bdf81b}\label{classdice_1_1random__variable_ac9c699272072661cfddd880bd7bdf81b}} 
+using {\bfseries value\+\_\+type} = Value\+Type
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_a38b4f4b7d42d5d5a6b9688bf03fab469}\label{classdice_1_1random__variable_a38b4f4b7d42d5d5a6b9688bf03fab469}} 
+using {\bfseries probability\+\_\+type} = Probability\+Type
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_abb6c151c9168391112bd1fc279f1984f}\label{classdice_1_1random__variable_abb6c151c9168391112bd1fc279f1984f}} 
+using {\bfseries frequency\+\_\+list} = std\+::vector$<$ std\+::pair$<$ value\+\_\+type, std\+::size\+\_\+t $>$ $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_ab17dc25c146a0673d2b7aa14c997b2d6}\label{classdice_1_1random__variable_ab17dc25c146a0673d2b7aa14c997b2d6}} 
+using {\bfseries probability\+\_\+list} = std\+::vector$<$ std\+::pair$<$ value\+\_\+type, probability\+\_\+type $>$ $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classdice_1_1random__variable_a7cf5a4706aebdb1d8d1fd362491df895}{random\+\_\+variable}} ()
+\begin{DoxyCompactList}\small\item\em Create an impossible event. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1random__variable_a50f56529bf017dbdc074f98ac6b9ac55}{random\+\_\+variable}} (\mbox{\hyperlink{classdice_1_1constant__tag}{constant\+\_\+tag}}, value\+\_\+type value)
+\begin{DoxyCompactList}\small\item\em Create a constant. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1random__variable_a96f7d3bfb204d1b213c1e004132492ee}{random\+\_\+variable}} (\mbox{\hyperlink{classdice_1_1bernoulli__tag}{bernoulli\+\_\+tag}}, probability\+\_\+type success\+\_\+prob)
+\begin{DoxyCompactList}\small\item\em Create a bernoulli distribution. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classdice_1_1random__variable_ae60bac2f1326a03ced717a4f0ff12513}{random\+\_\+variable}} (const frequency\+\_\+list \&list)
+\begin{DoxyCompactList}\small\item\em Compute probabilities from list of value frequencies. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_acf84e1446bdebc2be61df6dddf23926f}\label{classdice_1_1random__variable_acf84e1446bdebc2be61df6dddf23926f}} 
+{\bfseries random\+\_\+variable} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_a08f007500cac0eec18ec07b117be8662}\label{classdice_1_1random__variable_a08f007500cac0eec18ec07b117be8662}} 
+\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \& {\bfseries operator=} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_adfe32efb1c2f20260374a28078ed9b1f}\label{classdice_1_1random__variable_adfe32efb1c2f20260374a28078ed9b1f}} 
+{\bfseries random\+\_\+variable} (\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&\&)=default
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_ad234b4fd5bb4422dcbd2e0b38ca95851}\label{classdice_1_1random__variable_ad234b4fd5bb4422dcbd2e0b38ca95851}} 
+\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \& {\bfseries operator=} (\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&\&)=default
+\item 
+bool \mbox{\hyperlink{classdice_1_1random__variable_a42d682610d251d5305dd349a71a023eb}{is\+\_\+constant}} () const
+\begin{DoxyCompactList}\small\item\em Check whether this is a constant. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a1cf78d3c3fa4b13d85215b873a50be5f}{max\+\_\+value}} () const
+\begin{DoxyCompactList}\small\item\em Find maximal value in the variable\textquotesingle{}s range. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ab926693f2773202c8fce755d4664052f}{min\+\_\+value}} () const
+\begin{DoxyCompactList}\small\item\em Find minimal value in the variable\textquotesingle{}s range. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a210faa1d7ac3aa393804d87f828ca91c}{expected\+\_\+value}} () const
+\begin{DoxyCompactList}\small\item\em Compute expected value of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ae709a9985d1e722629fc13c26f405e61}{variance}} () const
+\begin{DoxyCompactList}\small\item\em Compute variance of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ae72311eea3b8ad6c66893c2af3489d74}{deviation}} () const
+\begin{DoxyCompactList}\small\item\em Calculate standard deviation of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_aa1c5beebc469a8cc51906fd0b48ef5b1}{quantile}} (probability\+\_\+type \mbox{\hyperlink{classdice_1_1random__variable_a0759c25151ebb5618e2ff0ecbb91c80d}{probability}}) const
+\begin{DoxyCompactList}\small\item\em Compute quantile of this random variable. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a559e5f26fcd39e1f68b22681aab90664}{random\+\_\+value}} (probability\+\_\+type \mbox{\hyperlink{classdice_1_1random__variable_a0759c25151ebb5618e2ff0ecbb91c80d}{probability}}) const
+\begin{DoxyCompactList}\small\item\em Return first value s.\+t. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \mbox{\hyperlink{classdice_1_1random__variable_a20c851091e966593c053252fb76f390e}{in}} (const T \&lower\+\_\+bound, const T \&upper\+\_\+bound) const
+\begin{DoxyCompactList}\small\item\em Calculate indicator that X (this r.\+v.) is in given interval. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a125e2b252af1eb4edd04011f81f080cf}{operator+}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute distribution of X + Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a40ad720c40cb4467dbb2b735512b279c}{operator-\/}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute distribution of X -\/ Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ac420c3a819add2d6115dfe5071f40b8e}{operator$\ast$}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute distribution of X $\ast$ Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a52896f8ba19758fc240d6e8f51b650e7}{operator/}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute distribution of integer division X / Y. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a8447981f77852b91874f1f888dae50ac}{less\+\_\+than}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator of X $<$ Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ac384c7a722412306ea7af080ceb8a8c5}{less\+\_\+than\+\_\+or\+\_\+equal}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator of X $<$= Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ac66bb2ec2b0d9a67029a3a9381d02d61}{equal}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator of X = Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_aeeabefcda0c3599eba97b98fab245021}{not\+\_\+equal}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator of X != Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_abeb43cf9343eb0f26418b71f04a3b350}{greater\+\_\+than}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator of X $>$ Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a067075bcd32f952f4eadcd7a888038b5}{greater\+\_\+than\+\_\+or\+\_\+equal}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compute indicator of X $>$= Y (X is this random variable). \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a5900675092ca3ca0ea387628ed64624f}{operator-\/}} () const
+\begin{DoxyCompactList}\small\item\em Compute negation of this random variable (-\/X) \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Predicate $>$ }\\auto \mbox{\hyperlink{classdice_1_1random__variable_a79723edbb8e79a914f7b5ea37a13ed9a}{restrict}} (Predicate include) const
+\begin{DoxyCompactList}\small\item\em Compute restriction of the range of this random variable. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Combination\+Function $>$ }\\auto \mbox{\hyperlink{classdice_1_1random__variable_a6aa92a82cfccdefe467410ec8e0d4dc7}{combine}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other, Combination\+Function combination) const
+\begin{DoxyCompactList}\small\item\em Create a random variable that is a function of this variable X and the other variable Y. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a0759c25151ebb5618e2ff0ecbb91c80d}{probability}} (const value\+\_\+type \&value) const
+\begin{DoxyCompactList}\small\item\em Find the probability of given value. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a60637ec353c3cd3046017d54824f1fd8}{size}} () const
+\begin{DoxyCompactList}\small\item\em Return number of values in variable\textquotesingle{}s range. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_ad65ca036dd0c61483c888579b2d912fa}{begin}} () const
+\begin{DoxyCompactList}\small\item\em First iterator of the (value, probaiblity) pair collection. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a82f50939d82419d9f86901b6997ca8fe}{end}} () const
+\begin{DoxyCompactList}\small\item\em Last iterator of the (value, probability) pair collection. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1random__variable_a113037d3c11921f1ba1227a838781d3e}{empty}} () const
+\begin{DoxyCompactList}\small\item\em Check whether there are any values with non-\/zero probability. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1random__variable_abe0ae85dfb81c7f5b7c921db588eda17}{operator==}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\begin{DoxyCompactList}\small\item\em Chek whether this variable is equal to some other variable. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_a46dbbc3797032825e095a658ff18d3ec}\label{classdice_1_1random__variable_a46dbbc3797032825e095a658ff18d3ec}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&other) const
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1random__variable_a576b2a57ac76cbde31cb0826a5cd1d6f}\label{classdice_1_1random__variable_a576b2a57ac76cbde31cb0826a5cd1d6f}} 
+class {\bfseries decomposition$<$ Value\+Type, Probability\+Type $>$}
+\item 
+auto \mbox{\hyperlink{classdice_1_1random__variable_a1ee237915048ab90f60508a75ba39c40}{roll}} (const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&num\+\_\+dice, const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \&num\+\_\+faces)
+\begin{DoxyCompactList}\small\item\em Create a random variable Z = XdY. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Value\+Type, typename Probability\+Type$>$\newline
+class dice\+::random\+\_\+variable$<$ Value\+Type, Probability\+Type $>$}
+
+Discrete random variable. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Value\+Type} & type of a value of this variable. Requirements\+:
+\begin{DoxyItemize}
+\item std\+::numeric\+\_\+limits specialization
+\item std\+::hash specialization
+\item std\+::max, std\+::min specialization
+\item convertible to Probability\+Type 
+\end{DoxyItemize}\\
+\hline
+{\em Probability\+Type} & type of probability (rational number in \mbox{[}0, 1\mbox{]})\\
+\hline
+\end{DoxyTemplParams}
+The Value\+Type is used as a key in a hash table. Probability\+Type is a value in this hash table. Probabilities of values sum up to 1.
+
+This type is immutable. All public methods and functions which modify a variable return a new random variable. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classdice_1_1random__variable_a7cf5a4706aebdb1d8d1fd362491df895}\label{classdice_1_1random__variable_a7cf5a4706aebdb1d8d1fd362491df895}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!random\+\_\+variable@{random\+\_\+variable}}
+\index{random\+\_\+variable@{random\+\_\+variable}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{random\+\_\+variable()}{random\_variable()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create an impossible event. 
+
+\mbox{\Hypertarget{classdice_1_1random__variable_a50f56529bf017dbdc074f98ac6b9ac55}\label{classdice_1_1random__variable_a50f56529bf017dbdc074f98ac6b9ac55}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!random\+\_\+variable@{random\+\_\+variable}}
+\index{random\+\_\+variable@{random\+\_\+variable}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{random\+\_\+variable()}{random\_variable()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classdice_1_1constant__tag}{constant\+\_\+tag}}}]{,  }\item[{value\+\_\+type}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a constant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & of the constant \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1random__variable_a96f7d3bfb204d1b213c1e004132492ee}\label{classdice_1_1random__variable_a96f7d3bfb204d1b213c1e004132492ee}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!random\+\_\+variable@{random\+\_\+variable}}
+\index{random\+\_\+variable@{random\+\_\+variable}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{random\+\_\+variable()}{random\_variable()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classdice_1_1bernoulli__tag}{bernoulli\+\_\+tag}}}]{,  }\item[{probability\+\_\+type}]{success\+\_\+prob }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a bernoulli distribution. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em success\+\_\+prob} & probability of success If this is 0 or 1, the variable will be constant. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classdice_1_1random__variable_ae60bac2f1326a03ced717a4f0ff12513}\label{classdice_1_1random__variable_ae60bac2f1326a03ced717a4f0ff12513}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!random\+\_\+variable@{random\+\_\+variable}}
+\index{random\+\_\+variable@{random\+\_\+variable}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{random\+\_\+variable()}{random\_variable()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} (\begin{DoxyParamCaption}\item[{const frequency\+\_\+list \&}]{list }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Compute probabilities from list of value frequencies. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & of (value, frequency) pairs (values can repeat) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1random__variable_ad65ca036dd0c61483c888579b2d912fa}\label{classdice_1_1random__variable_ad65ca036dd0c61483c888579b2d912fa}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!begin@{begin}}
+\index{begin@{begin}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{begin()}{begin()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+First iterator of the (value, probaiblity) pair collection. 
+
+\begin{DoxyReturn}{Returns}
+iterator pointing to the first value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a6aa92a82cfccdefe467410ec8e0d4dc7}\label{classdice_1_1random__variable_a6aa92a82cfccdefe467410ec8e0d4dc7}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!combine@{combine}}
+\index{combine@{combine}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{combine()}{combine()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+template$<$typename Combination\+Function $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::combine (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other,  }\item[{Combination\+Function}]{combination }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a random variable that is a function of this variable X and the other variable Y. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Combination\+Function} & It takes value from X (Value\+Type), value from Y (Value\+Type) and returns their combination (Value\+Type).\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X) \\
+\hline
+{\em combination} & function of X and Y\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new random variable that is a function of X and Y 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_ae72311eea3b8ad6c66893c2af3489d74}\label{classdice_1_1random__variable_ae72311eea3b8ad6c66893c2af3489d74}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!deviation@{deviation}}
+\index{deviation@{deviation}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{deviation()}{deviation()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::deviation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Calculate standard deviation of this random variable. 
+
+\begin{DoxyReturn}{Returns}
+standard deviation (square root or variance) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a113037d3c11921f1ba1227a838781d3e}\label{classdice_1_1random__variable_a113037d3c11921f1ba1227a838781d3e}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!empty@{empty}}
+\index{empty@{empty}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+bool \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether there are any values with non-\/zero probability. 
+
+\begin{DoxyReturn}{Returns}
+true iff there is at least 1 value with non-\/zero probability 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a82f50939d82419d9f86901b6997ca8fe}\label{classdice_1_1random__variable_a82f50939d82419d9f86901b6997ca8fe}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!end@{end}}
+\index{end@{end}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{end()}{end()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Last iterator of the (value, probability) pair collection. 
+
+\begin{DoxyReturn}{Returns}
+iterator pointing past the last value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_ac66bb2ec2b0d9a67029a3a9381d02d61}\label{classdice_1_1random__variable_ac66bb2ec2b0d9a67029a3a9381d02d61}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!equal@{equal}}
+\index{equal@{equal}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{equal()}{equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator of X = Y (X is this random variable). 
+
+X and Y are assumed to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of X = Y (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a210faa1d7ac3aa393804d87f828ca91c}\label{classdice_1_1random__variable_a210faa1d7ac3aa393804d87f828ca91c}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!expected\+\_\+value@{expected\+\_\+value}}
+\index{expected\+\_\+value@{expected\+\_\+value}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{expected\+\_\+value()}{expected\_value()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::expected\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute expected value of this random variable. 
+
+\begin{DoxyReturn}{Returns}
+expected value of this variable 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_abeb43cf9343eb0f26418b71f04a3b350}\label{classdice_1_1random__variable_abeb43cf9343eb0f26418b71f04a3b350}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!greater\+\_\+than@{greater\+\_\+than}}
+\index{greater\+\_\+than@{greater\+\_\+than}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{greater\+\_\+than()}{greater\_than()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::greater\+\_\+than (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator of X $>$ Y (X is this random variable). 
+
+X and Y are assumed to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of X $>$ Y (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a067075bcd32f952f4eadcd7a888038b5}\label{classdice_1_1random__variable_a067075bcd32f952f4eadcd7a888038b5}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!greater\+\_\+than\+\_\+or\+\_\+equal@{greater\+\_\+than\+\_\+or\+\_\+equal}}
+\index{greater\+\_\+than\+\_\+or\+\_\+equal@{greater\+\_\+than\+\_\+or\+\_\+equal}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{greater\+\_\+than\+\_\+or\+\_\+equal()}{greater\_than\_or\_equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::greater\+\_\+than\+\_\+or\+\_\+equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator of X $>$= Y (X is this random variable). 
+
+X and Y are assumed to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of X $>$= Y (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a20c851091e966593c053252fb76f390e}\label{classdice_1_1random__variable_a20c851091e966593c053252fb76f390e}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!in@{in}}
+\index{in@{in}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{in()}{in()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+template$<$typename T $>$ \\
+\mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}} \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::in (\begin{DoxyParamCaption}\item[{const T \&}]{lower\+\_\+bound,  }\item[{const T \&}]{upper\+\_\+bound }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Calculate indicator that X (this r.\+v.) is in given interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lower\+\_\+bound} & of the interval \\
+\hline
+{\em upper\+\_\+bound} & of the interval\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+r.\+v. Y with a Bernoulli distribution Y = 1 $<$=$>$ X is in the \mbox{[}lower\+\_\+bound, upper\+\_\+bound\mbox{]} interval Y = 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a42d682610d251d5305dd349a71a023eb}\label{classdice_1_1random__variable_a42d682610d251d5305dd349a71a023eb}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!is\+\_\+constant@{is\+\_\+constant}}
+\index{is\+\_\+constant@{is\+\_\+constant}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{is\+\_\+constant()}{is\_constant()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+bool \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::is\+\_\+constant (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check whether this is a constant. 
+
+\begin{DoxyReturn}{Returns}
+true I\+FF there is only 1 value in its range 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a8447981f77852b91874f1f888dae50ac}\label{classdice_1_1random__variable_a8447981f77852b91874f1f888dae50ac}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!less\+\_\+than@{less\+\_\+than}}
+\index{less\+\_\+than@{less\+\_\+than}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{less\+\_\+than()}{less\_than()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::less\+\_\+than (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator of X $<$ Y (X is this random variable). 
+
+X and Y are assumed to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of X $<$ Y (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_ac384c7a722412306ea7af080ceb8a8c5}\label{classdice_1_1random__variable_ac384c7a722412306ea7af080ceb8a8c5}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!less\+\_\+than\+\_\+or\+\_\+equal@{less\+\_\+than\+\_\+or\+\_\+equal}}
+\index{less\+\_\+than\+\_\+or\+\_\+equal@{less\+\_\+than\+\_\+or\+\_\+equal}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{less\+\_\+than\+\_\+or\+\_\+equal()}{less\_than\_or\_equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::less\+\_\+than\+\_\+or\+\_\+equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator of X $<$= Y (X is this random variable). 
+
+X and Y are assumed to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of X $<$= Y (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a1cf78d3c3fa4b13d85215b873a50be5f}\label{classdice_1_1random__variable_a1cf78d3c3fa4b13d85215b873a50be5f}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!max\+\_\+value@{max\+\_\+value}}
+\index{max\+\_\+value@{max\+\_\+value}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{max\+\_\+value()}{max\_value()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::max\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Find maximal value in the variable\textquotesingle{}s range. 
+
+\begin{DoxyReturn}{Returns}
+maximal value in the range or minimal value of the value\+\_\+type if this is an impossible event 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_ab926693f2773202c8fce755d4664052f}\label{classdice_1_1random__variable_ab926693f2773202c8fce755d4664052f}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!min\+\_\+value@{min\+\_\+value}}
+\index{min\+\_\+value@{min\+\_\+value}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{min\+\_\+value()}{min\_value()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::min\+\_\+value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Find minimal value in the variable\textquotesingle{}s range. 
+
+\begin{DoxyReturn}{Returns}
+minimal value in the range or maximal value of the value\+\_\+type if this is an impossible event 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_aeeabefcda0c3599eba97b98fab245021}\label{classdice_1_1random__variable_aeeabefcda0c3599eba97b98fab245021}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!not\+\_\+equal@{not\+\_\+equal}}
+\index{not\+\_\+equal@{not\+\_\+equal}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{not\+\_\+equal()}{not\_equal()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::not\+\_\+equal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute indicator of X != Y (X is this random variable). 
+
+X and Y are assumed to be indepedent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+indicator of X != Y (i.\+e. a random variable with a bernoulli distribution) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_ac420c3a819add2d6115dfe5071f40b8e}\label{classdice_1_1random__variable_ac420c3a819add2d6115dfe5071f40b8e}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{operator$\ast$()}{operator*()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::operator$\ast$ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute distribution of X $\ast$ Y (X is this random variable). 
+
+X and Y are assumed to be independent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of X $\ast$ Y 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a125e2b252af1eb4edd04011f81f080cf}\label{classdice_1_1random__variable_a125e2b252af1eb4edd04011f81f080cf}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!operator+@{operator+}}
+\index{operator+@{operator+}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::operator+ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute distribution of X + Y (X is this random variable). 
+
+X and Y are assumed to be independent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of X + Y 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a40ad720c40cb4467dbb2b735512b279c}\label{classdice_1_1random__variable_a40ad720c40cb4467dbb2b735512b279c}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::operator-\/ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute distribution of X -\/ Y (X is this random variable). 
+
+X and Y are assumed to be independent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of X -\/ Y 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a5900675092ca3ca0ea387628ed64624f}\label{classdice_1_1random__variable_a5900675092ca3ca0ea387628ed64624f}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::operator-\/ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute negation of this random variable (-\/X) 
+
+\begin{DoxyReturn}{Returns}
+a random variable -\/X (X is this random variable) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a52896f8ba19758fc240d6e8f51b650e7}\label{classdice_1_1random__variable_a52896f8ba19758fc240d6e8f51b650e7}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!operator/@{operator/}}
+\index{operator/@{operator/}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{operator/()}{operator/()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::operator/ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute distribution of integer division X / Y. 
+
+X is this random variable. X and Y are assumed to be independent.
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable Y (independent of X) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of X / Y 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_abe0ae85dfb81c7f5b7c921db588eda17}\label{classdice_1_1random__variable_abe0ae85dfb81c7f5b7c921db588eda17}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!operator==@{operator==}}
+\index{operator==@{operator==}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+bool \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Chek whether this variable is equal to some other variable. 
+
+Note\+: this will use the == operator on the Probability\+Type. This test is expensive (linear with the variable size).
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & random variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff the variables are exactly equal 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a0759c25151ebb5618e2ff0ecbb91c80d}\label{classdice_1_1random__variable_a0759c25151ebb5618e2ff0ecbb91c80d}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!probability@{probability}}
+\index{probability@{probability}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{probability()}{probability()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::probability (\begin{DoxyParamCaption}\item[{const value\+\_\+type \&}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Find the probability of given value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & whose probability you want to know.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+probability of the value. 0 if it\textquotesingle{}s not in the varaible\textquotesingle{}s range 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_aa1c5beebc469a8cc51906fd0b48ef5b1}\label{classdice_1_1random__variable_aa1c5beebc469a8cc51906fd0b48ef5b1}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!quantile@{quantile}}
+\index{quantile@{quantile}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{quantile()}{quantile()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::quantile (\begin{DoxyParamCaption}\item[{probability\+\_\+type}]{probability }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute quantile of this random variable. 
+
+Def.\+: Quantile(p) = min\{ x \+: P(X $<$= x) $>$= p\} Note\+: complexity of this operation is linearithmic with the size of the variable as we have to sort the values.
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::logic\+\_\+error} & if this is an impossible event.\\
+\hline
+\end{DoxyExceptions}
+
+\begin{DoxyParams}{Parameters}
+{\em probability} & between 0 and 1\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+quantile 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a559e5f26fcd39e1f68b22681aab90664}\label{classdice_1_1random__variable_a559e5f26fcd39e1f68b22681aab90664}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!random\+\_\+value@{random\+\_\+value}}
+\index{random\+\_\+value@{random\+\_\+value}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{random\+\_\+value()}{random\_value()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::random\+\_\+value (\begin{DoxyParamCaption}\item[{probability\+\_\+type}]{probability }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return first value s.\+t. 
+
+P(X $<$= value) $>$= prob.
+
+Unlike the quantile method, values are not copied nor sorted.
+
+
+\begin{DoxyParams}{Parameters}
+{\em probability} & (a random number between 0 and 1)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a79723edbb8e79a914f7b5ea37a13ed9a}\label{classdice_1_1random__variable_a79723edbb8e79a914f7b5ea37a13ed9a}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!restrict@{restrict}}
+\index{restrict@{restrict}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{restrict()}{restrict()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+template$<$typename Predicate $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::restrict (\begin{DoxyParamCaption}\item[{Predicate}]{include }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute restriction of the range of this random variable. 
+
+Values for which given predicate returns false won\textquotesingle{}t be included. Probabilities will be modified so that they sum up to 1.
+
+
+\begin{DoxyParams}{Parameters}
+{\em include} & predicate (bool function) Returns true I\+FF given element should be included\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new random variable with restricted range 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_a60637ec353c3cd3046017d54824f1fd8}\label{classdice_1_1random__variable_a60637ec353c3cd3046017d54824f1fd8}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!size@{size}}
+\index{size@{size}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return number of values in variable\textquotesingle{}s range. 
+
+Number of values with non-\/zero probability. This is also the std\+::distance(\mbox{\hyperlink{classdice_1_1random__variable_ad65ca036dd0c61483c888579b2d912fa}{begin()}}, \mbox{\hyperlink{classdice_1_1random__variable_a82f50939d82419d9f86901b6997ca8fe}{end()}}).
+
+\begin{DoxyReturn}{Returns}
+number of such values 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1random__variable_ae709a9985d1e722629fc13c26f405e61}\label{classdice_1_1random__variable_ae709a9985d1e722629fc13c26f405e61}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!variance@{variance}}
+\index{variance@{variance}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{variance()}{variance()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto \mbox{\hyperlink{classdice_1_1random__variable}{dice\+::random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$\+::variance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute variance of this random variable. 
+
+\begin{DoxyReturn}{Returns}
+variance of this variable 
+\end{DoxyReturn}
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classdice_1_1random__variable_a1ee237915048ab90f60508a75ba39c40}\label{classdice_1_1random__variable_a1ee237915048ab90f60508a75ba39c40}} 
+\index{dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}!roll@{roll}}
+\index{roll@{roll}!dice\+::random\+\_\+variable@{dice\+::random\+\_\+variable}}
+\subsubsection{\texorpdfstring{roll}{roll}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+auto roll (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{num\+\_\+dice,  }\item[{const \mbox{\hyperlink{classdice_1_1random__variable}{random\+\_\+variable}}$<$ Value\+Type, Probability\+Type $>$ \&}]{num\+\_\+faces }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Create a random variable Z = XdY. 
+
+X times roll a Y sided dice. Assumes X, Y are independent random variables.
+
+This funciton implements a simple dynamic programming algorithm. The probability that we roll k with X throws of a Y sided die is the probability that we roll k -\/ n with X -\/ 1 throws of a Y sided die and then roll n on the last die for n = 1 to Y.
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+\_\+dice} & number of dice X (independent of Y) Each value has to be a positive integer. \\
+\hline
+{\em num\+\_\+faces} & number of faces of each die Y (independent of X) Each value has to be a positive integer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+distribution of XdY
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::invalid\+\_\+argument} & if X or Y contain a 0 value. \\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/random\+\_\+variable.\+hpp\end{DoxyCompactItemize}

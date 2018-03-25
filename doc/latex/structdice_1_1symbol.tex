@@ -1,0 +1,121 @@
+\hypertarget{structdice_1_1symbol}{}\section{dice\+:\+:symbol Struct Reference}
+\label{structdice_1_1symbol}\index{dice\+::symbol@{dice\+::symbol}}
+
+
+Terminal symbol returned by the lexer type.  
+
+
+
+
+{\ttfamily \#include $<$symbols.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structdice_1_1symbol_a4d35cdd398636ca61822f3c024ed122c}{symbol}} (\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}} \mbox{\hyperlink{structdice_1_1symbol_a3bb3109342d99a01c7534c00877857db}{type}})
+\begin{DoxyCompactList}\small\item\em Create a symbol with just a type. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structdice_1_1symbol_a5554a3a825bb97c3961b069963af63d8}{symbol}} (\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}} \mbox{\hyperlink{structdice_1_1symbol_a3bb3109342d99a01c7534c00877857db}{type}}, std\+::string \mbox{\hyperlink{structdice_1_1symbol_abef11b61a11ced6140a6e1626bce0350}{lexeme}})
+\begin{DoxyCompactList}\small\item\em Create a symbol with lexeme value filled. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structdice_1_1symbol_a30caf2c6b632e0a35f584fcac22d0c0c}{symbol}} (\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}} \mbox{\hyperlink{structdice_1_1symbol_a3bb3109342d99a01c7534c00877857db}{type}}, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$ \mbox{\hyperlink{structdice_1_1symbol_a9575fe2bdb23550a1cbd1cb0bb0d1c4b}{value}})
+\begin{DoxyCompactList}\small\item\em Create a symbol with value filled. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structdice_1_1symbol_a8f096b612ef4c4547f6d4435371157db}\label{structdice_1_1symbol_a8f096b612ef4c4547f6d4435371157db}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{structdice_1_1symbol}{symbol}} \&other) const
+\item 
+\mbox{\Hypertarget{structdice_1_1symbol_a5cb5c60000186c98d0630b568ea09d3a}\label{structdice_1_1symbol_a5cb5c60000186c98d0630b568ea09d3a}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{structdice_1_1symbol}{symbol}} \&other) const
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structdice_1_1symbol_a3bb3109342d99a01c7534c00877857db}\label{structdice_1_1symbol_a3bb3109342d99a01c7534c00877857db}} 
+\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}} \mbox{\hyperlink{structdice_1_1symbol_a3bb3109342d99a01c7534c00877857db}{type}}
+\begin{DoxyCompactList}\small\item\em Type of this symbol. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{structdice_1_1symbol_abef11b61a11ced6140a6e1626bce0350}{lexeme}}
+\begin{DoxyCompactList}\small\item\em Matched symbol string. \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$ \mbox{\hyperlink{structdice_1_1symbol_a9575fe2bdb23550a1cbd1cb0bb0d1c4b}{value}} = nullptr
+\begin{DoxyCompactList}\small\item\em Value of the symbol. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Terminal symbol returned by the lexer type. 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structdice_1_1symbol_a4d35cdd398636ca61822f3c024ed122c}\label{structdice_1_1symbol_a4d35cdd398636ca61822f3c024ed122c}} 
+\index{dice\+::symbol@{dice\+::symbol}!symbol@{symbol}}
+\index{symbol@{symbol}!dice\+::symbol@{dice\+::symbol}}
+\subsubsection{\texorpdfstring{symbol()}{symbol()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily dice\+::symbol\+::symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}}}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a symbol with just a type. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & of the symbol \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structdice_1_1symbol_a5554a3a825bb97c3961b069963af63d8}\label{structdice_1_1symbol_a5554a3a825bb97c3961b069963af63d8}} 
+\index{dice\+::symbol@{dice\+::symbol}!symbol@{symbol}}
+\index{symbol@{symbol}!dice\+::symbol@{dice\+::symbol}}
+\subsubsection{\texorpdfstring{symbol()}{symbol()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily dice\+::symbol\+::symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}}}]{type,  }\item[{std\+::string}]{lexeme }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a symbol with lexeme value filled. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & of the symbol \\
+\hline
+{\em lexeme} & of the symbol \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structdice_1_1symbol_a30caf2c6b632e0a35f584fcac22d0c0c}\label{structdice_1_1symbol_a30caf2c6b632e0a35f584fcac22d0c0c}} 
+\index{dice\+::symbol@{dice\+::symbol}!symbol@{symbol}}
+\index{symbol@{symbol}!dice\+::symbol@{dice\+::symbol}}
+\subsubsection{\texorpdfstring{symbol()}{symbol()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily dice\+::symbol\+::symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{symbols_8hpp_ab0295a855bb7eadc138abd6993af3aea}{symbol\+\_\+type}}}]{type,  }\item[{std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}} $>$}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Create a symbol with value filled. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & of the symbol \\
+\hline
+{\em value} & of the symbol \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{structdice_1_1symbol_abef11b61a11ced6140a6e1626bce0350}\label{structdice_1_1symbol_abef11b61a11ced6140a6e1626bce0350}} 
+\index{dice\+::symbol@{dice\+::symbol}!lexeme@{lexeme}}
+\index{lexeme@{lexeme}!dice\+::symbol@{dice\+::symbol}}
+\subsubsection{\texorpdfstring{lexeme}{lexeme}}
+{\footnotesize\ttfamily std\+::string dice\+::symbol\+::lexeme}
+
+
+
+Matched symbol string. 
+
+Lexeme is stored only for symbol\+\_\+type\+::id, symbol\+\_\+type\+::func\+\_\+id and symbol\+\_\+type\+::roll\+\_\+op. \mbox{\Hypertarget{structdice_1_1symbol_a9575fe2bdb23550a1cbd1cb0bb0d1c4b}\label{structdice_1_1symbol_a9575fe2bdb23550a1cbd1cb0bb0d1c4b}} 
+\index{dice\+::symbol@{dice\+::symbol}!value@{value}}
+\index{value@{value}!dice\+::symbol@{dice\+::symbol}}
+\subsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classdice_1_1base__value}{base\+\_\+value}}$>$ dice\+::symbol\+::value = nullptr}
+
+
+
+Value of the symbol. 
+
+It is only stored for numbers (symbol\+\_\+type\+::number). 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/\mbox{\hyperlink{symbols_8hpp}{symbols.\+hpp}}\end{DoxyCompactItemize}

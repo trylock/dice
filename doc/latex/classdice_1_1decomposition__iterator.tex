@@ -1,0 +1,116 @@
+\hypertarget{classdice_1_1decomposition__iterator}{}\section{dice\+:\+:decomposition\+\_\+iterator$<$ Value\+Type, Probability\+Type $>$ Class Template Reference}
+\label{classdice_1_1decomposition__iterator}\index{dice\+::decomposition\+\_\+iterator$<$ Value\+Type, Probability\+Type $>$@{dice\+::decomposition\+\_\+iterator$<$ Value\+Type, Probability\+Type $>$}}
+
+
+Decompositon value iterator.  
+
+
+
+
+{\ttfamily \#include $<$decomposition.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_a1bd6ab0cacc2f5aebf8c2eb95ffb1075}\label{classdice_1_1decomposition__iterator_a1bd6ab0cacc2f5aebf8c2eb95ffb1075}} 
+using {\bfseries decomposition\+\_\+type} = \mbox{\hyperlink{classdice_1_1decomposition}{decomposition}}$<$ Value\+Type, Probability\+Type $>$
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_a7570559737c46473e48a2dc2d4f1ba29}\label{classdice_1_1decomposition__iterator_a7570559737c46473e48a2dc2d4f1ba29}} 
+using {\bfseries value\+\_\+type} = std\+::pair$<$ Value\+Type, Probability\+Type $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_afb218e94fad101615d43e92eb7ca9e30}\label{classdice_1_1decomposition__iterator_afb218e94fad101615d43e92eb7ca9e30}} 
+{\bfseries decomposition\+\_\+iterator} (const \mbox{\hyperlink{classdice_1_1decomposition}{decomposition\+\_\+type}} $\ast$decomp, bool is\+\_\+end=false)
+\item 
+\mbox{\hyperlink{classdice_1_1decomposition__iterator}{decomposition\+\_\+iterator}} \& \mbox{\hyperlink{classdice_1_1decomposition__iterator_afdd9eb500d48653f709548f7ae34bf2f}{operator++}} ()
+\begin{DoxyCompactList}\small\item\em Move to the next value. \end{DoxyCompactList}\item 
+value\+\_\+type $\ast$ \mbox{\hyperlink{classdice_1_1decomposition__iterator_aee9da45888a6249ebada6f9507770bdf}{operator-\/$>$}} ()
+\begin{DoxyCompactList}\small\item\em Access current value. \end{DoxyCompactList}\item 
+value\+\_\+type \& \mbox{\hyperlink{classdice_1_1decomposition__iterator_a77865c81e7e643f634c41a0cb0ae55fb}{operator$\ast$}} ()
+\begin{DoxyCompactList}\small\item\em Access current value. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classdice_1_1decomposition__iterator_a3a62c8222ebb9b10ea5914e4f58e81f1}{operator==}} (const \mbox{\hyperlink{classdice_1_1decomposition__iterator}{decomposition\+\_\+iterator}} \&other) const
+\begin{DoxyCompactList}\small\item\em Compare 2 iterators. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_a0a75500b466ff8da21569c178d6392ff}\label{classdice_1_1decomposition__iterator_a0a75500b466ff8da21569c178d6392ff}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classdice_1_1decomposition__iterator}{decomposition\+\_\+iterator}} \&other) const
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename Value\+Type, typename Probability\+Type$>$\newline
+class dice\+::decomposition\+\_\+iterator$<$ Value\+Type, Probability\+Type $>$}
+
+Decompositon value iterator. 
+
+It will iterate through pairs (value, probability). One value can be in multiple pairs. The probabilities sum up to 1. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_a77865c81e7e643f634c41a0cb0ae55fb}\label{classdice_1_1decomposition__iterator_a77865c81e7e643f634c41a0cb0ae55fb}} 
+\index{dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}}
+\subsubsection{\texorpdfstring{operator$\ast$()}{operator*()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+value\+\_\+type\& \mbox{\hyperlink{classdice_1_1decomposition__iterator}{dice\+::decomposition\+\_\+iterator}}$<$ Value\+Type, Probability\+Type $>$\+::operator$\ast$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Access current value. 
+
+\begin{DoxyReturn}{Returns}
+current value reference 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_afdd9eb500d48653f709548f7ae34bf2f}\label{classdice_1_1decomposition__iterator_afdd9eb500d48653f709548f7ae34bf2f}} 
+\index{dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}!operator++@{operator++}}
+\index{operator++@{operator++}!dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}}
+\subsubsection{\texorpdfstring{operator++()}{operator++()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+\mbox{\hyperlink{classdice_1_1decomposition__iterator}{decomposition\+\_\+iterator}}\& \mbox{\hyperlink{classdice_1_1decomposition__iterator}{dice\+::decomposition\+\_\+iterator}}$<$ Value\+Type, Probability\+Type $>$\+::operator++ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Move to the next value. 
+
+Next value is precomputed.
+
+\begin{DoxyReturn}{Returns}
+this iterator 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_aee9da45888a6249ebada6f9507770bdf}\label{classdice_1_1decomposition__iterator_aee9da45888a6249ebada6f9507770bdf}} 
+\index{dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}}
+\subsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+value\+\_\+type$\ast$ \mbox{\hyperlink{classdice_1_1decomposition__iterator}{dice\+::decomposition\+\_\+iterator}}$<$ Value\+Type, Probability\+Type $>$\+::operator-\/$>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Access current value. 
+
+\begin{DoxyReturn}{Returns}
+pointer to current value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classdice_1_1decomposition__iterator_a3a62c8222ebb9b10ea5914e4f58e81f1}\label{classdice_1_1decomposition__iterator_a3a62c8222ebb9b10ea5914e4f58e81f1}} 
+\index{dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}!operator==@{operator==}}
+\index{operator==@{operator==}!dice\+::decomposition\+\_\+iterator@{dice\+::decomposition\+\_\+iterator}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily template$<$typename Value\+Type , typename Probability\+Type $>$ \\
+bool \mbox{\hyperlink{classdice_1_1decomposition__iterator}{dice\+::decomposition\+\_\+iterator}}$<$ Value\+Type, Probability\+Type $>$\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classdice_1_1decomposition__iterator}{decomposition\+\_\+iterator}}$<$ Value\+Type, Probability\+Type $>$ \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compare 2 iterators. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & iterator\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff both point at the same value in the same variable 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/projects/dice/src/decomposition.\+hpp\end{DoxyCompactItemize}

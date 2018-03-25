@@ -1,0 +1,86 @@
+\hypertarget{utils_8hpp}{}\section{C\+:/projects/dice/src/utils.hpp File Reference}
+\label{utils_8hpp}\index{C\+:/projects/dice/src/utils.\+hpp@{C\+:/projects/dice/src/utils.\+hpp}}
+
+
+General purpose utility function templates.  
+
+
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+Include dependency graph for utils.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{utils_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{utils_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T , typename Less  = std\+::less$<$\+T$>$$>$ }\\std\+::vector$<$ T $>$ \mbox{\hyperlink{utils_8hpp_a76c303cd6d428781aba0af2068485c7e}{dice\+::sorted\+\_\+union}} (const std\+::vector$<$ T $>$ \&a, const std\+::vector$<$ T $>$ \&b, Less is\+\_\+less=Less())
+\begin{DoxyCompactList}\small\item\em Compute union of sorted lists A and B. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T \mbox{\hyperlink{utils_8hpp_ab5f71aca381e999396a566ef7ef794e1}{dice\+::clamp}} (const T \&value, const T \&lower, const T \&upper)
+\begin{DoxyCompactList}\small\item\em Clamp a value to given range. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+General purpose utility function templates. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{utils_8hpp_file_ab5f71aca381e999396a566ef7ef794e1}\label{utils_8hpp_file_ab5f71aca381e999396a566ef7ef794e1}} 
+\index{utils.\+hpp@{utils.\+hpp}!clamp@{clamp}}
+\index{clamp@{clamp}!utils.\+hpp@{utils.\+hpp}}
+\subsubsection{\texorpdfstring{clamp()}{clamp()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T dice\+::clamp (\begin{DoxyParamCaption}\item[{const T \&}]{value,  }\item[{const T \&}]{lower,  }\item[{const T \&}]{upper }\end{DoxyParamCaption})}
+
+
+
+Clamp a value to given range. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & \\
+\hline
+{\em lower} & bound of the range \\
+\hline
+{\em upper} & bound of the range\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+lower if value $<$ lower upper if value $>$ upper value otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{utils_8hpp_file_a76c303cd6d428781aba0af2068485c7e}\label{utils_8hpp_file_a76c303cd6d428781aba0af2068485c7e}} 
+\index{utils.\+hpp@{utils.\+hpp}!sorted\+\_\+union@{sorted\+\_\+union}}
+\index{sorted\+\_\+union@{sorted\+\_\+union}!utils.\+hpp@{utils.\+hpp}}
+\subsubsection{\texorpdfstring{sorted\+\_\+union()}{sorted\_union()}}
+{\footnotesize\ttfamily template$<$typename T , typename Less  = std\+::less$<$\+T$>$$>$ \\
+std\+::vector$<$T$>$ dice\+::sorted\+\_\+union (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ T $>$ \&}]{a,  }\item[{const std\+::vector$<$ T $>$ \&}]{b,  }\item[{Less}]{is\+\_\+less = {\ttfamily Less()} }\end{DoxyParamCaption})}
+
+
+
+Compute union of sorted lists A and B. 
+
+Both lists have to be sorted by given comparer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & sorted list A \\
+\hline
+{\em b} & sorted list B \\
+\hline
+{\em is\+\_\+less} & comparer (use operator $<$ by default)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+sorted union of lists A and B 
+\end{DoxyReturn}
